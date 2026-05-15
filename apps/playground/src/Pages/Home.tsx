@@ -1,12 +1,13 @@
 import type { PageProps } from '@hono/inertia'
+import { Link } from '@ts-76/inertia-hono-jsx'
 
 export default function Home(props: PageProps<'Home'>) {
   return (
     <>
       <h1>{props.greeting}</h1>
-      <p>Hono Inertia + hono/jsx — Step 4 リベンジ: PageProps 直使いで型貫通</p>
+      <p>Hono Inertia + hono/jsx — Step 5: Link で SPA ナビゲーション</p>
       <nav>
-        <a href="/users">Users</a>
+        <Link href="/users">Users</Link>
       </nav>
     </>
   )

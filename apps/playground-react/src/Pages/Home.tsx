@@ -1,12 +1,13 @@
 import type { PageProps } from '@hono/inertia'
+import { Link } from '@inertiajs/react'
 
 export default function Home(props: PageProps<'Home'>) {
   return (
     <>
       <h1>{props.greeting}</h1>
-      <p>Hono Inertia + React — 対照実験用</p>
+      <p>Hono Inertia + React — Step 5: Link で SPA ナビゲーション</p>
       <nav>
-        <a href="/users">Users</a>
+        <Link href="/users">Users</Link>
       </nav>
     </>
   )
