@@ -1,6 +1,6 @@
-import type { PageComponent } from '@ts-76/inertia-hono-jsx'
+import type { PageProps } from '@hono/inertia'
 
-const UsersShow: PageComponent<'Users/Show'> = (props) => {
+export default function UsersShow(props: PageProps<'Users/Show'>) {
   return (
     <>
       <h1>{props.user.name}</h1>
@@ -9,5 +9,3 @@ const UsersShow: PageComponent<'Users/Show'> = (props) => {
     </>
   )
 }
-
-export default UsersShow

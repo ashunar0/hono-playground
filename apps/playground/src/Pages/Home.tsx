@@ -1,15 +1,13 @@
-import type { PageComponent } from '@ts-76/inertia-hono-jsx'
+import type { PageProps } from '@hono/inertia'
 
-const Home: PageComponent<'Home'> = (props) => {
+export default function Home(props: PageProps<'Home'>) {
   return (
     <>
       <h1>{props.greeting}</h1>
-      <p>Hono Inertia + hono/jsx — Step 4: 型がサーバから貫通している</p>
+      <p>Hono Inertia + hono/jsx — Step 4 リベンジ: PageProps 直使いで型貫通</p>
       <nav>
         <a href="/users">Users</a>
       </nav>
     </>
   )
 }
-
-export default Home
