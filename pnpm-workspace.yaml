@@ -1,7 +1,5 @@
 packages:
   - apps/*
-  - "!apps/playground"
-  - "!apps/playground-react"
   - packages/*
   - tools/*
 
@@ -23,3 +21,7 @@ peerDependencyRules:
   allowedVersions:
     vite: "*"
     vitest: "*"
+allowBuilds:
+  esbuild: set this to true or false
+  sharp: set this to true or false
+  workerd: set this to true or false

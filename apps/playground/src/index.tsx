@@ -1,5 +1,6 @@
 /** @jsxImportSource hono/jsx */
-import { inertia, serializePage, type RootView } from '@hono/inertia'
+import { defer, inertiaWithDefer, type RootView } from '@ashunar0/hono-inertia-defer'
+import { serializePage } from '@hono/inertia'
 import { Hono } from 'hono'
 import { renderToString } from 'hono/jsx/dom/server'
 import { Link as ViteLink, Script, ViteClient } from 'vite-ssr-components/hono'
@@ -32,9 +33,21 @@ const rootView: RootView = (page) => `<!doctype html>
 </html>`
 
 const app = new Hono()
-  .use(inertia({ version, rootView }))
+  .use(inertiaWithDefer({ version, rootView }))
   .get('/', (c) => c.render('Home', { greeting: 'Hello from Hono Inertia' }))
-  .get('/users', (c) => c.render('Users/Index', { users }))
+  .get('/users', (c) =>
+    c.render('Users/Index', {
+      users,
+      serverTime: new Date().toISOString(),
+      stats: defer(async () => {
+        await new Promise((r) => setTimeout(r, 2500))
+        return {
+          total: users.length,
+          computedAt: new Date().toISOString(),
+        }
+      }),
+    }),
+  )
   .get('/users/new', (c) => c.render('Users/New', { errors: noUserFormErrors }))
   .post('/users', async (c) => {
     const body = await c.req.json<{ name?: string; role?: string }>()
