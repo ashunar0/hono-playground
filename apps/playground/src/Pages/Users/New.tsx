@@ -2,7 +2,7 @@ import type { PageProps } from '@hono/inertia'
 import { Link, useForm } from '@ts-76/inertia-hono-jsx'
 
 export default function UsersNew(_props: PageProps<'Users/New'>) {
-  const form = useForm({ name: '', role: '' })
+  const form = useForm('user-create', { name: '', role: '' })
 
   const onSubmit = (e: Event) => {
     e.preventDefault()
