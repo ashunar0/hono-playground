@@ -1,15 +1,15 @@
-type HomeProps = {
-  greeting: string
-}
+import type { PageComponent } from '@ts-76/inertia-hono-jsx'
 
-export default function Home(props: HomeProps) {
+const Home: PageComponent<'Home'> = (props) => {
   return (
     <>
       <h1>{props.greeting}</h1>
-      <p>Hono Inertia + hono/jsx — Step 3: クライアント hydration が動いた</p>
+      <p>Hono Inertia + hono/jsx — Step 4: 型がサーバから貫通している</p>
       <nav>
         <a href="/users">Users</a>
       </nav>
     </>
   )
 }
+
+export default Home

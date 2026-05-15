@@ -1,10 +1,6 @@
-type User = { id: number; name: string; role: string }
+import type { PageComponent } from '@ts-76/inertia-hono-jsx'
 
-type Props = {
-  user: User
-}
-
-export default function UsersShow(props: Props) {
+const UsersShow: PageComponent<'Users/Show'> = (props) => {
   return (
     <>
       <h1>{props.user.name}</h1>
@@ -13,3 +9,5 @@ export default function UsersShow(props: Props) {
     </>
   )
 }
+
+export default UsersShow

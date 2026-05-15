@@ -1,10 +1,6 @@
-type User = { id: number; name: string; role: string }
+import type { PageComponent } from '@ts-76/inertia-hono-jsx'
 
-type Props = {
-  users: User[]
-}
-
-export default function UsersIndex(props: Props) {
+const UsersIndex: PageComponent<'Users/Index'> = (props) => {
   return (
     <>
       <h1>Users</h1>
@@ -19,3 +15,5 @@ export default function UsersIndex(props: Props) {
     </>
   )
 }
+
+export default UsersIndex
