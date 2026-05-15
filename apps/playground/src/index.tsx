@@ -1,7 +1,8 @@
+/** @jsxImportSource hono/jsx */
 import { inertia, serializePage, type RootView } from '@hono/inertia'
 import { Hono } from 'hono'
 import { renderToString } from 'hono/jsx/dom/server'
-import { Link as ViteLink, ViteClient } from 'vite-ssr-components/hono'
+import { Link as ViteLink, Script, ViteClient } from 'vite-ssr-components/hono'
 
 const version = 'v1'
 
@@ -23,6 +24,7 @@ const rootView: RootView = (page) => `<!doctype html>
   <body>
     <script data-page="app" type="application/json">${serializePage(page)}</script>
     <div id="app"></div>
+    ${renderToString(<Script src="/src/client.tsx" />)}
   </body>
 </html>`
 
