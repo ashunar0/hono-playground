@@ -5,6 +5,9 @@ export default function UsersIndex(props: PageProps<'Users/Index'>) {
   return (
     <>
       <h1>Users</h1>
+      <p>
+        <Link href="/users/new">+ Add new user</Link>
+      </p>
       <ul>
         {props.users.map((u) => (
           <li key={u.id}>

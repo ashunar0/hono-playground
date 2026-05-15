@@ -12,6 +12,9 @@ const users = [
   { id: 3, name: 'Ren', role: 'Product' },
 ]
 
+type UserFormErrors = { name?: string; role?: string }
+const noUserFormErrors: UserFormErrors = {}
+
 const rootView: RootView = (page) => `<!doctype html>
 <html>
   <head>
@@ -32,6 +35,24 @@ const app = new Hono()
   .use(inertia({ version, rootView }))
   .get('/', (c) => c.render('Home', { greeting: 'Hello from Hono Inertia' }))
   .get('/users', (c) => c.render('Users/Index', { users }))
+  .get('/users/new', (c) => c.render('Users/New', { errors: noUserFormErrors }))
+  .post('/users', async (c) => {
+    const body = await c.req.json<{ name?: string; role?: string }>()
+    const name = (body.name ?? '').trim()
+    const role = (body.role ?? '').trim()
+
+    const errors: UserFormErrors = {}
+    if (!name) errors.name = 'Name is required'
+    if (!role) errors.role = 'Role is required'
+
+    if (errors.name || errors.role) {
+      return c.render('Users/New', { errors })
+    }
+
+    const id = users.length ? Math.max(...users.map((u) => u.id)) + 1 : 1
+    users.push({ id, name, role })
+    return c.redirect('/users')
+  })
   .get('/users/:id', (c) => {
     const user = users.find((u) => u.id === Number(c.req.param('id')))
     if (!user) return c.notFound()
