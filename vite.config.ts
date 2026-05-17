@@ -6,4 +6,7 @@ export default defineConfig({
     "apps/website/**/*": "vp check --fix",
   },
   lint: { options: { typeAware: true, typeCheck: true } },
+  fmt: {
+    ignorePatterns: ["**/pages.gen.ts"],
+  },
 });
