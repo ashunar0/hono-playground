@@ -10,7 +10,7 @@ const users = [
 type UserFormErrors = { name?: string; role?: string };
 const noUserFormErrors: UserFormErrors = {};
 
-const usersRoutes = new Hono()
+const app = new Hono()
   .get("/users", (c) =>
     c.render("Users/Index", {
       users,
@@ -48,4 +48,4 @@ const usersRoutes = new Hono()
     return c.render("Users/Show", { user });
   });
 
-export default usersRoutes;
+export default app;
