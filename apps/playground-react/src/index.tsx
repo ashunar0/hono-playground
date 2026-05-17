@@ -1,9 +1,10 @@
 import {
   defer,
-  inertiaWithDefer,
+  inertiaWithDeferAndScroll,
   type PageObject,
   type RootView,
-} from "@ashunar0/hono-inertia-defer";
+  scroll,
+} from "@ashunar0/hono-inertia-scroll";
 import { createInertiaApp } from "@inertiajs/react";
 import type { InertiaAppSSRResponse, Page } from "@inertiajs/core";
 import { Hono } from "hono";
@@ -24,6 +25,17 @@ type UserFormErrors = { name?: string; role?: string };
 const noUserFormErrors: UserFormErrors = {};
 
 let lastFormSubmission: Record<string, unknown> | null = null;
+
+const INFINITE_PER_PAGE = 5;
+const INFINITE_LAST_PAGE = 6;
+
+function buildInfiniteUsers(pageNum: number, prefix: string) {
+  const startId = (pageNum - 1) * INFINITE_PER_PAGE + 1;
+  return Array.from({ length: INFINITE_PER_PAGE }, (_, i) => ({
+    id: startId + i,
+    name: `${prefix}-User-${startId + i}`,
+  }));
+}
 
 const RootDocument = ({ body }: { body: string }) => (
   <html lang="ja">
@@ -61,7 +73,7 @@ const rootView: RootView = async (page: PageObject) => {
 };
 
 const app = new Hono()
-  .use(inertiaWithDefer({ version, rootView }))
+  .use(inertiaWithDeferAndScroll({ version, rootView }))
   .get("/", (c) => c.render("Home", { greeting: "Hello from Hono Inertia (React)" }))
   .get("/adapter/head-keys", (c) => c.render("Adapter/HeadKeys", {}))
   .get("/adapter/form", (c) => c.render("Adapter/FormDemo", { submitted: lastFormSubmission }))
@@ -72,6 +84,34 @@ const app = new Hono()
   .post("/adapter/form/cancel-slow", async (c) => {
     await new Promise((resolve) => setTimeout(resolve, 5000));
     return c.redirect("/adapter/form");
+  })
+  .get("/adapter/realtime", (c) => {
+    return c.render("Adapter/RealtimeDemo", {
+      serverTime: new Date().toISOString(),
+      lazyStats: defer(async () => {
+        await new Promise((r) => setTimeout(r, 800));
+        return { computedAt: new Date().toISOString(), rows: 42 };
+      }),
+    });
+  })
+  .get("/adapter/infinite", (c) => {
+    const url = new URL(c.req.url);
+    const manualPage = Number(url.searchParams.get("manualUsers_page") ?? 3);
+    const autoPage = Number(url.searchParams.get("autoUsers_page") ?? 1);
+    return c.render("Adapter/InfiniteScrollDemo", {
+      manualUsers: scroll({
+        data: buildInfiniteUsers(manualPage, "Manual"),
+        currentPage: manualPage,
+        lastPage: INFINITE_LAST_PAGE,
+        pageName: "manualUsers_page",
+      }),
+      autoUsers: scroll({
+        data: buildInfiniteUsers(autoPage, "Auto"),
+        currentPage: autoPage,
+        lastPage: INFINITE_LAST_PAGE,
+        pageName: "autoUsers_page",
+      }),
+    });
   })
   .get("/users", (c) =>
     c.render("Users/Index", {

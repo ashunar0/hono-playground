@@ -14,6 +14,8 @@ export default function MainLayout({ children }: { children?: Child }) {
           <Link href="/users">Users</Link>
           <Link href="/adapter/head-keys">Head Demo</Link>
           <Link href="/adapter/form">Form Demo</Link>
+          <Link href="/adapter/infinite">Infinite</Link>
+          <Link href="/adapter/realtime">Realtime</Link>
         </nav>
         <button type="button" style="margin-left:auto;" onClick={() => setClicks((n) => n + 1)}>
           Layout clicks: {clicks}

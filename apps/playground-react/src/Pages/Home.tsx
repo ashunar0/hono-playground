@@ -10,6 +10,8 @@ export default function Home(props: PageProps<"Home">) {
         <Link href="/users">Users</Link>
         <Link href="/adapter/head-keys">Head Demo</Link>
         <Link href="/adapter/form">Form Demo</Link>
+        <Link href="/adapter/infinite">Infinite</Link>
+        <Link href="/adapter/realtime">Realtime</Link>
       </nav>
     </>
   );
