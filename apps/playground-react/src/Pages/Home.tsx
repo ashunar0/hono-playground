@@ -1,7 +1,7 @@
-import type { PageProps } from '@hono/inertia'
-import { Link } from '@inertiajs/react'
+import type { PageProps } from "@hono/inertia";
+import { Link } from "@inertiajs/react";
 
-export default function Home(props: PageProps<'Home'>) {
+export default function Home(props: PageProps<"Home">) {
   return (
     <>
       <h1>{props.greeting}</h1>
@@ -10,5 +10,5 @@ export default function Home(props: PageProps<'Home'>) {
         <Link href="/users">Users</Link>
       </nav>
     </>
-  )
+  );
 }
