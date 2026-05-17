@@ -1,0 +1,23 @@
+{
+  "name": "create-hono-inertia",
+  "version": "0.0.1",
+  "description": "Scaffold a Hono + Inertia + hono/jsx project (Cloudflare Workers, SSR + hydration)",
+  "license": "MIT",
+  "bin": {
+    "create-hono-inertia": "./dist/index.mjs"
+  },
+  "files": [
+    "dist",
+    "templates"
+  ],
+  "type": "module",
+  "scripts": {
+    "build": "vp pack",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "typescript": "catalog:",
+    "vite-plus": "catalog:"
+  }
+}

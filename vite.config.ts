@@ -5,8 +5,11 @@ export default defineConfig({
     "packages/**/*": "vp check --fix",
     "apps/website/**/*": "vp check --fix",
   },
-  lint: { options: { typeAware: true, typeCheck: true } },
+  lint: {
+    options: { typeAware: true, typeCheck: true },
+    ignorePatterns: ["**/templates/**"],
+  },
   fmt: {
-    ignorePatterns: ["**/pages.gen.ts"],
+    ignorePatterns: ["**/pages.gen.ts", "**/templates/**"],
   },
 });
