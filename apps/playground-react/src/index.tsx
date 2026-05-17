@@ -7,6 +7,7 @@ import {
 import { createInertiaApp } from "@inertiajs/react";
 import type { InertiaAppSSRResponse, Page } from "@inertiajs/core";
 import { Hono } from "hono";
+import type { ComponentType } from "react";
 import ReactDOMServer from "react-dom/server";
 import { Link as ViteLink, ReactRefresh, Script, ViteClient } from "vite-ssr-components/react";
 import { resolve } from "./pages";
@@ -44,7 +45,13 @@ const rootView: RootView = async (page: PageObject) => {
     page: page as unknown as Page,
     render: ReactDOMServer.renderToString,
     resolve,
-    setup: ({ App, props }) => <App {...props} />,
+    setup: ({
+      App,
+      props,
+    }: {
+      App: ComponentType<Record<string, unknown>>;
+      props: Record<string, unknown>;
+    }) => <App {...props} />,
     // eslint-disable-next-line
   } as never)) as unknown as InertiaAppSSRResponse;
   const html = ReactDOMServer.renderToString(<RootDocument body={body} />);
