@@ -15,7 +15,7 @@ overrides:
   vitest: npm:@voidzero-dev/vite-plus-test@latest
 
 patchedDependencies:
-  '@ts-76/inertia-hono-jsx': 310bcc7c22963592bd68c50ccc6eecaa612468a33622fcbf821c5cb656ce852f
+  '@ts-76/inertia-hono-jsx@0.2.0': bf039fa8938c9d759aad1e88ab6d8f973776e721694b0e92bd1fc83771b1a1b8
 
 importers:
 
@@ -41,7 +41,7 @@ importers:
         version: 3.1.1
       '@ts-76/inertia-hono-jsx':
         specifier: ^0.2.0
-        version: 0.2.0(patch_hash=310bcc7c22963592bd68c50ccc6eecaa612468a33622fcbf821c5cb656ce852f)(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.0))(hono@4.12.18))(hono@4.12.18)
+        version: 0.2.0(patch_hash=bf039fa8938c9d759aad1e88ab6d8f973776e721694b0e92bd1fc83771b1a1b8)(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.0))(hono@4.12.18))(hono@4.12.18)
       hono:
         specifier: ^4.12.18
         version: 4.12.18
@@ -2221,7 +2221,7 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@ts-76/inertia-hono-jsx@0.2.0(patch_hash=310bcc7c22963592bd68c50ccc6eecaa612468a33622fcbf821c5cb656ce852f)(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.0))(hono@4.12.18))(hono@4.12.18)':
+  '@ts-76/inertia-hono-jsx@0.2.0(patch_hash=bf039fa8938c9d759aad1e88ab6d8f973776e721694b0e92bd1fc83771b1a1b8)(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.0))(hono@4.12.18))(hono@4.12.18)':
     dependencies:
       '@hono/inertia': 0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.0))(hono@4.12.18)
       '@inertiajs/core': 3.1.1

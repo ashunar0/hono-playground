@@ -26,4 +26,4 @@ allowBuilds:
   sharp: set this to true or false
   workerd: set this to true or false
 patchedDependencies:
-  "@ts-76/inertia-hono-jsx": patches/@ts-76__inertia-hono-jsx.patch
+  "@ts-76/inertia-hono-jsx@0.2.0": patches/@ts-76__inertia-hono-jsx@0.2.0.patch
