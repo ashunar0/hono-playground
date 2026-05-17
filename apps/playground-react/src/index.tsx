@@ -23,6 +23,8 @@ const users = [
 type UserFormErrors = { name?: string; role?: string };
 const noUserFormErrors: UserFormErrors = {};
 
+let lastFormSubmission: Record<string, unknown> | null = null;
+
 const RootDocument = ({ body }: { body: string }) => (
   <html lang="ja">
     <head>
@@ -62,6 +64,15 @@ const app = new Hono()
   .use(inertiaWithDefer({ version, rootView }))
   .get("/", (c) => c.render("Home", { greeting: "Hello from Hono Inertia (React)" }))
   .get("/adapter/head-keys", (c) => c.render("Adapter/HeadKeys", {}))
+  .get("/adapter/form", (c) => c.render("Adapter/FormDemo", { submitted: lastFormSubmission }))
+  .post("/adapter/form/success", async (c) => {
+    lastFormSubmission = await c.req.json();
+    return c.redirect("/adapter/form");
+  })
+  .post("/adapter/form/cancel-slow", async (c) => {
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+    return c.redirect("/adapter/form");
+  })
   .get("/users", (c) =>
     c.render("Users/Index", {
       users,

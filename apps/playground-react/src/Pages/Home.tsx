@@ -9,6 +9,7 @@ export default function Home(props: PageProps<"Home">) {
       <nav style={{ display: "flex", gap: 12 }}>
         <Link href="/users">Users</Link>
         <Link href="/adapter/head-keys">Head Demo</Link>
+        <Link href="/adapter/form">Form Demo</Link>
       </nav>
     </>
   );
