@@ -1,7 +1,7 @@
-import type { PageProps } from '@hono/inertia'
-import { Deferred, Link, router } from '@ts-76/inertia-hono-jsx'
+import type { PageProps } from "@hono/inertia";
+import { Deferred, Link, router } from "@ts-76/inertia-hono-jsx";
 
-export default function UsersIndex(props: PageProps<'Users/Index'>) {
+export default function UsersIndex(props: PageProps<"Users/Index">) {
   return (
     <>
       <h1>Users</h1>
@@ -10,14 +10,14 @@ export default function UsersIndex(props: PageProps<'Users/Index'>) {
       </p>
       <Deferred data="stats" fallback={<p>📊 Loading stats…</p>}>
         <p>
-          📊 Total: <strong>{props.stats?.total}</strong> users, computed at{' '}
+          📊 Total: <strong>{props.stats?.total}</strong> users, computed at{" "}
           <strong>{props.stats?.computedAt}</strong>
         </p>
       </Deferred>
       <p>
-        <button type="button" onClick={() => router.reload({ only: ['users'] })}>
+        <button type="button" onClick={() => router.reload({ only: ["users"] })}>
           Reload users only
-        </button>{' '}
+        </button>{" "}
         <button type="button" onClick={() => router.reload()}>
           Full reload
         </button>
@@ -32,7 +32,6 @@ export default function UsersIndex(props: PageProps<'Users/Index'>) {
           </li>
         ))}
       </ul>
-      <Link href="/">Home</Link>
     </>
-  )
+  );
 }

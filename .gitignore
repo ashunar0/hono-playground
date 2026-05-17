@@ -15,6 +15,9 @@ dist-ssr
 # 外部研究材料（cloneした参考実装などを置く場所）
 .research/
 
+# Playwright MCP のセッション artifacts
+.playwright-mcp/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

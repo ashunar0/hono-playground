@@ -26,11 +26,14 @@ export interface DeferredProp<T = unknown> {
  * @param group Optional group name (defaults to `'default'`). Multiple
  *   deferred props in the same group are fetched in a single partial reload.
  */
-export const defer = <T>(resolver: () => T | Promise<T>, group = "default"): DeferredProp<T> => ({
-  [DEFER_MARKER]: true,
-  group,
-  resolve: resolver,
-});
+export const defer = <T>(resolver: () => T | Promise<T>, group = "default"): T | undefined => {
+  const marker: DeferredProp<T> = {
+    [DEFER_MARKER]: true,
+    group,
+    resolve: resolver,
+  };
+  return marker as unknown as T | undefined;
+};
 
 const isDeferred = (value: unknown): value is DeferredProp => {
   return typeof value === "object" && value !== null && DEFER_MARKER in value;
