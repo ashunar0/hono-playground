@@ -1,6 +1,13 @@
-import { defer, inertiaWithDefer, type RootView } from '@ashunar0/hono-inertia-defer'
+import {
+  defer,
+  inertiaWithDefer,
+  type PageObject,
+  type RootView,
+} from '@ashunar0/hono-inertia-defer'
 import { serializePage } from '@hono/inertia'
 import { Hono } from 'hono'
+import { renderToString } from 'react-dom/server'
+import { Link as ViteLink, ReactRefresh, Script, ViteClient } from 'vite-ssr-components/react'
 
 const version = 'v1'
 
@@ -13,21 +20,30 @@ const users = [
 type UserFormErrors = { name?: string; role?: string }
 const noUserFormErrors: UserFormErrors = {}
 
-const rootView: RootView = (page) => `<!doctype html>
-<html>
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Playground (React)</title>
-    <script type="module" src="/@vite/client"></script>
-    <link href="/src/style.css" rel="stylesheet" />
-  </head>
-  <body>
-    <script data-page="app" type="application/json">${serializePage(page)}</script>
-    <div id="app"></div>
-    <script type="module" src="/src/client.tsx"></script>
-  </body>
-</html>`
+const RootDocument = ({ page }: { page: PageObject }) => (
+  <html lang="ja">
+    <head>
+      <meta charSet="utf-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <title>Playground (React)</title>
+      <ViteClient />
+      <ReactRefresh />
+      <ViteLink href="/src/style.css" rel="stylesheet" />
+    </head>
+    <body>
+      <script
+        data-page="app"
+        type="application/json"
+        dangerouslySetInnerHTML={{ __html: serializePage(page) }}
+      />
+      <div id="app" />
+      <Script src="/src/client.tsx" />
+    </body>
+  </html>
+)
+
+const rootView: RootView = (page) =>
+  '<!doctype html>' + renderToString(<RootDocument page={page} />)
 
 const app = new Hono()
   .use(inertiaWithDefer({ version, rootView }))
