@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-import { cpSync, existsSync, readFileSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -21,6 +21,8 @@ if (existsSync(targetDir)) {
 }
 
 cpSync(templateDir, targetDir, { recursive: true });
+
+renameSync(resolve(targetDir, "_gitignore"), resolve(targetDir, ".gitignore"));
 
 const replacements = [
   { file: "package.json", from: '"name": "cf-workers-hono-jsx"', to: `"name": "${projectName}"` },

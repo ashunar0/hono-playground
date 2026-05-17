@@ -2,7 +2,28 @@
   "name": "create-hono-inertia",
   "version": "0.0.1",
   "description": "Scaffold a Hono + Inertia + hono/jsx project (Cloudflare Workers, SSR + hydration)",
+  "keywords": [
+    "cloudflare-workers",
+    "create",
+    "hono",
+    "hono-jsx",
+    "inertia",
+    "inertiajs",
+    "scaffold",
+    "ssr",
+    "template"
+  ],
+  "homepage": "https://github.com/ashunar0/hono-playground/tree/main/packages/create-hono-inertia#readme",
+  "bugs": {
+    "url": "https://github.com/ashunar0/hono-playground/issues"
+  },
   "license": "MIT",
+  "author": "Ashunar0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ashunar0/hono-playground.git",
+    "directory": "packages/create-hono-inertia"
+  },
   "bin": {
     "create-hono-inertia": "./dist/index.mjs"
   },
