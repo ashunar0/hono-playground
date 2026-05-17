@@ -1,5 +1,5 @@
 diff --git a/dist/index.js b/dist/index.js
-index 574b5d2eb7c082b164febf2dcec6971ff7beeb7c..13e23c015353070323e3b9d83d996945f34e1f79 100644
+index 574b5d2eb7c082b164febf2dcec6971ff7beeb7c..366461a88a19a61f2b80e7a00c335e14dbb0950f 100644
 --- a/dist/index.js
 +++ b/dist/index.js
 @@ -98,7 +98,7 @@ function renderWithLayouts({
@@ -29,6 +29,15 @@ index 574b5d2eb7c082b164febf2dcec6971ff7beeb7c..13e23c015353070323e3b9d83d996945
  
  // src/useForm.ts
  import {
+@@ -1374,7 +1374,7 @@ import {
+   useMemo as useMemo6,
+   useRef as useRef5,
+   useState as useState7
+-} from "hono/jsx/dom";
++} from "hono/jsx";
+ var resolveHTMLElement = (value, fallback) => {
+   if (!value) {
+     return fallback;
 @@ -1615,7 +1615,7 @@ import {
    shouldIntercept
  } from "@inertiajs/core";

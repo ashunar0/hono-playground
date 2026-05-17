@@ -15,7 +15,7 @@ overrides:
   vitest: npm:@voidzero-dev/vite-plus-test@latest
 
 patchedDependencies:
-  '@ts-76/inertia-hono-jsx@0.2.0': bf039fa8938c9d759aad1e88ab6d8f973776e721694b0e92bd1fc83771b1a1b8
+  '@ts-76/inertia-hono-jsx@0.2.0': 021a9e24a42eff48d42c46bccc8c7b46e81747a4e29c337fb161586705420540
 
 importers:
 
@@ -33,6 +33,9 @@ importers:
       '@ashunar0/hono-inertia-partial':
         specifier: workspace:*
         version: link:../../packages/hono-inertia-partial
+      '@ashunar0/hono-inertia-scroll':
+        specifier: workspace:*
+        version: link:../../packages/hono-inertia-scroll
       '@hono/inertia':
         specifier: ^0.2.0
         version: 0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.0))(hono@4.12.18)
@@ -41,7 +44,7 @@ importers:
         version: 3.1.1
       '@ts-76/inertia-hono-jsx':
         specifier: ^0.2.0
-        version: 0.2.0(patch_hash=bf039fa8938c9d759aad1e88ab6d8f973776e721694b0e92bd1fc83771b1a1b8)(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.0))(hono@4.12.18))(hono@4.12.18)
+        version: 0.2.0(patch_hash=021a9e24a42eff48d42c46bccc8c7b46e81747a4e29c337fb161586705420540)(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.0))(hono@4.12.18))(hono@4.12.18)
       hono:
         specifier: ^4.12.18
         version: 4.12.18
@@ -64,6 +67,9 @@ importers:
       '@ashunar0/hono-inertia-defer':
         specifier: workspace:*
         version: link:../../packages/hono-inertia-defer
+      '@ashunar0/hono-inertia-scroll':
+        specifier: workspace:*
+        version: link:../../packages/hono-inertia-scroll
       '@hono/inertia':
         specifier: ^0.2.0
         version: 0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.0))(hono@4.12.18)
@@ -127,6 +133,21 @@ importers:
         version: 0.1.21(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(typescript@5.9.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(yaml@2.9.0))(yaml@2.9.0)
 
   packages/hono-inertia-partial:
+    devDependencies:
+      '@hono/inertia':
+        specifier: ^0.2.0
+        version: 0.2.0(hono@4.12.18)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(yaml@2.9.0))
+      hono:
+        specifier: ^4.12.18
+        version: 4.12.18
+      typescript:
+        specifier: ^5
+        version: 5.9.3
+      vite-plus:
+        specifier: 'catalog:'
+        version: 0.1.21(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(typescript@5.9.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(yaml@2.9.0))(yaml@2.9.0)
+
+  packages/hono-inertia-scroll:
     devDependencies:
       '@hono/inertia':
         specifier: ^0.2.0
@@ -2221,7 +2242,7 @@ snapshots:
 
   '@standard-schema/spec@1.1.0': {}
 
-  '@ts-76/inertia-hono-jsx@0.2.0(patch_hash=bf039fa8938c9d759aad1e88ab6d8f973776e721694b0e92bd1fc83771b1a1b8)(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.0))(hono@4.12.18))(hono@4.12.18)':
+  '@ts-76/inertia-hono-jsx@0.2.0(patch_hash=021a9e24a42eff48d42c46bccc8c7b46e81747a4e29c337fb161586705420540)(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.0))(hono@4.12.18))(hono@4.12.18)':
     dependencies:
       '@hono/inertia': 0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.27.3)(jiti@2.7.0)(typescript@6.0.3)(yaml@2.9.0))(hono@4.12.18)
       '@inertiajs/core': 3.1.1
