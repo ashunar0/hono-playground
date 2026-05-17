@@ -61,6 +61,7 @@ const rootView: RootView = async (page: PageObject) => {
 const app = new Hono()
   .use(inertiaWithDefer({ version, rootView }))
   .get("/", (c) => c.render("Home", { greeting: "Hello from Hono Inertia (React)" }))
+  .get("/adapter/head-keys", (c) => c.render("Adapter/HeadKeys", {}))
   .get("/users", (c) =>
     c.render("Users/Index", {
       users,

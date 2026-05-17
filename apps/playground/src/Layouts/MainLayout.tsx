@@ -12,6 +12,7 @@ export default function MainLayout({ children }: { children?: Child }) {
         <nav style="display:flex;gap:12px;">
           <Link href="/">Home</Link>
           <Link href="/users">Users</Link>
+          <Link href="/adapter/head-keys">Head Demo</Link>
         </nav>
         <button type="button" style="margin-left:auto;" onClick={() => setClicks((n) => n + 1)}>
           Layout clicks: {clicks}
