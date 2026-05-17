@@ -1,0 +1,31 @@
+diff --git a/dist/index.js b/dist/index.js
+index 574b5d2eb7c082b164febf2dcec6971ff7beeb7c..f56c3df10e81810aa5465be17c88ce69801bfce0 100644
+--- a/dist/index.js
++++ b/dist/index.js
+@@ -98,7 +98,7 @@ function renderWithLayouts({
+ }
+ 
+ // src/App.tsx
+-import { jsx } from "hono/jsx/dom/jsx-runtime";
++import { jsx } from "hono/jsx/jsx-runtime";
+ var currentIsInitialPage = true;
+ var routerIsInitialized = false;
+ var swapComponent = async () => {
+@@ -196,7 +196,7 @@ import {
+ import { createElement as createElement2 } from "hono/jsx";
+ import { createRoot, hydrateRoot } from "hono/jsx/dom/client";
+ import { renderToString as honoRenderToString } from "hono/jsx/dom/server";
+-import { jsx as jsx2 } from "hono/jsx/dom/jsx-runtime";
++import { jsx as jsx2 } from "hono/jsx/jsx-runtime";
+ async function createInertiaApp({
+   id = "app",
+   resolve,
+@@ -1615,7 +1615,7 @@ import {
+   shouldIntercept
+ } from "@inertiajs/core";
+ import { useMemo as useMemo7, useState as useState8 } from "hono/jsx";
+-import { jsx as jsx3 } from "hono/jsx/dom/jsx-runtime";
++import { jsx as jsx3 } from "hono/jsx/jsx-runtime";
+ var noop2 = () => void 0;
+ function Link({
+   children,
