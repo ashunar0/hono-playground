@@ -1,14 +1,24 @@
-import type { DrizzleD1Database } from "drizzle-orm/d1";
-import { tasksRepo } from "./repository";
+import type { Db } from "../../lib/db";
+import { tagsRepo, tasksRepo } from "./repository";
 import type { CreateTaskRequest } from "./schema";
 
 export const tasksService = {
-  list: (db: DrizzleD1Database) => tasksRepo.list(db),
+  list: async (db: Db) => {
+    const rows = await tasksRepo.list(db);
+    return rows.map(({ tasksTags, ...task }) => ({
+      ...task,
+      tags: tasksTags.map((tt) => tt.tag.name),
+    }));
+  },
 
-  create: (db: DrizzleD1Database, input: CreateTaskRequest) => tasksRepo.create(db, input),
+  create: async (db: Db, input: CreateTaskRequest) => {
+    const created = await tasksRepo.create(db, { title: input.title, dueAt: input.dueAt });
+    if (!created) return;
+    const tagIds = await tagsRepo.upsertByNames(db, input.tagNames);
+    await tasksRepo.attachTags(db, created.id, tagIds);
+  },
 
-  toggle: (db: DrizzleD1Database, id: number, done: boolean) =>
-    tasksRepo.updateDone(db, id, done),
+  toggle: (db: Db, id: number, done: boolean) => tasksRepo.updateDone(db, id, done),
 
-  delete: (db: DrizzleD1Database, id: number) => tasksRepo.delete(db, id),
+  delete: (db: Db, id: number) => tasksRepo.delete(db, id),
 };

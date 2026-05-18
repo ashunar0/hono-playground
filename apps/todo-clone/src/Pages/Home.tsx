@@ -2,43 +2,92 @@ import type { PageProps } from "@hono/inertia";
 import { Form, router } from "@ts-76/inertia-hono-jsx";
 
 export default function Home({ tasks }: PageProps<"Home">) {
+  const now = Date.now();
+
   return (
-    <>
-      <h1>todo-clone</h1>
+    <div class="mx-auto max-w-2xl p-8">
+      <h1 class="mb-6 text-3xl font-bold tracking-tight">todo-clone</h1>
 
       <Form action="/tasks" method="post" resetOnSuccess>
         {() => (
-          <div>
-            <input type="text" name="title" placeholder="新しいタスク..." required />
-            <button type="submit">追加</button>
+          <div class="mb-6 flex flex-col gap-2">
+            <input
+              type="text"
+              name="title"
+              placeholder="新しいタスク..."
+              required
+              class="rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+            />
+            <div class="flex flex-wrap gap-2">
+              <input
+                type="date"
+                name="dueAt"
+                class="rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+              />
+              <input
+                type="text"
+                name="tagNames"
+                placeholder="タグ (カンマ区切り)"
+                class="min-w-0 flex-1 rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+              />
+              <button
+                type="submit"
+                class="rounded bg-blue-500 px-4 py-2 font-medium text-white hover:bg-blue-600"
+              >
+                追加
+              </button>
+            </div>
           </div>
         )}
       </Form>
 
-      <ul>
-        {tasks.map((t) => (
-          <li>
-            <input
-              type="checkbox"
-              checked={t.done}
-              onChange={(e) =>
-                router.patch(
-                  `/tasks/${t.id}`,
-                  { done: (e.currentTarget as HTMLInputElement).checked },
-                  { preserveScroll: true },
-                )
-              }
-            />
-            <span style={t.done ? "text-decoration: line-through" : undefined}>{t.title}</span>
-            <button
-              type="button"
-              onClick={() => router.delete(`/tasks/${t.id}`, { preserveScroll: true })}
-            >
-              削除
-            </button>
-          </li>
-        ))}
-      </ul>
-    </>
+      {tasks.length === 0 ? (
+        <p class="text-center text-gray-500">タスクがないのだ</p>
+      ) : (
+        <ul class="divide-y divide-gray-200 rounded border border-gray-200">
+          {tasks.map((t) => {
+            const due = t.dueAt ? new Date(t.dueAt) : null;
+            const overdue = due !== null && !t.done && due.getTime() < now;
+            return (
+              <li class="flex items-center gap-3 p-3">
+                <input
+                  type="checkbox"
+                  checked={t.done}
+                  onChange={(e) =>
+                    router.patch(
+                      `/tasks/${t.id}`,
+                      { done: (e.currentTarget as HTMLInputElement).checked },
+                      { preserveScroll: true },
+                    )
+                  }
+                  class="h-4 w-4"
+                />
+                <div class="flex-1 min-w-0">
+                  <div class={t.done ? "text-gray-400 line-through" : ""}>{t.title}</div>
+                  <div class="mt-1 flex flex-wrap items-center gap-2 text-xs">
+                    {due !== null && (
+                      <span class={overdue ? "font-medium text-red-500" : "text-gray-500"}>
+                        📅 {due.toLocaleDateString("ja-JP")}
+                        {overdue && " (期限切れ)"}
+                      </span>
+                    )}
+                    {t.tags.map((tag) => (
+                      <span class="rounded bg-gray-100 px-2 py-0.5 text-gray-700">#{tag}</span>
+                    ))}
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => router.delete(`/tasks/${t.id}`, { preserveScroll: true })}
+                  class="text-sm text-red-500 hover:text-red-700"
+                >
+                  削除
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
   );
 }

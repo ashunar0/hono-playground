@@ -1,3 +1,4 @@
+import { relations } from "drizzle-orm";
 import { integer, primaryKey, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
 
 export const tasks = sqliteTable("tasks", {
@@ -34,3 +35,16 @@ export const tasksTags = sqliteTable(
     pk: primaryKey({ columns: [t.taskId, t.tagId] }),
   }),
 );
+
+export const tasksRelations = relations(tasks, ({ many }) => ({
+  tasksTags: many(tasksTags),
+}));
+
+export const tagsRelations = relations(tags, ({ many }) => ({
+  tasksTags: many(tasksTags),
+}));
+
+export const tasksTagsRelations = relations(tasksTags, ({ one }) => ({
+  task: one(tasks, { fields: [tasksTags.taskId], references: [tasks.id] }),
+  tag: one(tags, { fields: [tasksTags.tagId], references: [tags.id] }),
+}));
