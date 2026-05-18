@@ -1,7 +1,4 @@
-import { createInertiaApp, type ResolvedComponent } from "@ts-76/inertia-hono-jsx";
+import { createInertiaApp } from "@ts-76/inertia-hono-jsx";
+import { resolve } from "./pages";
 
-const pages = import.meta.glob<ResolvedComponent>("./Pages/**/*.tsx", { eager: true });
-
-void createInertiaApp({
-  resolve: (name) => pages[`./Pages/${name}.tsx`],
-});
+void createInertiaApp({ resolve });

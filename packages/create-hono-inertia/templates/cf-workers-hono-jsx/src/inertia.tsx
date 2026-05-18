@@ -1,12 +1,11 @@
 import { inertia as inertiaMiddleware, type PageObject, type RootView } from "@hono/inertia";
 import type { InertiaAppSSRResponse, Page } from "@inertiajs/core";
-import { createInertiaApp, type ResolvedComponent } from "@ts-76/inertia-hono-jsx";
+import { createInertiaApp } from "@ts-76/inertia-hono-jsx";
 import { renderToString } from "hono/jsx/dom/server";
 import { Link as ViteLink, Script, ViteClient } from "vite-ssr-components/hono";
+import { resolve } from "./pages";
 
 const version = "v1";
-
-const pages = import.meta.glob<ResolvedComponent>("./Pages/**/*.tsx", { eager: true });
 
 // @hono/inertia の PageObject は @inertiajs/core の Page の部分集合。
 // errors/flash/rescuedProps/rememberedState は SSR 時点では参照されないが Page 型で必須。
@@ -24,7 +23,7 @@ async function ssrRender(page: PageObject): Promise<InertiaAppSSRResponse> {
   const result = await createInertiaApp({
     page: toInertiaPage(page),
     render: renderToString,
-    resolve: (name) => pages[`./Pages/${name}.tsx`],
+    resolve,
   });
   return result as unknown as InertiaAppSSRResponse;
 }
