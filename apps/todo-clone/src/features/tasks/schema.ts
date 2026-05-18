@@ -37,3 +37,15 @@ export const taskIdParamSchema = z.object({
 });
 
 export type TaskIdParam = z.infer<typeof taskIdParamSchema>;
+
+export const listFilterSchema = z.object({
+  status: z.enum(["open", "done", "all"]).catch("open").default("open"),
+  tag: z.string().trim().min(1).optional().catch(undefined),
+  overdue: z
+    .union([z.literal("1"), z.literal("0"), z.literal("true"), z.literal("false")])
+    .transform((v) => v === "1" || v === "true")
+    .optional()
+    .catch(undefined),
+});
+
+export type ListFilter = z.infer<typeof listFilterSchema>;

@@ -1,15 +1,16 @@
 import { type Context, Hono } from "hono";
 import { getDb } from "../../lib/db";
-import { toInertiaErrors, vJson, vParam } from "../../lib/validator";
-import { createTaskSchema, taskIdParamSchema, toggleTaskSchema } from "./schema";
+import { toInertiaErrors, vJson, vParam, vQuery } from "../../lib/validator";
+import { createTaskSchema, listFilterSchema, taskIdParamSchema, toggleTaskSchema } from "./schema";
 import { tasksService } from "./service";
 
 type AppContext = Context<{ Bindings: CloudflareBindings }>;
 
 export const tasksApp = new Hono<{ Bindings: CloudflareBindings }>()
-  .get("/", async (c) => {
-    const rows = await tasksService.list(getDb(c.env));
-    return c.render("Home", { tasks: rows });
+  .get("/", vQuery(listFilterSchema), async (c) => {
+    const filter = c.req.valid("query");
+    const rows = await tasksService.list(getDb(c.env), filter);
+    return c.render("Home", { tasks: rows, filter });
   })
   .post(
     "/tasks",

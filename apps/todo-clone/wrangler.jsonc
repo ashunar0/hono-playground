@@ -8,7 +8,7 @@
       "binding": "DB",
       "database_name": "todo-clone-dev",
       "database_id": "local-only",
-      "migrations_dir": "./drizzle"
-    }
-  ]
+      "migrations_dir": "./drizzle",
+    },
+  ],
 }

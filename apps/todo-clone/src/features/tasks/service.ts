@@ -1,10 +1,10 @@
 import type { Db } from "../../lib/db";
 import { tagsRepo, tasksRepo } from "./repository";
-import type { CreateTaskRequest } from "./schema";
+import type { CreateTaskRequest, ListFilter } from "./schema";
 
 export const tasksService = {
-  list: async (db: Db) => {
-    const rows = await tasksRepo.list(db);
+  list: async (db: Db, filter: ListFilter = { status: "open" }) => {
+    const rows = await tasksRepo.list(db, filter);
     return rows.map(({ tasksTags, ...task }) => ({
       ...task,
       tags: tasksTags.map((tt) => tt.tag.name),

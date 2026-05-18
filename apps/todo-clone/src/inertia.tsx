@@ -1,8 +1,4 @@
-import {
-  inertiaFlash,
-  type PageObject,
-  type RootView,
-} from "@ashunar0/hono-inertia-flash";
+import { inertiaFlash, type PageObject, type RootView } from "@ashunar0/hono-inertia-flash";
 import type { InertiaAppSSRResponse, Page } from "@inertiajs/core";
 import { createInertiaApp } from "@ts-76/inertia-hono-jsx";
 import { renderToString } from "hono/jsx/dom/server";

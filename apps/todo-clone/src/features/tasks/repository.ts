@@ -1,15 +1,37 @@
-import { eq, inArray } from "drizzle-orm";
+import { and, eq, inArray, lt } from "drizzle-orm";
 import { tags, tasks, tasksTags } from "../../db/schema";
 import type { Db } from "../../lib/db";
 
+type ListOptions = {
+  status?: "open" | "done" | "all";
+  tag?: string;
+  overdue?: boolean;
+  now?: Date;
+};
+
 export const tasksRepo = {
-  list: (db: Db) =>
-    db.query.tasks.findMany({
+  list: (db: Db, options: ListOptions = {}) => {
+    const { status = "open", tag, overdue, now = new Date() } = options;
+    const conditions = [];
+    if (status === "open") conditions.push(eq(tasks.done, false));
+    else if (status === "done") conditions.push(eq(tasks.done, true));
+    if (overdue) conditions.push(lt(tasks.dueAt, now));
+    if (tag) {
+      const taggedTaskIds = db
+        .select({ id: tasksTags.taskId })
+        .from(tasksTags)
+        .innerJoin(tags, eq(tasksTags.tagId, tags.id))
+        .where(eq(tags.name, tag));
+      conditions.push(inArray(tasks.id, taggedTaskIds));
+    }
+    return db.query.tasks.findMany({
       with: {
         tasksTags: { with: { tag: true } },
       },
+      where: conditions.length > 0 ? and(...conditions) : undefined,
       orderBy: tasks.createdAt,
-    }),
+    });
+  },
 
   create: async (db: Db, input: { title: string; dueAt?: Date }) => {
     const [row] = await db

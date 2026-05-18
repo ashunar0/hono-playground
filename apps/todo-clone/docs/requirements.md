@@ -20,45 +20,45 @@
 
 ## 技術スタック
 
-| 層 | 選定 |
-|---|---|
-| ランタイム | Cloudflare Workers |
-| サーバ | Hono |
-| ビュー | Inertia + hono/jsx (SSR + hydration) |
-| DB | Cloudflare D1 (ローカル開発時は `--local` の SQLite) |
-| ORM | Drizzle |
-| 認証 | **better-auth** (OSS, self-host, Hono adapter, D1 adapter で繋ぐ) |
+| 層         | 選定                                                              |
+| ---------- | ----------------------------------------------------------------- |
+| ランタイム | Cloudflare Workers                                                |
+| サーバ     | Hono                                                              |
+| ビュー     | Inertia + hono/jsx (SSR + hydration)                              |
+| DB         | Cloudflare D1 (ローカル開発時は `--local` の SQLite)              |
+| ORM        | Drizzle                                                           |
+| 認証       | **better-auth** (OSS, self-host, Hono adapter, D1 adapter で繋ぐ) |
 
 ## データモデル (案)
 
 ### `tasks`
 
-| カラム | 型 | 制約 |
-|---|---|---|
-| id | integer | PK, autoIncrement |
-| user_id | integer | FK → users.id, notNull (認証導入後) |
-| title | text | notNull |
-| done | integer (boolean) | notNull, default false |
-| due_at | integer (timestamp) | nullable |
-| created_at | integer (timestamp) | notNull |
+| カラム     | 型                  | 制約                                |
+| ---------- | ------------------- | ----------------------------------- |
+| id         | integer             | PK, autoIncrement                   |
+| user_id    | integer             | FK → users.id, notNull (認証導入後) |
+| title      | text                | notNull                             |
+| done       | integer (boolean)   | notNull, default false              |
+| due_at     | integer (timestamp) | nullable                            |
+| created_at | integer (timestamp) | notNull                             |
 
 ### `tags`
 
-| カラム | 型 | 制約 |
-|---|---|---|
-| id | integer | PK, autoIncrement |
-| user_id | integer | FK → users.id, notNull (認証導入後) |
-| name | text | notNull |
-| created_at | integer (timestamp) | notNull |
+| カラム     | 型                  | 制約                                |
+| ---------- | ------------------- | ----------------------------------- |
+| id         | integer             | PK, autoIncrement                   |
+| user_id    | integer             | FK → users.id, notNull (認証導入後) |
+| name       | text                | notNull                             |
+| created_at | integer (timestamp) | notNull                             |
 
 unique 制約: `(user_id, name)` で同じユーザーの重複タグを防ぐ。
 
 ### `tasks_tags` (中間表)
 
-| カラム | 型 | 制約 |
-|---|---|---|
+| カラム  | 型      | 制約                   |
+| ------- | ------- | ---------------------- |
 | task_id | integer | FK → tasks.id, notNull |
-| tag_id | integer | FK → tags.id, notNull |
+| tag_id  | integer | FK → tags.id, notNull  |
 
 PK: composite `(task_id, tag_id)`。M:N を正規化で持つ (タグ rename・タグ別件数集計・JOIN で綺麗に検索)。
 
