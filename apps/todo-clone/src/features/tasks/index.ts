@@ -1,18 +1,28 @@
-import { Hono } from "hono";
+import { type Context, Hono } from "hono";
 import { getDb } from "../../lib/db";
-import { vJson, vParam } from "../../lib/validator";
+import { type InertiaErrors, toInertiaErrors, vJson, vParam } from "../../lib/validator";
 import { createTaskSchema, taskIdParamSchema, toggleTaskSchema } from "./schema";
 import { tasksService } from "./service";
 
+type AppContext = Context<{ Bindings: CloudflareBindings }>;
+
+const renderHome = async (c: AppContext, errors: InertiaErrors = {}) => {
+  const rows = await tasksService.list(getDb(c.env));
+  return c.render("Home", { tasks: rows, errors });
+};
+
 export const tasksApp = new Hono<{ Bindings: CloudflareBindings }>()
-  .get("/", async (c) => {
-    const rows = await tasksService.list(getDb(c.env));
-    return c.render("Home", { tasks: rows });
-  })
-  .post("/tasks", vJson(createTaskSchema), async (c) => {
-    await tasksService.create(getDb(c.env), c.req.valid("json"));
-    return c.redirect("/", 303);
-  })
+  .get("/", (c) => renderHome(c))
+  .post(
+    "/tasks",
+    vJson(createTaskSchema, async (result, c: AppContext) => {
+      if (!result.success) return renderHome(c, toInertiaErrors(result.error));
+    }),
+    async (c) => {
+      await tasksService.create(getDb(c.env), c.req.valid("json"));
+      return c.redirect("/", 303);
+    },
+  )
   .patch("/tasks/:id", vParam(taskIdParamSchema), vJson(toggleTaskSchema), async (c) => {
     const { id } = c.req.valid("param");
     const { done } = c.req.valid("json");

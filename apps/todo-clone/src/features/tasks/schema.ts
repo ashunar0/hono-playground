@@ -1,8 +1,16 @@
 import { z } from "zod";
 
 export const createTaskSchema = z.object({
-  title: z.string().trim().min(1),
-  dueAt: z.union([z.coerce.date(), z.literal("").transform(() => undefined)]).optional(),
+  title: z
+    .string({ message: "タイトルを入力してください" })
+    .trim()
+    .min(1, { message: "タイトルを入力してください" }),
+  dueAt: z
+    .union([
+      z.coerce.date({ message: "日付の形式が正しくありません" }),
+      z.literal("").transform(() => undefined),
+    ])
+    .optional(),
   tagNames: z
     .string()
     .optional()

@@ -9,26 +9,41 @@ export default function Home({ tasks }: PageProps<"Home">) {
       <h1 class="mb-6 text-3xl font-bold tracking-tight">todo-clone</h1>
 
       <Form action="/tasks" method="post" resetOnSuccess>
-        {() => (
+        {({ errors }) => (
           <div class="mb-6 flex flex-col gap-2">
             <input
               type="text"
               name="title"
               placeholder="新しいタスク..."
-              required
-              class="rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+              aria-invalid={errors.title ? "true" : undefined}
+              class={`rounded border px-3 py-2 focus:outline-none ${
+                errors.title
+                  ? "border-red-400 focus:border-red-500"
+                  : "border-gray-300 focus:border-blue-500"
+              }`}
             />
+            {errors.title && <p class="text-sm text-red-500">{errors.title}</p>}
             <div class="flex flex-wrap gap-2">
               <input
                 type="date"
                 name="dueAt"
-                class="rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                aria-invalid={errors.dueAt ? "true" : undefined}
+                class={`rounded border px-3 py-2 focus:outline-none ${
+                  errors.dueAt
+                    ? "border-red-400 focus:border-red-500"
+                    : "border-gray-300 focus:border-blue-500"
+                }`}
               />
               <input
                 type="text"
                 name="tagNames"
                 placeholder="タグ (カンマ区切り)"
-                class="min-w-0 flex-1 rounded border border-gray-300 px-3 py-2 focus:border-blue-500 focus:outline-none"
+                aria-invalid={errors.tagNames ? "true" : undefined}
+                class={`min-w-0 flex-1 rounded border px-3 py-2 focus:outline-none ${
+                  errors.tagNames
+                    ? "border-red-400 focus:border-red-500"
+                    : "border-gray-300 focus:border-blue-500"
+                }`}
               />
               <button
                 type="submit"
@@ -37,6 +52,8 @@ export default function Home({ tasks }: PageProps<"Home">) {
                 追加
               </button>
             </div>
+            {errors.dueAt && <p class="text-sm text-red-500">{errors.dueAt}</p>}
+            {errors.tagNames && <p class="text-sm text-red-500">{errors.tagNames}</p>}
           </div>
         )}
       </Form>
