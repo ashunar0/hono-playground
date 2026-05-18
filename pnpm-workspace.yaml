@@ -11,6 +11,8 @@ catalog:
   vite: npm:@voidzero-dev/vite-plus-core@latest
   vitest: npm:@voidzero-dev/vite-plus-test@latest
   vite-plus: latest
+  drizzle-orm: ^0.45.2
+  drizzle-kit: ^0.31.10
 overrides:
   vite: "catalog:"
   vitest: "catalog:"
@@ -22,8 +24,8 @@ peerDependencyRules:
     vite: "*"
     vitest: "*"
 allowBuilds:
-  esbuild: set this to true or false
-  sharp: set this to true or false
-  workerd: set this to true or false
+  esbuild: true
+  sharp: false
+  workerd: true
 patchedDependencies:
   "@ts-76/inertia-hono-jsx@0.2.0": patches/@ts-76__inertia-hono-jsx@0.2.0.patch

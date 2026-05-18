@@ -1,0 +1,14 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "todo-clone",
+  "compatibility_date": "2025-08-03",
+  "main": "./src/index.tsx",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "todo-clone-dev",
+      "database_id": "local-only",
+      "migrations_dir": "./drizzle"
+    }
+  ]
+}
