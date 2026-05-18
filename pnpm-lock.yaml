@@ -159,6 +159,9 @@ importers:
 
   apps/todo-clone:
     dependencies:
+      '@ashunar0/hono-inertia-flash':
+        specifier: workspace:*
+        version: link:../../packages/hono-inertia-flash
       '@hono/inertia':
         specifier: ^0.2.0
         version: 0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(yaml@2.9.0))(hono@4.12.18)
@@ -231,6 +234,21 @@ importers:
         version: 0.1.21(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(vite@8.0.12(@types/node@24.12.4)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(yaml@2.9.0))(yaml@2.9.0)
 
   packages/hono-inertia-defer:
+    devDependencies:
+      '@hono/inertia':
+        specifier: ^0.2.0
+        version: 0.2.0(hono@4.12.18)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(yaml@2.9.0))
+      hono:
+        specifier: ^4.12.18
+        version: 4.12.18
+      typescript:
+        specifier: ^5
+        version: 5.9.3
+      vite-plus:
+        specifier: 'catalog:'
+        version: 0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(yaml@2.9.0))(yaml@2.9.0)
+
+  packages/hono-inertia-flash:
     devDependencies:
       '@hono/inertia':
         specifier: ^0.2.0
