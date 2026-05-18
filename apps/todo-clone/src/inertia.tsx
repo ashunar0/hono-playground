@@ -1,4 +1,8 @@
-import { inertia as inertiaMiddleware, type PageObject, type RootView } from "@hono/inertia";
+import {
+  inertiaFlash,
+  type PageObject,
+  type RootView,
+} from "@ashunar0/hono-inertia-flash";
 import type { InertiaAppSSRResponse, Page } from "@inertiajs/core";
 import { createInertiaApp } from "@ts-76/inertia-hono-jsx";
 import { renderToString } from "hono/jsx/dom/server";
@@ -50,4 +54,4 @@ const rootView: RootView = async (page) => {
   return "<!doctype html>" + html.replace("</head>", head.join("") + "</head>");
 };
 
-export const inertia = inertiaMiddleware({ version, rootView });
+export const inertia = inertiaFlash({ version, rootView });
