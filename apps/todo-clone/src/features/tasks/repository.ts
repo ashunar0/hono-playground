@@ -1,6 +1,6 @@
+import { tags, tasks, tasksTags } from "@/db/schema";
+import type { Db } from "@/lib/db";
 import { and, eq, inArray, lt } from "drizzle-orm";
-import { tags, tasks, tasksTags } from "../../db/schema";
-import type { Db } from "../../lib/db";
 
 type ListOptions = {
   status?: "open" | "done" | "all";

@@ -1,4 +1,4 @@
-import type { Db } from "../../lib/db";
+import type { Db } from "@/lib/db";
 import { tagsRepo, tasksRepo } from "./repository";
 import type { CreateTaskRequest, ListFilter } from "./schema";
 

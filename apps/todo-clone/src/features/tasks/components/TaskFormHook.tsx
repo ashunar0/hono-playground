@@ -1,5 +1,5 @@
 import { useForm } from "@ts-76/inertia-hono-jsx";
-import { cn } from "../../../lib/cn";
+import { cn } from "@/lib/cn";
 
 export function TaskFormHook() {
   const form = useForm({

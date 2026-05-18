@@ -1,5 +1,5 @@
 import { Link, router } from "@ts-76/inertia-hono-jsx";
-import { cn } from "../../../lib/cn";
+import { cn } from "@/lib/cn";
 import type { Task } from "../types";
 
 type Props = {

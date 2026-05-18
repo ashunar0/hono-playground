@@ -1,5 +1,5 @@
 import { Form } from "@ts-76/inertia-hono-jsx";
-import { cn } from "../../../lib/cn";
+import { cn } from "@/lib/cn";
 
 const inputClass = (hasError: boolean, extra?: string) =>
   cn(

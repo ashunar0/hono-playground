@@ -1,6 +1,6 @@
+import { getDb } from "@/lib/db";
+import { toInertiaErrors, vJson, vParam, vQuery } from "@/lib/validator";
 import { type Context, Hono } from "hono";
-import { getDb } from "../../lib/db";
-import { toInertiaErrors, vJson, vParam, vQuery } from "../../lib/validator";
 import { createTaskSchema, listFilterSchema, taskIdParamSchema, toggleTaskSchema } from "./schema";
 import { tasksService } from "./service";
 
