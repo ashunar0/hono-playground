@@ -1,21 +1,10 @@
 import type { PageProps } from "@hono/inertia";
 import { Form, Link, router } from "@ts-76/inertia-hono-jsx";
+import { cn } from "../lib/cn";
+import { href } from "../lib/href";
 
 type FilterStatus = "open" | "done" | "all";
-
-const buildFilterHref = (filter: {
-  status?: FilterStatus;
-  tag?: string;
-  overdue?: boolean;
-}) => {
-  const params = new URLSearchParams();
-  if (filter.status && filter.status !== "open")
-    params.set("status", filter.status);
-  if (filter.tag) params.set("tag", filter.tag);
-  if (filter.overdue) params.set("overdue", "1");
-  const qs = params.toString();
-  return qs ? `/?${qs}` : "/";
-};
+type FilterOverrides = Partial<{ status: FilterStatus; tag: string | undefined; overdue: boolean }>;
 
 export default function Home({ tasks, filter }: PageProps<"Home">) {
   const now = Date.now();
@@ -23,12 +12,20 @@ export default function Home({ tasks, filter }: PageProps<"Home">) {
   const activeTag: string | undefined = filter?.tag;
   const overdueOn = Boolean(filter?.overdue);
 
+  const linkTo = (overrides: FilterOverrides = {}) => {
+    const next = { status, tag: activeTag, overdue: overdueOn, ...overrides };
+    return href("/", {
+      status: next.status === "open" ? undefined : next.status,
+      tag: next.tag,
+      overdue: next.overdue ? "1" : undefined,
+    });
+  };
+
   const tabClass = (active: boolean) =>
-    `rounded px-3 py-1 text-sm ${
-      active
-        ? "bg-blue-500 text-white"
-        : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-    }`;
+    cn(
+      "rounded px-3 py-1 text-sm",
+      active ? "bg-blue-500 text-white" : "bg-gray-100 text-gray-700 hover:bg-gray-200",
+    );
 
   return (
     <div class="mx-auto max-w-2xl p-8">
@@ -42,11 +39,12 @@ export default function Home({ tasks, filter }: PageProps<"Home">) {
               name="title"
               placeholder="新しいタスク..."
               aria-invalid={errors.title ? "true" : undefined}
-              class={`rounded border px-3 py-2 focus:outline-none ${
+              class={cn(
+                "rounded border px-3 py-2 focus:outline-none",
                 errors.title
                   ? "border-red-400 focus:border-red-500"
-                  : "border-gray-300 focus:border-blue-500"
-              }`}
+                  : "border-gray-300 focus:border-blue-500",
+              )}
             />
             {errors.title && <p class="text-sm text-red-500">{errors.title}</p>}
             <div class="flex flex-wrap gap-2">
@@ -54,22 +52,24 @@ export default function Home({ tasks, filter }: PageProps<"Home">) {
                 type="date"
                 name="dueAt"
                 aria-invalid={errors.dueAt ? "true" : undefined}
-                class={`rounded border px-3 py-2 focus:outline-none ${
+                class={cn(
+                  "rounded border px-3 py-2 focus:outline-none",
                   errors.dueAt
                     ? "border-red-400 focus:border-red-500"
-                    : "border-gray-300 focus:border-blue-500"
-                }`}
+                    : "border-gray-300 focus:border-blue-500",
+                )}
               />
               <input
                 type="text"
                 name="tagNames"
                 placeholder="タグ (カンマ区切り)"
                 aria-invalid={errors.tagNames ? "true" : undefined}
-                class={`min-w-0 flex-1 rounded border px-3 py-2 focus:outline-none ${
+                class={cn(
+                  "min-w-0 flex-1 rounded border px-3 py-2 focus:outline-none",
                   errors.tagNames
                     ? "border-red-400 focus:border-red-500"
-                    : "border-gray-300 focus:border-blue-500"
-                }`}
+                    : "border-gray-300 focus:border-blue-500",
+                )}
               />
               <button
                 type="submit"
@@ -79,57 +79,27 @@ export default function Home({ tasks, filter }: PageProps<"Home">) {
               </button>
             </div>
             {errors.dueAt && <p class="text-sm text-red-500">{errors.dueAt}</p>}
-            {errors.tagNames && (
-              <p class="text-sm text-red-500">{errors.tagNames}</p>
-            )}
+            {errors.tagNames && <p class="text-sm text-red-500">{errors.tagNames}</p>}
           </div>
         )}
       </Form>
 
       <div class="mb-4 flex flex-wrap items-center gap-2">
-        <Link
-          href={buildFilterHref({
-            status: "open",
-            tag: activeTag,
-            overdue: overdueOn,
-          })}
-          class={tabClass(status === "open")}
-        >
+        <Link href={linkTo({ status: "open" })} class={tabClass(status === "open")}>
           未完了
         </Link>
-        <Link
-          href={buildFilterHref({
-            status: "done",
-            tag: activeTag,
-            overdue: overdueOn,
-          })}
-          class={tabClass(status === "done")}
-        >
+        <Link href={linkTo({ status: "done" })} class={tabClass(status === "done")}>
           完了
         </Link>
-        <Link
-          href={buildFilterHref({
-            status: "all",
-            tag: activeTag,
-            overdue: overdueOn,
-          })}
-          class={tabClass(status === "all")}
-        >
+        <Link href={linkTo({ status: "all" })} class={tabClass(status === "all")}>
           すべて
         </Link>
-        <Link
-          href={buildFilterHref({
-            status,
-            tag: activeTag,
-            overdue: !overdueOn,
-          })}
-          class={tabClass(overdueOn)}
-        >
+        <Link href={linkTo({ overdue: !overdueOn })} class={tabClass(overdueOn)}>
           期限切れのみ
         </Link>
         {activeTag && (
           <Link
-            href={buildFilterHref({ status, overdue: overdueOn })}
+            href={linkTo({ tag: undefined })}
             class="ml-auto rounded bg-red-100 px-2 py-1 text-xs text-red-700 hover:bg-red-200"
           >
             #{activeTag} ✕
@@ -159,32 +129,23 @@ export default function Home({ tasks, filter }: PageProps<"Home">) {
                   class="h-4 w-4"
                 />
                 <div class="flex-1 min-w-0">
-                  <div class={t.done ? "text-gray-400 line-through" : ""}>
-                    {t.title}
-                  </div>
+                  <div class={t.done ? "text-gray-400 line-through" : ""}>{t.title}</div>
                   <div class="mt-1 flex flex-wrap items-center gap-2 text-xs">
                     {due !== null && (
-                      <span
-                        class={
-                          overdue ? "font-medium text-red-500" : "text-gray-500"
-                        }
-                      >
+                      <span class={overdue ? "font-medium text-red-500" : "text-gray-500"}>
                         📅 {due.toLocaleDateString("ja-JP")}
                         {overdue && " (期限切れ)"}
                       </span>
                     )}
                     {t.tags.map((tag) => (
                       <Link
-                        href={buildFilterHref({
-                          status,
-                          tag,
-                          overdue: overdueOn,
-                        })}
-                        class={`rounded px-2 py-0.5 ${
+                        href={linkTo({ tag })}
+                        class={cn(
+                          "rounded px-2 py-0.5",
                           tag === activeTag
                             ? "bg-blue-100 text-blue-700"
-                            : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                        }`}
+                            : "bg-gray-100 text-gray-700 hover:bg-gray-200",
+                        )}
                       >
                         #{tag}
                       </Link>
@@ -193,9 +154,7 @@ export default function Home({ tasks, filter }: PageProps<"Home">) {
                 </div>
                 <button
                   type="button"
-                  onClick={() =>
-                    router.delete(`/tasks/${t.id}`, { preserveScroll: true })
-                  }
+                  onClick={() => router.delete(`/tasks/${t.id}`, { preserveScroll: true })}
                   class="text-sm text-red-500 hover:text-red-700"
                 >
                   削除

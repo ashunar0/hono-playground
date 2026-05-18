@@ -14,9 +14,9 @@ catalog:
   drizzle-orm: ^0.45.2
   drizzle-kit: ^0.31.10
   zod: ^4.4.3
-  '@hono/zod-validator': ^0.8.0
+  "@hono/zod-validator": ^0.8.0
   tailwindcss: ^4.3.0
-  '@tailwindcss/vite': ^4.3.0
+  "@tailwindcss/vite": ^4.3.0
 overrides:
   vite: "catalog:"
   vitest: "catalog:"
