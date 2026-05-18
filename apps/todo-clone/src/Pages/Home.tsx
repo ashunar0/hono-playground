@@ -1,5 +1,6 @@
 import type { PageProps } from "@hono/inertia";
-import { Form, Link, router } from "@ts-76/inertia-hono-jsx";
+import { Link, router } from "@ts-76/inertia-hono-jsx";
+import { TaskForm } from "../features/tasks/components/TaskForm";
 import { cn } from "../lib/cn";
 import { href } from "../lib/href";
 
@@ -31,58 +32,7 @@ export default function Home({ tasks, filter }: PageProps<"Home">) {
     <div class="mx-auto max-w-2xl p-8">
       <h1 class="mb-6 text-3xl font-bold tracking-tight">todo-clone</h1>
 
-      <Form action="/tasks" method="post" resetOnSuccess>
-        {({ errors }) => (
-          <div class="mb-6 flex flex-col gap-2">
-            <input
-              type="text"
-              name="title"
-              placeholder="新しいタスク..."
-              aria-invalid={errors.title ? "true" : undefined}
-              class={cn(
-                "rounded border px-3 py-2 focus:outline-none",
-                errors.title
-                  ? "border-red-400 focus:border-red-500"
-                  : "border-gray-300 focus:border-blue-500",
-              )}
-            />
-            {errors.title && <p class="text-sm text-red-500">{errors.title}</p>}
-            <div class="flex flex-wrap gap-2">
-              <input
-                type="date"
-                name="dueAt"
-                aria-invalid={errors.dueAt ? "true" : undefined}
-                class={cn(
-                  "rounded border px-3 py-2 focus:outline-none",
-                  errors.dueAt
-                    ? "border-red-400 focus:border-red-500"
-                    : "border-gray-300 focus:border-blue-500",
-                )}
-              />
-              <input
-                type="text"
-                name="tagNames"
-                placeholder="タグ (カンマ区切り)"
-                aria-invalid={errors.tagNames ? "true" : undefined}
-                class={cn(
-                  "min-w-0 flex-1 rounded border px-3 py-2 focus:outline-none",
-                  errors.tagNames
-                    ? "border-red-400 focus:border-red-500"
-                    : "border-gray-300 focus:border-blue-500",
-                )}
-              />
-              <button
-                type="submit"
-                class="rounded bg-blue-500 px-4 py-2 font-medium text-white hover:bg-blue-600"
-              >
-                追加
-              </button>
-            </div>
-            {errors.dueAt && <p class="text-sm text-red-500">{errors.dueAt}</p>}
-            {errors.tagNames && <p class="text-sm text-red-500">{errors.tagNames}</p>}
-          </div>
-        )}
-      </Form>
+      <TaskForm />
 
       <div class="mb-4 flex flex-wrap items-center gap-2">
         <Link href={linkTo({ status: "open" })} class={tabClass(status === "open")}>
