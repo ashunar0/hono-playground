@@ -1,6 +1,7 @@
 import type { PageProps } from "@hono/inertia";
-import { Link, router } from "@ts-76/inertia-hono-jsx";
+import { Link } from "@ts-76/inertia-hono-jsx";
 import { TaskForm } from "../features/tasks/components/TaskForm";
+import { TaskItem } from "../features/tasks/components/TaskItem";
 import { cn } from "../lib/cn";
 import { href } from "../lib/href";
 
@@ -61,57 +62,9 @@ export default function Home({ tasks, filter }: PageProps<"Home">) {
         <p class="text-center text-gray-500">タスクがないのだ</p>
       ) : (
         <ul class="divide-y divide-gray-200 rounded border border-gray-200">
-          {tasks.map((t) => {
-            const due = t.dueAt ? new Date(t.dueAt) : null;
-            const overdue = due !== null && !t.done && due.getTime() < now;
-            return (
-              <li class="flex items-center gap-3 p-3">
-                <input
-                  type="checkbox"
-                  checked={t.done}
-                  onChange={(e) =>
-                    router.patch(
-                      `/tasks/${t.id}`,
-                      { done: (e.currentTarget as HTMLInputElement).checked },
-                      { preserveScroll: true },
-                    )
-                  }
-                  class="h-4 w-4"
-                />
-                <div class="flex-1 min-w-0">
-                  <div class={t.done ? "text-gray-400 line-through" : ""}>{t.title}</div>
-                  <div class="mt-1 flex flex-wrap items-center gap-2 text-xs">
-                    {due !== null && (
-                      <span class={overdue ? "font-medium text-red-500" : "text-gray-500"}>
-                        📅 {due.toLocaleDateString("ja-JP")}
-                        {overdue && " (期限切れ)"}
-                      </span>
-                    )}
-                    {t.tags.map((tag) => (
-                      <Link
-                        href={linkTo({ tag })}
-                        class={cn(
-                          "rounded px-2 py-0.5",
-                          tag === activeTag
-                            ? "bg-blue-100 text-blue-700"
-                            : "bg-gray-100 text-gray-700 hover:bg-gray-200",
-                        )}
-                      >
-                        #{tag}
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => router.delete(`/tasks/${t.id}`, { preserveScroll: true })}
-                  class="text-sm text-red-500 hover:text-red-700"
-                >
-                  削除
-                </button>
-              </li>
-            );
-          })}
+          {tasks.map((t) => (
+            <TaskItem task={t} activeTag={activeTag} now={now} linkTo={linkTo} />
+          ))}
         </ul>
       )}
     </div>
