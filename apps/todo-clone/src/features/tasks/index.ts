@@ -1,12 +1,14 @@
 import { getDb } from "@/lib/db";
 import { toInertiaErrors, vJson, vParam, vQuery } from "@/lib/validator";
+import type { AuthVariables } from "@/middleware/auth";
 import { type Context, Hono } from "hono";
 import { createTaskSchema, listFilterSchema, taskIdParamSchema, toggleTaskSchema } from "./schema";
 import { tasksService } from "./service";
 
-type AppContext = Context<{ Bindings: CloudflareBindings }>;
+type AppEnv = { Bindings: CloudflareBindings; Variables: AuthVariables };
+type AppContext = Context<AppEnv>;
 
-export const tasksApp = new Hono<{ Bindings: CloudflareBindings }>()
+export const tasksApp = new Hono<AppEnv>()
   .get("/", vQuery(listFilterSchema), async (c) => {
     const filter = c.req.valid("query");
     const rows = await tasksService.list(getDb(c.env), filter);
