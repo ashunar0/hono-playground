@@ -14,7 +14,7 @@ export const tasksApp = new Hono<AppEnv>()
   .get("/", vQuery(listFilterSchema), async (c) => {
     const filter = c.req.valid("query");
     const user = c.get("user")!;
-    const rows = await tasksService.list(getDb(c.env), filter);
+    const rows = await tasksService.list(getDb(c.env), user.id, filter);
     return c.render("Home", { tasks: rows, filter, user });
   })
   .post(
@@ -26,18 +26,21 @@ export const tasksApp = new Hono<AppEnv>()
       }
     }),
     async (c) => {
-      await tasksService.create(getDb(c.env), c.req.valid("json"));
+      const user = c.get("user")!;
+      await tasksService.create(getDb(c.env), user.id, c.req.valid("json"));
       return c.redirect("/", 303);
     },
   )
   .patch("/tasks/:id", vParam(taskIdParamSchema), vJson(toggleTaskSchema), async (c) => {
     const { id } = c.req.valid("param");
     const { done } = c.req.valid("json");
-    await tasksService.toggle(getDb(c.env), id, done);
+    const user = c.get("user")!;
+    await tasksService.toggle(getDb(c.env), user.id, id, done);
     return c.redirect("/", 303);
   })
   .delete("/tasks/:id", vParam(taskIdParamSchema), async (c) => {
     const { id } = c.req.valid("param");
-    await tasksService.delete(getDb(c.env), id);
+    const user = c.get("user")!;
+    await tasksService.delete(getDb(c.env), user.id, id);
     return c.redirect("/", 303);
   });

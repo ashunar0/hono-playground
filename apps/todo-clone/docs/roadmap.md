@@ -61,15 +61,15 @@
 
 ## Phase 4: 認証 (better-auth)
 
-- [ ] `better-auth` + Hono adapter + Drizzle/D1 adapter インストール
-- [ ] schema は better-auth の CLI で生成 (users / sessions / accounts 等)
-- [ ] tasks に `user_id` カラム追加 (migration)
-- [ ] サインアップ / ログイン画面 (Inertia ページから better-auth の API 叩く)
-- [ ] Hono middleware で session 検証 → `c.set('user', ...)`
-- [ ] 未ログインなら `/login` リダイレクト
-- [ ] 全 task クエリに `user_id` フィルタを追加
+- [x] `better-auth` + Hono adapter + Drizzle/D1 adapter インストール
+- [x] schema は better-auth の CLI で生成 (users / sessions / accounts 等)
+- [x] tasks に `user_id` カラム追加 (migration)
+- [x] サインアップ / ログイン画面 (Inertia ページから better-auth の API 叩く)
+- [x] Hono middleware で session 検証 → `c.set('user', ...)`
+- [x] 未ログインなら `/login` リダイレクト
+- [x] 全 task クエリに `user_id` フィルタを追加
 
-**完成条件**: 別ユーザーでログインしたら互いのタスクが見えない
+**完成条件**: 別ユーザーでログインしたら互いのタスクが見えない ✅
 
 ---
 

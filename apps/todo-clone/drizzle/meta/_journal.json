@@ -15,6 +15,13 @@
       "when": 1779167463852,
       "tag": "0001_brief_morbius",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1779169607280,
+      "tag": "0002_military_ender_wiggin",
+      "breakpoints": true
     }
   ]
 }

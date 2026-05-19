@@ -10,9 +10,9 @@ type ListOptions = {
 };
 
 export const tasksRepo = {
-  list: (db: Db, options: ListOptions = {}) => {
+  list: (db: Db, userId: string, options: ListOptions = {}) => {
     const { status = "open", tag, overdue, now = new Date() } = options;
-    const conditions = [];
+    const conditions = [eq(tasks.userId, userId)];
     if (status === "open") conditions.push(eq(tasks.done, false));
     else if (status === "done") conditions.push(eq(tasks.done, true));
     if (overdue) conditions.push(lt(tasks.dueAt, now));
@@ -28,23 +28,24 @@ export const tasksRepo = {
       with: {
         tasksTags: { with: { tag: true } },
       },
-      where: conditions.length > 0 ? and(...conditions) : undefined,
+      where: and(...conditions),
       orderBy: tasks.createdAt,
     });
   },
 
-  create: async (db: Db, input: { title: string; dueAt?: Date }) => {
+  create: async (db: Db, userId: string, input: { title: string; dueAt?: Date }) => {
     const [row] = await db
       .insert(tasks)
-      .values({ title: input.title, dueAt: input.dueAt, createdAt: new Date() })
+      .values({ userId, title: input.title, dueAt: input.dueAt, createdAt: new Date() })
       .returning({ id: tasks.id });
     return row;
   },
 
-  updateDone: (db: Db, id: number, done: boolean) =>
-    db.update(tasks).set({ done }).where(eq(tasks.id, id)),
+  updateDone: (db: Db, userId: string, id: number, done: boolean) =>
+    db.update(tasks).set({ done }).where(and(eq(tasks.id, id), eq(tasks.userId, userId))),
 
-  delete: (db: Db, id: number) => db.delete(tasks).where(eq(tasks.id, id)),
+  delete: (db: Db, userId: string, id: number) =>
+    db.delete(tasks).where(and(eq(tasks.id, id), eq(tasks.userId, userId))),
 
   attachTags: (db: Db, taskId: number, tagIds: number[]) => {
     if (tagIds.length === 0) return;
