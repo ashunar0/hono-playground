@@ -15,6 +15,9 @@ dist-ssr
 # 外部研究材料（cloneした参考実装などを置く場所）
 .research/
 
+# 個人ノート (公開しない)
+docs/
+
 # Playwright MCP のセッション artifacts
 .playwright-mcp/
 
