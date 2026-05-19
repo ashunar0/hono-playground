@@ -46,9 +46,7 @@ catalogs:
 overrides:
   vite: npm:@voidzero-dev/vite-plus-core@latest
   vitest: npm:@voidzero-dev/vite-plus-test@latest
-
-patchedDependencies:
-  '@ts-76/inertia-hono-jsx@0.2.0': 021a9e24a42eff48d42c46bccc8c7b46e81747a4e29c337fb161586705420540
+  '@ts-76/inertia-hono-jsx': file:.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz
 
 importers:
 
@@ -76,8 +74,8 @@ importers:
         specifier: ^3.1.1
         version: 3.1.1
       '@ts-76/inertia-hono-jsx':
-        specifier: ^0.2.0
-        version: 0.2.0(patch_hash=021a9e24a42eff48d42c46bccc8c7b46e81747a4e29c337fb161586705420540)(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)(yaml@2.9.0))(hono@4.12.18))(hono@4.12.18)
+        specifier: file:../../.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz
+        version: file:.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)(yaml@2.9.0))(hono@4.12.18))(hono@4.12.18)
       hono:
         specifier: ^4.12.18
         version: 4.12.18
@@ -147,8 +145,8 @@ importers:
         specifier: ^3.1.1
         version: 3.1.1
       '@ts-76/inertia-hono-jsx':
-        specifier: ^0.2.0
-        version: 0.2.0(patch_hash=021a9e24a42eff48d42c46bccc8c7b46e81747a4e29c337fb161586705420540)(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)(yaml@2.9.0))(hono@4.12.18))(hono@4.12.18)
+        specifier: file:../../.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz
+        version: file:.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)(yaml@2.9.0))(hono@4.12.18))(hono@4.12.18)
       hono:
         specifier: ^4.12.18
         version: 4.12.18
@@ -190,8 +188,8 @@ importers:
         specifier: ^3.1.1
         version: 3.1.1
       '@ts-76/inertia-hono-jsx':
-        specifier: ^0.2.0
-        version: 0.2.0(patch_hash=021a9e24a42eff48d42c46bccc8c7b46e81747a4e29c337fb161586705420540)(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(yaml@2.9.0))(hono@4.12.18))(hono@4.12.18)
+        specifier: file:../../.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz
+        version: file:.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(yaml@2.9.0))(hono@4.12.18))(hono@4.12.18)
       better-auth:
         specifier: 'catalog:'
         version: 1.6.11(@prisma/client@5.22.0)(@voidzero-dev/vite-plus-test@0.1.21(@types/node@25.7.0)(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(yaml@2.9.0))(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(yaml@2.9.0))(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client@0.15.15)(@prisma/client@5.22.0)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(kysely@0.28.17)(pg@8.20.0))(pg@8.20.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -2098,11 +2096,12 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7 || ^8
 
-  '@ts-76/inertia-hono-jsx@0.2.0':
-    resolution: {integrity: sha512-+eiCoVHzhv6riDYE3QJwEtlqZsSdwcQj8ro1lLCy0KGSRzp4SoaThXrnxBAoEXrPYArQSvE79XLp2B1/S+xLbg==}
+  '@ts-76/inertia-hono-jsx@file:.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz':
+    resolution: {integrity: sha512-bjH+qeNy9z/gejKncsaQDCDL+teeDINM6wl4Hy07RejJ4VsWReWLZvhsFohFUGoTPq9hWiKdsO9kbyYzo6bwBA==, tarball: file:.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz}
+    version: 0.2.2-fork-c.0
     peerDependencies:
       '@hono/inertia': ^0.2.0
-      hono: ^4.0.0
+      hono: ^4.12.20
 
   '@tybys/wasm-util@0.10.2':
     resolution: {integrity: sha512-RoBvJ2X0wuKlWFIjrwffGw1IqZHKQqzIchKaadZZfnNpsAYp2mM0h36JtPCjNDAHGgYez/15uMBpfGwchhiMgg==}
@@ -4884,7 +4883,7 @@ snapshots:
       tailwindcss: 4.3.0
       vite: '@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(yaml@2.9.0)'
 
-  '@ts-76/inertia-hono-jsx@0.2.0(patch_hash=021a9e24a42eff48d42c46bccc8c7b46e81747a4e29c337fb161586705420540)(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(yaml@2.9.0))(hono@4.12.18))(hono@4.12.18)':
+  '@ts-76/inertia-hono-jsx@file:.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(yaml@2.9.0))(hono@4.12.18))(hono@4.12.18)':
     dependencies:
       '@hono/inertia': 0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(yaml@2.9.0))(hono@4.12.18)
       '@inertiajs/core': 3.1.1
@@ -4894,7 +4893,7 @@ snapshots:
     transitivePeerDependencies:
       - axios
 
-  '@ts-76/inertia-hono-jsx@0.2.0(patch_hash=021a9e24a42eff48d42c46bccc8c7b46e81747a4e29c337fb161586705420540)(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)(yaml@2.9.0))(hono@4.12.18))(hono@4.12.18)':
+  '@ts-76/inertia-hono-jsx@file:.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)(yaml@2.9.0))(hono@4.12.18))(hono@4.12.18)':
     dependencies:
       '@hono/inertia': 0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)(yaml@2.9.0))(hono@4.12.18)
       '@inertiajs/core': 3.1.1

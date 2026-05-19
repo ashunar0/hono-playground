@@ -23,6 +23,8 @@ catalog:
 overrides:
   vite: "catalog:"
   vitest: "catalog:"
+  # ts-76 fork tarball (PR #6 マージ済み + SSR overload 修正含む。 ts-76 公式 0.2.2 release 後に削除)
+  "@ts-76/inertia-hono-jsx": "file:.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz"
 peerDependencyRules:
   allowAny:
     - vite
@@ -36,5 +38,3 @@ allowBuilds:
   esbuild: true
   sharp: false
   workerd: true
-patchedDependencies:
-  "@ts-76/inertia-hono-jsx@0.2.0": patches/@ts-76__inertia-hono-jsx@0.2.0.patch
