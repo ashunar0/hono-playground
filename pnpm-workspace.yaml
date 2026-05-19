@@ -17,6 +17,9 @@ catalog:
   "@hono/zod-validator": ^0.8.0
   tailwindcss: ^4.3.0
   "@tailwindcss/vite": ^4.3.0
+  better-auth: ^1.6.11
+  '@better-auth/cli': ^1.4.21
+  '@better-auth/drizzle-adapter': ^1.6.11
 overrides:
   vite: "catalog:"
   vitest: "catalog:"
@@ -28,6 +31,8 @@ peerDependencyRules:
     vite: "*"
     vitest: "*"
 allowBuilds:
+  '@prisma/client': set this to true or false
+  better-sqlite3: set this to true or false
   esbuild: true
   sharp: false
   workerd: true
