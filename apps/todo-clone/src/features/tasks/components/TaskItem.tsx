@@ -45,6 +45,7 @@ export function TaskItem({ task, activeTag, now, linkTo }: Props) {
           {task.tags.map((tag) => (
             <Link
               href={linkTo({ tag })}
+              prefetch
               class={cn(
                 "rounded px-2 py-0.5",
                 tag === activeTag

@@ -49,21 +49,22 @@ export default function Home({ tasks, filter, user }: HomePageProps) {
         <TaskForm />
 
         <div class="mb-4 flex flex-wrap items-center gap-2">
-          <Link href={linkTo({ status: "open" })} class={tabClass(status === "open")}>
+          <Link href={linkTo({ status: "open" })} prefetch class={tabClass(status === "open")}>
             未完了
           </Link>
-          <Link href={linkTo({ status: "done" })} class={tabClass(status === "done")}>
+          <Link href={linkTo({ status: "done" })} prefetch class={tabClass(status === "done")}>
             完了
           </Link>
-          <Link href={linkTo({ status: "all" })} class={tabClass(status === "all")}>
+          <Link href={linkTo({ status: "all" })} prefetch class={tabClass(status === "all")}>
             すべて
           </Link>
-          <Link href={linkTo({ overdue: !overdueOn })} class={tabClass(overdueOn)}>
+          <Link href={linkTo({ overdue: !overdueOn })} prefetch class={tabClass(overdueOn)}>
             期限切れのみ
           </Link>
           {activeTag && (
             <Link
               href={linkTo({ tag: undefined })}
+              prefetch
               class="ml-auto rounded bg-red-100 px-2 py-1 text-xs text-red-700 hover:bg-red-200"
             >
               #{activeTag} ✕
