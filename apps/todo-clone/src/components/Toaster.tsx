@@ -4,7 +4,6 @@ import { useEffect, useState } from "hono/jsx";
 
 type ToastType = "success" | "error" | "info";
 type Toast = { type: ToastType; message: string };
-type FlashShape = { toast?: Toast };
 type Displayed = Toast & { id: number };
 
 const VARIANT_CLASS: Record<ToastType, string> = {
@@ -29,7 +28,7 @@ const AUTO_DISMISS_MS = 3500;
 
 export function Toaster() {
   const page = usePage();
-  const flashToast = (page.props as FlashShape).toast;
+  const flashToast = page.props.toast;
   const [toasts, setToasts] = useState<Displayed[]>([]);
 
   useEffect(() => {
