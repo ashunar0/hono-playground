@@ -1,14 +1,19 @@
 import { TaskForm } from "@/features/tasks/components/TaskForm";
 import { TaskItem } from "@/features/tasks/components/TaskItem";
+import type { ListFilter } from "@/features/tasks/schema";
+import type { Task } from "@/features/tasks/types";
 import { cn } from "@/lib/cn";
 import { href } from "@/lib/href";
-import type { PageProps } from "@hono/inertia";
-import { Link } from "@ts-76/inertia-hono-jsx";
+import type { AuthVariables } from "@/middleware/auth";
+import { Form, Link } from "@ts-76/inertia-hono-jsx";
 
 type FilterStatus = "open" | "done" | "all";
 type FilterOverrides = Partial<{ status: FilterStatus; tag: string | undefined; overdue: boolean }>;
+type User = NonNullable<AuthVariables["user"]>;
 
-export default function Home({ tasks, filter }: PageProps<"Home">) {
+type HomeProps = { tasks: Task[]; filter: ListFilter; user: User };
+
+export default function Home({ tasks, filter, user }: HomeProps) {
   const now = Date.now();
   const status: FilterStatus = filter?.status ?? "open";
   const activeTag: string | undefined = filter?.tag;
@@ -31,7 +36,17 @@ export default function Home({ tasks, filter }: PageProps<"Home">) {
 
   return (
     <div class="mx-auto max-w-2xl p-8">
-      <h1 class="mb-6 text-3xl font-bold tracking-tight">todo-clone</h1>
+      <div class="mb-6 flex items-center justify-between">
+        <h1 class="text-3xl font-bold tracking-tight">todo-clone</h1>
+        <div class="flex items-center gap-3 text-sm">
+          <span class="text-gray-600">{user.name}</span>
+          <Form action="/logout" method="post">
+            <button type="submit" class="text-gray-500 hover:text-gray-800">
+              ログアウト
+            </button>
+          </Form>
+        </div>
+      </div>
 
       <TaskForm />
 

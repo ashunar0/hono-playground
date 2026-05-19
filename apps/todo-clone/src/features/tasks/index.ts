@@ -1,6 +1,7 @@
 import { getDb } from "@/lib/db";
 import { toInertiaErrors, vJson, vParam, vQuery } from "@/lib/validator";
 import type { AuthVariables } from "@/middleware/auth";
+import { requireAuth } from "@/middleware/require-auth";
 import { type Context, Hono } from "hono";
 import { createTaskSchema, listFilterSchema, taskIdParamSchema, toggleTaskSchema } from "./schema";
 import { tasksService } from "./service";
@@ -9,10 +10,12 @@ type AppEnv = { Bindings: CloudflareBindings; Variables: AuthVariables };
 type AppContext = Context<AppEnv>;
 
 export const tasksApp = new Hono<AppEnv>()
+  .use(requireAuth)
   .get("/", vQuery(listFilterSchema), async (c) => {
     const filter = c.req.valid("query");
+    const user = c.get("user")!;
     const rows = await tasksService.list(getDb(c.env), filter);
-    return c.render("Home", { tasks: rows, filter });
+    return c.render("Home", { tasks: rows, filter, user });
   })
   .post(
     "/tasks",

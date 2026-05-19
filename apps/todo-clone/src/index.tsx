@@ -9,8 +9,8 @@ const app = new Hono<{
   Variables: AuthVariables;
 }>()
   .use(authMiddleware)
-  .route("/", authApp)
   .use(inertia)
+  .route("/", authApp)
   .route("/", tasksApp);
 
 export default app;
