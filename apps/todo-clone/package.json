@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@ashunar0/hono-inertia-flash": "workspace:*",
+    "@ashunar0/hono-inertia-pages": "workspace:*",
     "@better-auth/cli": "catalog:",
     "@better-auth/drizzle-adapter": "catalog:",
     "@hono/inertia": "^0.2.0",

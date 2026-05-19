@@ -1,0 +1,28 @@
+{
+  "name": "@ashunar0/hono-inertia-pages",
+  "version": "0.0.1",
+  "description": "Helper to resolve Inertia page components from import.meta.glob(). Same shape as Laravel's resolvePageComponent, framework-agnostic on the Hono side.",
+  "license": "MIT",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "type": "module",
+  "main": "./src/index.ts",
+  "types": "./src/index.ts",
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "import": "./src/index.ts"
+    },
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "build": "vp pack",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "typescript": "^5",
+    "vite-plus": "catalog:"
+  }
+}
