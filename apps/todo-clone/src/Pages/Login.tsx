@@ -1,11 +1,5 @@
-import { cn } from "@/lib/cn";
+import { FormField } from "@/features/auth/components/FormField";
 import { Form, Link } from "@ts-76/inertia-hono-jsx";
-
-const inputClass = (hasError: boolean) =>
-  cn(
-    "rounded border px-3 py-2 focus:outline-none",
-    hasError ? "border-red-400 focus:border-red-500" : "border-gray-300 focus:border-blue-500",
-  );
 
 export default function Login() {
   return (
@@ -15,28 +9,20 @@ export default function Login() {
         {({ errors }) => (
           <div class="flex flex-col gap-3">
             {errors._form && <p class="text-sm text-red-500">{errors._form}</p>}
-            <label class="flex flex-col gap-1">
-              <span class="text-sm text-gray-700">メールアドレス</span>
-              <input
-                type="email"
-                name="email"
-                autocomplete="email"
-                aria-invalid={errors.email ? "true" : undefined}
-                class={inputClass(!!errors.email)}
-              />
-              {errors.email && <p class="text-sm text-red-500">{errors.email}</p>}
-            </label>
-            <label class="flex flex-col gap-1">
-              <span class="text-sm text-gray-700">パスワード</span>
-              <input
-                type="password"
-                name="password"
-                autocomplete="current-password"
-                aria-invalid={errors.password ? "true" : undefined}
-                class={inputClass(!!errors.password)}
-              />
-              {errors.password && <p class="text-sm text-red-500">{errors.password}</p>}
-            </label>
+            <FormField
+              name="email"
+              type="email"
+              label="メールアドレス"
+              autocomplete="email"
+              error={errors.email}
+            />
+            <FormField
+              name="password"
+              type="password"
+              label="パスワード"
+              autocomplete="current-password"
+              error={errors.password}
+            />
             <button
               type="submit"
               class="rounded bg-blue-500 px-4 py-2 font-medium text-white hover:bg-blue-600"
