@@ -54,8 +54,7 @@ export const authApp = new Hono<AppEnv>()
         forwardSetCookie(c, res);
         return c.redirect("/", 303);
       } catch (err) {
-        const message =
-          err instanceof Error ? err.message : "登録に失敗しました";
+        const message = err instanceof Error ? err.message : "登録に失敗しました";
         c.flash("errors", { _form: message });
         return c.back();
       }

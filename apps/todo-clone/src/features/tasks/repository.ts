@@ -42,7 +42,10 @@ export const tasksRepo = {
   },
 
   updateDone: (db: Db, userId: string, id: number, done: boolean) =>
-    db.update(tasks).set({ done }).where(and(eq(tasks.id, id), eq(tasks.userId, userId))),
+    db
+      .update(tasks)
+      .set({ done })
+      .where(and(eq(tasks.id, id), eq(tasks.userId, userId))),
 
   delete: (db: Db, userId: string, id: number) =>
     db.delete(tasks).where(and(eq(tasks.id, id), eq(tasks.userId, userId))),
