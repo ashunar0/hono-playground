@@ -2,8 +2,6 @@ import { createInertiaApp } from "@inertiajs/react";
 import { createRoot, hydrateRoot } from "react-dom/client";
 import { resolve } from "./pages";
 
-console.log("🌱 client booted", new Date().toISOString());
-
 void createInertiaApp({
   resolve,
   setup({ el, App, props }) {
