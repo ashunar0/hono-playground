@@ -7,18 +7,22 @@ import { href } from "@/lib/href";
 import { Form, Link } from "@ts-76/inertia-hono-jsx";
 
 type FilterStatus = "open" | "done" | "all";
-type FilterOverrides = Partial<{ status: FilterStatus; tag: string | undefined; overdue: boolean }>;
+type FilterOverrides = Partial<{
+  status: FilterStatus;
+  tag: string | undefined;
+  overdue: boolean;
+}>;
 
 export default function Home({ tasks, filter, user }: HomePageProps) {
   const now = Date.now();
-  const status: FilterStatus = filter?.status ?? "open";
+  const status: FilterStatus = filter?.status ?? "all";
   const activeTag: string | undefined = filter?.tag;
   const overdueOn = Boolean(filter?.overdue);
 
   const linkTo = (overrides: FilterOverrides = {}) => {
     const next = { status, tag: activeTag, overdue: overdueOn, ...overrides };
     return href("/", {
-      status: next.status === "open" ? undefined : next.status,
+      status: next.status === "all" ? undefined : next.status,
       tag: next.tag,
       overdue: next.overdue ? "1" : undefined,
     });
@@ -49,17 +53,14 @@ export default function Home({ tasks, filter, user }: HomePageProps) {
         <TaskForm />
 
         <div class="mb-4 flex flex-wrap items-center gap-2">
+          <Link href={linkTo({ status: "all" })} prefetch class={tabClass(status === "all")}>
+            すべて
+          </Link>
           <Link href={linkTo({ status: "open" })} prefetch class={tabClass(status === "open")}>
             未完了
           </Link>
           <Link href={linkTo({ status: "done" })} prefetch class={tabClass(status === "done")}>
             完了
-          </Link>
-          <Link href={linkTo({ status: "all" })} prefetch class={tabClass(status === "all")}>
-            すべて
-          </Link>
-          <Link href={linkTo({ overdue: !overdueOn })} prefetch class={tabClass(overdueOn)}>
-            期限切れのみ
           </Link>
           {activeTag && (
             <Link
@@ -70,6 +71,28 @@ export default function Home({ tasks, filter, user }: HomePageProps) {
               #{activeTag} ✕
             </Link>
           )}
+          <Link
+            href={linkTo({ overdue: !overdueOn })}
+            prefetch
+            preserveScroll
+            role="checkbox"
+            aria-checked={overdueOn}
+            class={cn(
+              "flex items-center gap-2 text-sm text-gray-700 hover:text-gray-900",
+              !activeTag && "ml-auto",
+            )}
+          >
+            <span
+              aria-hidden="true"
+              class={cn(
+                "flex h-4 w-4 items-center justify-center rounded border text-xs transition-colors",
+                overdueOn ? "border-blue-500 bg-blue-500 text-white" : "border-gray-300 bg-white",
+              )}
+            >
+              {overdueOn && "✓"}
+            </span>
+            期限切れのみ
+          </Link>
         </div>
 
         {tasks.length === 0 ? (
