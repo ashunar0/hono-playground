@@ -1,5 +1,5 @@
-import { Link, router } from "@ts-76/inertia-hono-jsx";
 import { cn } from "@/lib/cn";
+import { Link, router } from "@ts-76/inertia-hono-jsx";
 import type { Task } from "../types";
 
 type Props = {
@@ -9,24 +9,32 @@ type Props = {
   linkTo: (overrides: { tag?: string }) => string;
 };
 
+type PageProps = { tasks: Task[] };
+
 export function TaskItem({ task, activeTag, now, linkTo }: Props) {
   const due = task.dueAt ? new Date(task.dueAt) : null;
   const overdue = due !== null && !task.done && due.getTime() < now;
 
+  const handleToggle = (e: Event) => {
+    const checked = (e.currentTarget as HTMLInputElement).checked;
+    router
+      .optimistic<PageProps>((props) => ({
+        tasks: props.tasks.map((t) => (t.id === task.id ? { ...t, done: checked } : t)),
+      }))
+      .patch(`/tasks/${task.id}`, { done: checked }, { preserveScroll: true });
+  };
+
+  const handleDelete = () => {
+    router
+      .optimistic<PageProps>((props) => ({
+        tasks: props.tasks.filter((t) => t.id !== task.id),
+      }))
+      .delete(`/tasks/${task.id}`, { preserveScroll: true });
+  };
+
   return (
     <li class="flex items-center gap-3 p-3">
-      <input
-        type="checkbox"
-        checked={task.done}
-        onChange={(e) =>
-          router.patch(
-            `/tasks/${task.id}`,
-            { done: (e.currentTarget as HTMLInputElement).checked },
-            { preserveScroll: true },
-          )
-        }
-        class="h-4 w-4"
-      />
+      <input type="checkbox" checked={task.done} onChange={handleToggle} class="h-4 w-4" />
       <div class="flex-1 min-w-0">
         <div class={task.done ? "text-gray-400 line-through" : ""}>{task.title}</div>
         <div class="mt-1 flex flex-wrap items-center gap-2 text-xs">
@@ -51,11 +59,7 @@ export function TaskItem({ task, activeTag, now, linkTo }: Props) {
           ))}
         </div>
       </div>
-      <button
-        type="button"
-        onClick={() => router.delete(`/tasks/${task.id}`, { preserveScroll: true })}
-        class="text-sm text-red-500 hover:text-red-700"
-      >
+      <button type="button" onClick={handleDelete} class="text-sm text-red-500 hover:text-red-700">
         削除
       </button>
     </li>

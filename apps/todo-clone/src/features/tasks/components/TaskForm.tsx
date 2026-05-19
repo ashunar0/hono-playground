@@ -1,9 +1,39 @@
 import { inputClass } from "@/lib/inputClass";
 import { Form } from "@ts-76/inertia-hono-jsx";
+import type { Task } from "../types";
+
+type PageProps = { tasks: Task[] };
 
 export function TaskForm() {
   return (
-    <Form action="/tasks" method="post" resetOnSuccess>
+    <Form
+      action="/tasks"
+      method="post"
+      resetOnSuccess
+      optimistic={(props, data) => {
+        const { tasks } = props as unknown as PageProps;
+        const title = (data.title ?? "") as string;
+        const dueAtRaw = (data.dueAt ?? "") as string;
+        const tagNamesRaw = (data.tagNames ?? "") as string;
+        return {
+          tasks: [
+            ...tasks,
+            {
+              id: -Date.now(),
+              userId: "",
+              title,
+              done: false,
+              dueAt: dueAtRaw ? new Date(dueAtRaw) : null,
+              createdAt: new Date(),
+              tags: tagNamesRaw
+                .split(",")
+                .map((s) => s.trim())
+                .filter(Boolean),
+            },
+          ],
+        };
+      }}
+    >
       {({ errors }) => (
         <div class="mb-6 flex flex-col gap-2">
           <input
