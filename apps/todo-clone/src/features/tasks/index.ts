@@ -28,6 +28,7 @@ export const tasksApp = new Hono<AppEnv>()
     async (c) => {
       const user = c.get("user")!;
       await tasksService.create(getDb(c.env), user.id, c.req.valid("json"));
+      c.flash("toast", { type: "success", message: "タスクを追加したのだ" });
       return c.redirect("/", 303);
     },
   )
@@ -36,11 +37,16 @@ export const tasksApp = new Hono<AppEnv>()
     const { done } = c.req.valid("json");
     const user = c.get("user")!;
     await tasksService.toggle(getDb(c.env), user.id, id, done);
+    c.flash("toast", {
+      type: "success",
+      message: done ? "完了にしたのだ" : "未完了に戻したのだ",
+    });
     return c.redirect("/", 303);
   })
   .delete("/tasks/:id", vParam(taskIdParamSchema), async (c) => {
     const { id } = c.req.valid("param");
     const user = c.get("user")!;
     await tasksService.delete(getDb(c.env), user.id, id);
+    c.flash("toast", { type: "success", message: "タスクを削除したのだ" });
     return c.redirect("/", 303);
   });

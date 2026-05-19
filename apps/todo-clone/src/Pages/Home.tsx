@@ -1,3 +1,4 @@
+import { Toaster } from "@/components/Toaster";
 import { TaskForm } from "@/features/tasks/components/TaskForm";
 import { TaskItem } from "@/features/tasks/components/TaskItem";
 import type { ListFilter } from "@/features/tasks/schema";
@@ -35,53 +36,56 @@ export default function Home({ tasks, filter, user }: HomeProps) {
     );
 
   return (
-    <div class="mx-auto max-w-2xl p-8">
-      <div class="mb-6 flex items-center justify-between">
-        <h1 class="text-3xl font-bold tracking-tight">todo-clone</h1>
-        <div class="flex items-center gap-3 text-sm">
-          <span class="text-gray-600">{user.name}</span>
-          <Form action="/logout" method="post">
-            <button type="submit" class="text-gray-500 hover:text-gray-800">
-              ログアウト
-            </button>
-          </Form>
+    <>
+      <Toaster />
+      <div class="mx-auto max-w-2xl p-8">
+        <div class="mb-6 flex items-center justify-between">
+          <h1 class="text-3xl font-bold tracking-tight">todo-clone</h1>
+          <div class="flex items-center gap-3 text-sm">
+            <span class="text-gray-600">{user.name}</span>
+            <Form action="/logout" method="post">
+              <button type="submit" class="text-gray-500 hover:text-gray-800">
+                ログアウト
+              </button>
+            </Form>
+          </div>
         </div>
-      </div>
 
-      <TaskForm />
+        <TaskForm />
 
-      <div class="mb-4 flex flex-wrap items-center gap-2">
-        <Link href={linkTo({ status: "open" })} class={tabClass(status === "open")}>
-          未完了
-        </Link>
-        <Link href={linkTo({ status: "done" })} class={tabClass(status === "done")}>
-          完了
-        </Link>
-        <Link href={linkTo({ status: "all" })} class={tabClass(status === "all")}>
-          すべて
-        </Link>
-        <Link href={linkTo({ overdue: !overdueOn })} class={tabClass(overdueOn)}>
-          期限切れのみ
-        </Link>
-        {activeTag && (
-          <Link
-            href={linkTo({ tag: undefined })}
-            class="ml-auto rounded bg-red-100 px-2 py-1 text-xs text-red-700 hover:bg-red-200"
-          >
-            #{activeTag} ✕
+        <div class="mb-4 flex flex-wrap items-center gap-2">
+          <Link href={linkTo({ status: "open" })} class={tabClass(status === "open")}>
+            未完了
           </Link>
+          <Link href={linkTo({ status: "done" })} class={tabClass(status === "done")}>
+            完了
+          </Link>
+          <Link href={linkTo({ status: "all" })} class={tabClass(status === "all")}>
+            すべて
+          </Link>
+          <Link href={linkTo({ overdue: !overdueOn })} class={tabClass(overdueOn)}>
+            期限切れのみ
+          </Link>
+          {activeTag && (
+            <Link
+              href={linkTo({ tag: undefined })}
+              class="ml-auto rounded bg-red-100 px-2 py-1 text-xs text-red-700 hover:bg-red-200"
+            >
+              #{activeTag} ✕
+            </Link>
+          )}
+        </div>
+
+        {tasks.length === 0 ? (
+          <p class="text-center text-gray-500">タスクがないのだ</p>
+        ) : (
+          <ul class="divide-y divide-gray-200 rounded border border-gray-200">
+            {tasks.map((t) => (
+              <TaskItem task={t} activeTag={activeTag} now={now} linkTo={linkTo} />
+            ))}
+          </ul>
         )}
       </div>
-
-      {tasks.length === 0 ? (
-        <p class="text-center text-gray-500">タスクがないのだ</p>
-      ) : (
-        <ul class="divide-y divide-gray-200 rounded border border-gray-200">
-          {tasks.map((t) => (
-            <TaskItem task={t} activeTag={activeTag} now={now} linkTo={linkTo} />
-          ))}
-        </ul>
-      )}
-    </div>
+    </>
   );
 }
