@@ -1,6 +1,6 @@
 import { cn } from "@/lib/cn";
 import { Link, router } from "@ts-76/inertia-hono-jsx";
-import type { Task } from "../types";
+import type { HomePageProps, Task } from "../types";
 
 type Props = {
   task: Task;
@@ -9,8 +9,6 @@ type Props = {
   linkTo: (overrides: { tag?: string }) => string;
 };
 
-type PageProps = { tasks: Task[] };
-
 export function TaskItem({ task, activeTag, now, linkTo }: Props) {
   const due = task.dueAt ? new Date(task.dueAt) : null;
   const overdue = due !== null && !task.done && due.getTime() < now;
@@ -18,16 +16,16 @@ export function TaskItem({ task, activeTag, now, linkTo }: Props) {
   const handleToggle = (e: Event) => {
     const checked = (e.currentTarget as HTMLInputElement).checked;
     router
-      .optimistic<PageProps>((props) => ({
-        tasks: props.tasks.map((t) => (t.id === task.id ? { ...t, done: checked } : t)),
+      .optimistic<HomePageProps>((pageProps) => ({
+        tasks: pageProps.tasks.map((t) => (t.id === task.id ? { ...t, done: checked } : t)),
       }))
       .patch(`/tasks/${task.id}`, { done: checked }, { preserveScroll: true });
   };
 
   const handleDelete = () => {
     router
-      .optimistic<PageProps>((props) => ({
-        tasks: props.tasks.filter((t) => t.id !== task.id),
+      .optimistic<HomePageProps>((pageProps) => ({
+        tasks: pageProps.tasks.filter((t) => t.id !== task.id),
       }))
       .delete(`/tasks/${task.id}`, { preserveScroll: true });
   };

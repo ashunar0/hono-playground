@@ -1,8 +1,6 @@
 import { inputClass } from "@/lib/inputClass";
 import { Form } from "@ts-76/inertia-hono-jsx";
-import type { Task } from "../types";
-
-type PageProps = { tasks: Task[] };
+import type { HomePageProps } from "../types";
 
 export function TaskForm() {
   return (
@@ -10,8 +8,8 @@ export function TaskForm() {
       action="/tasks"
       method="post"
       resetOnSuccess
-      optimistic={(props, data) => {
-        const { tasks } = props as unknown as PageProps;
+      optimistic={(pageProps, data) => {
+        const { tasks } = pageProps as unknown as HomePageProps;
         const title = (data.title ?? "") as string;
         const dueAtRaw = (data.dueAt ?? "") as string;
         const tagNamesRaw = (data.tagNames ?? "") as string;

@@ -1,20 +1,15 @@
 import { Toaster } from "@/components/Toaster";
 import { TaskForm } from "@/features/tasks/components/TaskForm";
 import { TaskItem } from "@/features/tasks/components/TaskItem";
-import type { ListFilter } from "@/features/tasks/schema";
-import type { Task } from "@/features/tasks/types";
+import type { HomePageProps } from "@/features/tasks/types";
 import { cn } from "@/lib/cn";
 import { href } from "@/lib/href";
-import type { AuthVariables } from "@/middleware/auth";
 import { Form, Link } from "@ts-76/inertia-hono-jsx";
 
 type FilterStatus = "open" | "done" | "all";
 type FilterOverrides = Partial<{ status: FilterStatus; tag: string | undefined; overdue: boolean }>;
-type User = NonNullable<AuthVariables["user"]>;
 
-type HomeProps = { tasks: Task[]; filter: ListFilter; user: User };
-
-export default function Home({ tasks, filter, user }: HomeProps) {
+export default function Home({ tasks, filter, user }: HomePageProps) {
   const now = Date.now();
   const status: FilterStatus = filter?.status ?? "open";
   const activeTag: string | undefined = filter?.tag;
