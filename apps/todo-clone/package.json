@@ -7,6 +7,7 @@
     "preview": "$npm_execpath run build && vite preview",
     "deploy": "$npm_execpath run build && wrangler deploy",
     "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "test": "vp test",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -25,12 +26,14 @@
   },
   "devDependencies": {
     "@cloudflare/vite-plugin": "^1.2.3",
+    "@libsql/client": "^0.15.7",
     "@tailwindcss/vite": "catalog:",
     "drizzle-kit": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "vite": "^6.3.5",
     "vite-ssr-components": "^0.6.1",
+    "vitest": "catalog:",
     "wrangler": "^4.17.0"
   }
 }
