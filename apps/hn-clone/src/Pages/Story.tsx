@@ -1,9 +1,13 @@
 import { Layout } from "@/components/Layout";
+import { CommentForm } from "@/features/comments/components/CommentForm";
+import { CommentItem } from "@/features/comments/components/CommentItem";
 import type { StoryPageProps } from "@/features/stories/types";
 import { hostOf, timeAgo } from "@/lib/format";
+import { Link, usePage } from "@ts-76/inertia-hono-jsx";
 
-export default function Story({ story }: StoryPageProps) {
+export default function Story({ story, comments }: StoryPageProps) {
   const external = Boolean(story.url);
+  const user = usePage().props.user;
 
   return (
     <Layout>
@@ -32,10 +36,30 @@ export default function Story({ story }: StoryPageProps) {
         {story.text && <p class="mt-4 whitespace-pre-wrap text-sm text-gray-800">{story.text}</p>}
       </article>
 
-      {/* コメントは Phase 4 (フルツリー) で実装。今は枠だけ。 */}
       <section class="border-t border-gray-200 pt-4">
-        <h2 class="mb-2 text-sm font-bold text-gray-700">コメント</h2>
-        <p class="text-sm text-gray-400">コメント機能は準備中なのだ</p>
+        <h2 class="mb-3 text-sm font-bold text-gray-700">コメント</h2>
+
+        {user ? (
+          <CommentForm storyId={story.id} placeholder="コメントを書く…" />
+        ) : (
+          <p class="text-sm text-gray-400">
+            コメントするには
+            <Link href="/login" class="text-orange-600 hover:underline">
+              ログイン
+            </Link>
+            なのだ
+          </p>
+        )}
+
+        {comments.length === 0 ? (
+          <p class="mt-4 text-sm text-gray-400">まだコメントがないのだ</p>
+        ) : (
+          <ul class="mt-2">
+            {comments.map((comment) => (
+              <CommentItem comment={comment} storyId={story.id} />
+            ))}
+          </ul>
+        )}
       </section>
     </Layout>
   );

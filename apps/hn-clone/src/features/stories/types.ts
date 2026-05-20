@@ -1,3 +1,4 @@
+import type { CommentNode } from "../comments/types";
 import type { ListQuery } from "./schema";
 import type { storiesService } from "./service";
 
@@ -12,4 +13,5 @@ export type HomePageProps = {
 
 export type StoryPageProps = {
   story: StoryDetail;
+  comments: CommentNode[];
 };

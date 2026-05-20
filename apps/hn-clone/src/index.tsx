@@ -1,5 +1,6 @@
 import { Hono } from "hono";
 import { authApp } from "./features/auth";
+import { commentsApp } from "./features/comments";
 import { storiesApp } from "./features/stories";
 import { flash, inertia } from "./inertia";
 import { authMiddleware, type AuthVariables } from "./middleware/auth";
@@ -15,6 +16,7 @@ const app = new Hono<{
   // shareUser は c.share (plus) に依存するので inertia の後。
   .use(shareUser)
   .route("/", authApp)
-  .route("/", storiesApp);
+  .route("/", storiesApp)
+  .route("/", commentsApp);
 
 export default app;
