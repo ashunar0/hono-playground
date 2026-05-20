@@ -1,8 +1,13 @@
 import { useForm } from "@ts-76/inertia-hono-jsx";
 import { cn } from "@/lib/cn";
+import { makeOptimisticTask } from "./optimistic";
+import type { HomePageProps } from "../types";
 
 export function TaskFormHook() {
-  const form = useForm({
+  // rememberKey を渡すと useForm が内部で useRemember を使い、
+  // data / errors を history state に保持する。
+  // → 入力途中で別フィルタへ移動して browser back しても下書きが復元される。
+  const form = useForm("CreateTask", {
     title: "",
     dueAt: "",
     tagNames: "",
@@ -10,9 +15,12 @@ export function TaskFormHook() {
 
   const onSubmit = (e: Event) => {
     e.preventDefault();
-    form.post("/tasks", {
-      onSuccess: () => form.reset(),
-    });
+    // 実験: post options の optimistic ではなく form.optimistic<TProps>() を使うと
+    // ページ固有 props (HomePageProps) を型引数で渡せて cast が要らないはず
+    form.optimistic<HomePageProps>(({ tasks }) => ({
+      tasks: [...(tasks ?? []), makeOptimisticTask(form.data)],
+    }));
+    form.post("/tasks", { onSuccess: () => form.reset() });
   };
 
   const inputClass = (hasError: boolean, extra?: string) =>

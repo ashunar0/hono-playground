@@ -1,5 +1,5 @@
 import { Toaster } from "@/components/Toaster";
-import { TaskForm } from "@/features/tasks/components/TaskForm";
+import { TaskFormHook } from "@/features/tasks/components/TaskFormHook";
 import { TaskItem } from "@/features/tasks/components/TaskItem";
 import type { HomePageProps } from "@/features/tasks/types";
 import { cn } from "@/lib/cn";
@@ -50,7 +50,7 @@ export default function Home({ tasks, filter, user }: HomePageProps) {
           </div>
         </div>
 
-        <TaskForm />
+        <TaskFormHook />
 
         <div class="mb-4 flex flex-wrap items-center gap-2">
           <Link href={linkTo({ status: "all" })} prefetch class={tabClass(status === "all")}>
