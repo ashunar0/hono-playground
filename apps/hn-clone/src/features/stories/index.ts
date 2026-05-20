@@ -1,15 +1,12 @@
 import { getDb } from "@/lib/db";
 import { toInertiaErrors, vJson, vParam, vQuery } from "@/lib/validator";
-import type { AuthVariables } from "@/middleware/auth";
+import { type AppContext, type AppEnv } from "@/middleware/auth";
 import { requireAuth } from "@/middleware/require-auth";
 import { scroll } from "@ashunar0/hono-inertia-plus";
-import { type Context, Hono } from "hono";
+import { Hono } from "hono";
 import { commentsService } from "../comments/service";
 import { createStorySchema, listQuerySchema, storyIdParamSchema } from "./schema";
 import { storiesService } from "./service";
-
-type AppEnv = { Bindings: CloudflareBindings; Variables: AuthVariables };
-type AppContext = Context<AppEnv>;
 
 export const storiesApp = new Hono<AppEnv>()
   // 一覧・詳細は未ログインでも閲覧可。投稿だけ requireAuth を個別に付ける。

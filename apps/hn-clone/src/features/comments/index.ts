@@ -1,13 +1,10 @@
 import { getDb } from "@/lib/db";
 import { toInertiaErrors, vJson, vParam } from "@/lib/validator";
-import type { AuthVariables } from "@/middleware/auth";
+import { type AppContext, type AppEnv } from "@/middleware/auth";
 import { requireAuth } from "@/middleware/require-auth";
-import { type Context, Hono } from "hono";
+import { Hono } from "hono";
 import { commentIdParamSchema, createCommentSchema, storyIdParamSchema } from "./schema";
 import { commentsService } from "./service";
-
-type AppEnv = { Bindings: CloudflareBindings; Variables: AuthVariables };
-type AppContext = Context<AppEnv>;
 
 export const commentsApp = new Hono<AppEnv>()
   .post(

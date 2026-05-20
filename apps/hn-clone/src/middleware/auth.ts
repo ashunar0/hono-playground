@@ -1,3 +1,4 @@
+import type { Context } from "hono";
 import { createMiddleware } from "hono/factory";
 import { createAuth } from "@/lib/auth";
 import { getDb } from "@/lib/db";
@@ -10,6 +11,10 @@ export type AuthVariables = {
   user: Session["user"] | null;
   session: Session["session"] | null;
 };
+
+// 全 feature の Hono ルータ共通の Env / Context。各 index.ts はこれを import する。
+export type AppEnv = { Bindings: CloudflareBindings; Variables: AuthVariables };
+export type AppContext = Context<AppEnv>;
 
 export const authMiddleware = createMiddleware<{
   Bindings: CloudflareBindings;

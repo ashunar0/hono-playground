@@ -1,10 +1,7 @@
 import { toInertiaErrors, vJson } from "@/lib/validator";
-import type { AuthVariables } from "@/middleware/auth";
-import { type Context, Hono } from "hono";
+import { type AppContext, type AppEnv } from "@/middleware/auth";
+import { Hono } from "hono";
 import { loginSchema, signupSchema } from "./schema";
-
-type AppEnv = { Bindings: CloudflareBindings; Variables: AuthVariables };
-type AppContext = Context<AppEnv>;
 
 const forwardSetCookie = (c: AppContext, res: Response) => {
   const setCookie = res.headers.get("set-cookie");
