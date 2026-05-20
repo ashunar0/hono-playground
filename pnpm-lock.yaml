@@ -56,6 +56,79 @@ importers:
         specifier: 'catalog:'
         version: 0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1))
 
+  apps/hn-clone:
+    dependencies:
+      '@ashunar0/hono-inertia-flash':
+        specifier: workspace:*
+        version: link:../../packages/hono-inertia-flash
+      '@ashunar0/hono-inertia-pages':
+        specifier: workspace:*
+        version: link:../../packages/hono-inertia-pages
+      '@ashunar0/hono-inertia-plus':
+        specifier: workspace:*
+        version: link:../../packages/hono-inertia-plus
+      '@better-auth/cli':
+        specifier: 'catalog:'
+        version: 1.4.21(@better-fetch/fetch@1.1.21)(@libsql/client@0.15.15)(@voidzero-dev/vite-plus-test@0.1.21(@types/node@25.7.0)(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(better-call@1.1.8(zod@4.4.3))(drizzle-kit@0.31.10)(jose@6.2.3)(kysely@0.28.17)(nanostores@1.3.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@better-auth/drizzle-adapter':
+        specifier: 'catalog:'
+        version: 1.6.11(@better-auth/core@1.6.11(@better-auth/utils@0.4.0)(@better-fetch/fetch@1.1.21)(better-call@1.1.8(zod@4.4.3))(jose@6.2.3)(kysely@0.28.17)(nanostores@1.3.0))(@better-auth/utils@0.4.0)(drizzle-orm@0.45.2(@libsql/client@0.15.15)(@prisma/client@5.22.0)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(kysely@0.28.17)(pg@8.20.0))
+      '@hono/inertia':
+        specifier: ^0.2.0
+        version: 0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(hono@4.12.18)
+      '@hono/zod-validator':
+        specifier: 'catalog:'
+        version: 0.8.0(hono@4.12.18)(zod@4.4.3)
+      '@inertiajs/core':
+        specifier: ^3.1.1
+        version: 3.1.1
+      '@ts-76/inertia-hono-jsx':
+        specifier: file:../../.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz
+        version: file:.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(hono@4.12.18))(hono@4.12.18)
+      better-auth:
+        specifier: 'catalog:'
+        version: 1.6.11(@prisma/client@5.22.0)(@voidzero-dev/vite-plus-test@0.1.21(@types/node@25.7.0)(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client@0.15.15)(@prisma/client@5.22.0)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(kysely@0.28.17)(pg@8.20.0))(pg@8.20.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      drizzle-orm:
+        specifier: 'catalog:'
+        version: 0.45.2(@libsql/client@0.15.15)(@prisma/client@5.22.0)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(kysely@0.28.17)(pg@8.20.0)
+      hono:
+        specifier: ^4.12.18
+        version: 4.12.18
+      zod:
+        specifier: 'catalog:'
+        version: 4.4.3
+    devDependencies:
+      '@cloudflare/vite-plugin':
+        specifier: ^1.2.3
+        version: 1.37.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(workerd@1.20260511.1)(wrangler@4.91.0)
+      '@libsql/client':
+        specifier: ^0.15.7
+        version: 0.15.15
+      '@tailwindcss/vite':
+        specifier: 'catalog:'
+        version: 4.3.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))
+      drizzle-kit:
+        specifier: 'catalog:'
+        version: 0.31.10
+      tailwindcss:
+        specifier: 'catalog:'
+        version: 4.3.0
+      typescript:
+        specifier: 'catalog:'
+        version: 5.9.3
+      vite:
+        specifier: npm:@voidzero-dev/vite-plus-core@latest
+        version: '@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)'
+      vite-ssr-components:
+        specifier: ^0.6.1
+        version: 0.6.1
+      vitest:
+        specifier: npm:@voidzero-dev/vite-plus-test@latest
+        version: '@voidzero-dev/vite-plus-test@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1))'
+      wrangler:
+        specifier: ^4.17.0
+        version: 4.91.0
+
   apps/playground:
     dependencies:
       '@ashunar0/hono-inertia-plus':

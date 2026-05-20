@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "hn-clone",
+  "compatibility_date": "2025-08-03",
+  "compatibility_flags": ["nodejs_compat"],
+  "main": "./src/index.tsx",
+  "vars": {
+    "BETTER_AUTH_URL": "http://localhost:5173",
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "hn-clone-dev",
+      "database_id": "local-only",
+      "migrations_dir": "./drizzle",
+    },
+  ],
+}

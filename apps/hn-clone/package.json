@@ -1,0 +1,40 @@
+{
+  "name": "hn-clone",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "$npm_execpath run build && vite preview",
+    "deploy": "$npm_execpath run build && wrangler deploy",
+    "cf-typegen": "wrangler types --env-interface CloudflareBindings",
+    "test": "vp test",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@ashunar0/hono-inertia-flash": "workspace:*",
+    "@ashunar0/hono-inertia-pages": "workspace:*",
+    "@ashunar0/hono-inertia-plus": "workspace:*",
+    "@better-auth/cli": "catalog:",
+    "@better-auth/drizzle-adapter": "catalog:",
+    "@hono/inertia": "^0.2.0",
+    "@hono/zod-validator": "catalog:",
+    "@inertiajs/core": "^3.1.1",
+    "@ts-76/inertia-hono-jsx": "^0.2.0",
+    "better-auth": "catalog:",
+    "drizzle-orm": "catalog:",
+    "hono": "^4.12.18",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@cloudflare/vite-plugin": "^1.2.3",
+    "@libsql/client": "^0.15.7",
+    "@tailwindcss/vite": "catalog:",
+    "drizzle-kit": "catalog:",
+    "tailwindcss": "catalog:",
+    "typescript": "catalog:",
+    "vite": "^6.3.5",
+    "vite-ssr-components": "^0.6.1",
+    "vitest": "catalog:",
+    "wrangler": "^4.17.0"
+  }
+}
