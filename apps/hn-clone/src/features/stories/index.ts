@@ -14,7 +14,9 @@ export const storiesApp = new Hono<AppEnv>()
   // 一覧・詳細は未ログインでも閲覧可。投稿だけ requireAuth を個別に付ける。
   .get("/", vQuery(listQuerySchema), async (c) => {
     const { sort } = c.req.valid("query");
-    const stories = await storiesService.list(getDb(c.env), sort);
+    // 未ログインは空文字 = 誰の投票にも一致せず voted は全部 false。
+    const userId = c.get("user")?.id ?? "";
+    const stories = await storiesService.list(getDb(c.env), userId, sort);
     return c.render("Home", { stories, sort });
   })
   .get("/submit", requireAuth, (c) => c.render("Submit"))
@@ -37,11 +39,18 @@ export const storiesApp = new Hono<AppEnv>()
   .get("/stories/:id", vParam(storyIdParamSchema), async (c) => {
     const { id } = c.req.valid("param");
     const db = getDb(c.env);
-    const story = await storiesService.get(db, id);
+    const userId = c.get("user")?.id ?? "";
+    const story = await storiesService.get(db, userId, id);
     if (!story) {
       c.flash("toast", { type: "error", message: "投稿が見つからなかったのだ" });
       return c.redirect("/", 303);
     }
     const comments = await commentsService.tree(db, id);
     return c.render("Story", { story, comments });
+  })
+  .post("/stories/:id/vote", requireAuth, vParam(storyIdParamSchema), async (c) => {
+    const { id } = c.req.valid("param");
+    const user = c.get("user")!;
+    await storiesService.vote(getDb(c.env), user.id, id);
+    return c.back(`/stories/${id}`);
   });

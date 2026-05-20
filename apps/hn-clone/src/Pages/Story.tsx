@@ -1,13 +1,26 @@
 import { Layout } from "@/components/Layout";
 import { CommentForm } from "@/features/comments/components/CommentForm";
 import { CommentItem } from "@/features/comments/components/CommentItem";
+import { VoteButton } from "@/features/stories/components/VoteButton";
 import type { StoryPageProps } from "@/features/stories/types";
 import { hostOf, timeAgo } from "@/lib/format";
-import { Link, usePage } from "@ts-76/inertia-hono-jsx";
+import { Link, router, usePage } from "@ts-76/inertia-hono-jsx";
 
 export default function Story({ story, comments }: StoryPageProps) {
   const external = Boolean(story.url);
   const user = usePage().props.user;
+
+  const handleVote = () => {
+    router
+      .optimistic<StoryPageProps>((page) => ({
+        story: {
+          ...page.story,
+          voted: !page.story.voted,
+          voteCount: page.story.voteCount + (page.story.voted ? -1 : 1),
+        },
+      }))
+      .post(`/stories/${story.id}/vote`, {}, { preserveScroll: true });
+  };
 
   return (
     <Layout>
@@ -29,9 +42,14 @@ export default function Story({ story, comments }: StoryPageProps) {
             <span class="text-xs font-normal text-gray-400">({hostOf(story.url!)})</span>
           )}
         </h1>
-        <p class="mt-1 text-xs text-gray-500">
-          {story.voteCount} points by {story.authorName ?? "unknown"} ·{" "}
-          {timeAgo(new Date(story.createdAt))}
+        <p class="mt-1 flex items-baseline gap-1 text-xs text-gray-500">
+          <VoteButton
+            voteCount={story.voteCount}
+            voted={story.voted}
+            canVote={Boolean(user)}
+            onVote={handleVote}
+          />
+          · by {story.authorName ?? "unknown"} · {timeAgo(new Date(story.createdAt))}
         </p>
         {story.text && <p class="mt-4 whitespace-pre-wrap text-sm text-gray-800">{story.text}</p>}
       </article>
