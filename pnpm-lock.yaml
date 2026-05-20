@@ -46,7 +46,6 @@ catalogs:
 overrides:
   vite: npm:@voidzero-dev/vite-plus-core@latest
   vitest: npm:@voidzero-dev/vite-plus-test@latest
-  '@ts-76/inertia-hono-jsx': file:.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz
 
 importers:
 
@@ -83,8 +82,8 @@ importers:
         specifier: ^3.1.1
         version: 3.1.1
       '@ts-76/inertia-hono-jsx':
-        specifier: file:../../.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz
-        version: file:.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(hono@4.12.18))(hono@4.12.18)
+        specifier: ^0.2.3
+        version: 0.2.3(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(hono@4.12.18))(hono@4.12.18)
       better-auth:
         specifier: 'catalog:'
         version: 1.6.11(@prisma/client@5.22.0)(@voidzero-dev/vite-plus-test@0.1.21(@types/node@25.7.0)(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client@0.15.15)(@prisma/client@5.22.0)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(kysely@0.28.17)(pg@8.20.0))(pg@8.20.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -141,15 +140,15 @@ importers:
         specifier: ^3.1.1
         version: 3.1.1
       '@ts-76/inertia-hono-jsx':
-        specifier: file:../../.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz
-        version: file:.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(hono@4.12.18))(hono@4.12.18)
+        specifier: ^0.2.0
+        version: 0.2.1(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(hono@4.12.18))(hono@4.12.18)
       hono:
         specifier: ^4.12.18
         version: 4.12.18
     devDependencies:
       '@cloudflare/vite-plugin':
         specifier: ^1.2.3
-        version: 1.37.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(workerd@1.20260511.1)(wrangler@4.91.0)
+        version: 1.37.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(workerd@1.20260518.1)(wrangler@4.91.0)
       vite:
         specifier: npm:@voidzero-dev/vite-plus-core@latest
         version: '@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)'
@@ -183,7 +182,7 @@ importers:
     devDependencies:
       '@cloudflare/vite-plugin':
         specifier: ^1.2.3
-        version: 1.37.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(workerd@1.20260511.1)(wrangler@4.91.0)
+        version: 1.37.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(workerd@1.20260518.1)(wrangler@4.91.0)
       '@types/react':
         specifier: ^19.2.14
         version: 19.2.14
@@ -204,20 +203,20 @@ importers:
     dependencies:
       '@hono/inertia':
         specifier: ^0.2.0
-        version: 0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(hono@4.12.18)
+        version: 0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(hono@4.12.21)
       '@inertiajs/core':
         specifier: ^3.1.1
         version: 3.1.1
       '@ts-76/inertia-hono-jsx':
-        specifier: file:../../.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz
-        version: file:.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(hono@4.12.18))(hono@4.12.18)
+        specifier: ^0.2.3
+        version: 0.2.3(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(hono@4.12.21))(hono@4.12.21)
       hono:
-        specifier: ^4.12.18
-        version: 4.12.18
+        specifier: ^4.12.21
+        version: 4.12.21
     devDependencies:
       '@cloudflare/vite-plugin':
-        specifier: ^1.2.3
-        version: 1.37.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(workerd@1.20260511.1)(wrangler@4.91.0)
+        specifier: ^1.37.2
+        version: 1.37.2(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(workerd@1.20260518.1)(wrangler@4.93.0)
       vite:
         specifier: npm:@voidzero-dev/vite-plus-core@latest
         version: '@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)'
@@ -225,8 +224,8 @@ importers:
         specifier: ^0.6.1
         version: 0.6.1
       wrangler:
-        specifier: ^4.17.0
-        version: 4.91.0
+        specifier: ^4.93.0
+        version: 4.93.0
 
   apps/todo-clone:
     dependencies:
@@ -255,8 +254,8 @@ importers:
         specifier: ^3.1.1
         version: 3.1.1
       '@ts-76/inertia-hono-jsx':
-        specifier: file:../../.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz
-        version: file:.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(hono@4.12.18))(hono@4.12.18)
+        specifier: ^0.2.3
+        version: 0.2.3(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(hono@4.12.18))(hono@4.12.18)
       better-auth:
         specifier: 'catalog:'
         version: 1.6.11(@prisma/client@5.22.0)(@voidzero-dev/vite-plus-test@0.1.21(@types/node@25.7.0)(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client@0.15.15)(@prisma/client@5.22.0)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(kysely@0.28.17)(pg@8.20.0))(pg@8.20.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
@@ -272,7 +271,7 @@ importers:
     devDependencies:
       '@cloudflare/vite-plugin':
         specifier: ^1.2.3
-        version: 1.37.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(workerd@1.20260511.1)(wrangler@4.91.0)
+        version: 1.37.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(workerd@1.20260518.1)(wrangler@4.91.0)
       '@libsql/client':
         specifier: ^0.15.7
         version: 0.15.15
@@ -660,8 +659,20 @@ packages:
       vite: ^6.1.0 || ^7.0.0 || ^8.0.0
       wrangler: ^4.91.0
 
+  '@cloudflare/vite-plugin@1.37.2':
+    resolution: {integrity: sha512-+QSQVdRcaRp63R3PqPHuIxqZUJnp1wJI2C+Un3DuwYAy2rjiHXKHwAvPWeUWIB8u04sydPFEuOwa0RaZA/hsJQ==}
+    peerDependencies:
+      vite: ^6.1.0 || ^7.0.0 || ^8.0.0
+      wrangler: ^4.93.0
+
   '@cloudflare/workerd-darwin-64@1.20260511.1':
     resolution: {integrity: sha512-xQXYe0ILEGKyFFgZ9SlxZV2RkWXxp9mIA5mlqfdEmmSInMHlWRO4H/l6oCXZnQXNH6o3bvmGuNzl6Mac5+Omgg==}
+    engines: {node: '>=16'}
+    cpu: [x64]
+    os: [darwin]
+
+  '@cloudflare/workerd-darwin-64@1.20260518.1':
+    resolution: {integrity: sha512-IhZEf5kDd0CLRtFxGS9AUqfM5SY3EFScqqCY1VF9twNMdYpJDYrDZDJAkQitHF8sF/sPVVHYR4Aifpdq6tzmaA==}
     engines: {node: '>=16'}
     cpu: [x64]
     os: [darwin]
@@ -672,8 +683,20 @@ packages:
     cpu: [arm64]
     os: [darwin]
 
+  '@cloudflare/workerd-darwin-arm64@1.20260518.1':
+    resolution: {integrity: sha512-uqlNP1psd8SWfN1Lg5p8ePv8/piOOXt+ycvb8+NQopXECGeh9+PQ/yr/IQjpurxBhYpvSaMC+vEeihejahjkJg==}
+    engines: {node: '>=16'}
+    cpu: [arm64]
+    os: [darwin]
+
   '@cloudflare/workerd-linux-64@1.20260511.1':
     resolution: {integrity: sha512-5ZV6SHjU7WSsb9pRPSssckLJgDI5xemv7XpKWM023hMv9Q3jb4ZpkZEeIOGt2Q46E4/fcxfnXeQbL1nukDIpLg==}
+    engines: {node: '>=16'}
+    cpu: [x64]
+    os: [linux]
+
+  '@cloudflare/workerd-linux-64@1.20260518.1':
+    resolution: {integrity: sha512-D9p8Hl0lIQ46nYs4fQZp5F+9hhvgOcQJTF1SMQWpAxQSS5f8oX+vL5YdCrETUYnyoaoyEQETtkRrWYKJkPTFeg==}
     engines: {node: '>=16'}
     cpu: [x64]
     os: [linux]
@@ -684,8 +707,20 @@ packages:
     cpu: [arm64]
     os: [linux]
 
+  '@cloudflare/workerd-linux-arm64@1.20260518.1':
+    resolution: {integrity: sha512-+vNRkuOp9E/uRKHgQXVDUBPF5cwtTeXK6+ucLK50QUFzMYycqVl8kTFN2b//BX2H5BI4bjMRhXoBpe/zAlGRWQ==}
+    engines: {node: '>=16'}
+    cpu: [arm64]
+    os: [linux]
+
   '@cloudflare/workerd-windows-64@1.20260511.1':
     resolution: {integrity: sha512-tGEyfKFArBL0NdqmABqzsIK1vmHdshkdFzCAUo1j6LqYsEpgJWCzvqwX9IpNHEc/AAm0UtPOLhLKhz1DA7HQLA==}
+    engines: {node: '>=16'}
+    cpu: [x64]
+    os: [win32]
+
+  '@cloudflare/workerd-windows-64@1.20260518.1':
+    resolution: {integrity: sha512-tnqofUq+ZvKliQHhboygbH7iy/Zm/MaCCotIlrqVj5a988+tPtndxyLM0r4vaAIC10iy/2LWCkwnE67VFTFiUA==}
     engines: {node: '>=16'}
     cpu: [x64]
     os: [win32]
@@ -2106,9 +2141,14 @@ packages:
     peerDependencies:
       vite: ^5.2.0 || ^6 || ^7 || ^8
 
-  '@ts-76/inertia-hono-jsx@file:.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz':
-    resolution: {integrity: sha512-bjH+qeNy9z/gejKncsaQDCDL+teeDINM6wl4Hy07RejJ4VsWReWLZvhsFohFUGoTPq9hWiKdsO9kbyYzo6bwBA==, tarball: file:.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz}
-    version: 0.2.2-fork-c.0
+  '@ts-76/inertia-hono-jsx@0.2.1':
+    resolution: {integrity: sha512-I9+c+PWUxxMLzCOgtecjKPuXi5KB1vVHgi6J0hw/TO4wA02QBFNzWuQVCL47WrPjpc/kl54n6Wc4SKhr8mdsmg==}
+    peerDependencies:
+      '@hono/inertia': ^0.2.0
+      hono: ^4.0.0
+
+  '@ts-76/inertia-hono-jsx@0.2.3':
+    resolution: {integrity: sha512-RFj0wAZ9m1M5Y66gAQTOp7vynqE3yfmlVW7ZPpinZOydb9QP5QjyY6YfioHfNGxtDw7kb7IqdYJu9vu0pBGEqA==}
     peerDependencies:
       '@hono/inertia': ^0.2.0
       hono: ^4.12.20
@@ -2845,6 +2885,10 @@ packages:
     resolution: {integrity: sha512-RWzP96k/yv0PQfyXnWjs6zot20TqfpfsNXhOnev8d1InAxubW93L11/oNUc3tQqn2G0bSdAOBpX+2uDFHV7kdQ==}
     engines: {node: '>=16.9.0'}
 
+  hono@4.12.21:
+    resolution: {integrity: sha512-uV63apnb0kyPtAUwoWgaGh9HyIFcv8lgmzPZSiTBQAFOFGIzka5EZ1dZocmGnn0XdX0+XTqJ6Tqv7selMuGLRQ==}
+    engines: {node: '>=16.9.0'}
+
   ieee754@1.2.1:
     resolution: {integrity: sha512-dcyqhDvX1C46lXZcVqCpK+FtMRQVdIMN6/Df5js2zouUsqG7I6sFxitIC+7KYK29KdXOLHdu9zL4sFnoVQnqaA==}
 
@@ -3009,6 +3053,11 @@ packages:
 
   miniflare@4.20260511.0:
     resolution: {integrity: sha512-GjTfjtdrDb4LTUcA1S/iz/YKMvSxlbgAfgXpyhM1PQV/xzUYRpKWayq3R1vOQg53Y/g0epaBFaZLA2QbnS/meA==}
+    engines: {node: '>=22.0.0'}
+    hasBin: true
+
+  miniflare@4.20260518.0:
+    resolution: {integrity: sha512-jbvp43zWa66tuQ+P7bl7s25VJWzGMv4mVhxEEZEEATPvuqAQhGn2wj3rQViVZkZZBZmXQtZ5ZV5kX9VtmWGzuA==}
     engines: {node: '>=22.0.0'}
     hasBin: true
 
@@ -3433,12 +3482,27 @@ packages:
     engines: {node: '>=16'}
     hasBin: true
 
+  workerd@1.20260518.1:
+    resolution: {integrity: sha512-rLquk/eeqqJCbdGljSSuIZWW25vzYjTblXkD/tXQXKR5YsSIC91EtlqrzA1L4TJDZCxXKeFXPYqkW7R16UipXQ==}
+    engines: {node: '>=16'}
+    hasBin: true
+
   wrangler@4.91.0:
     resolution: {integrity: sha512-dFzhAd2/DpaHGRrQMQkL8F6AKmjzK2hfbhyTJ+5dcZS6jdl9KG8oxO5oAflIdlsRYnrOzxRxQnvIqwewIq1FXA==}
     engines: {node: '>=22.0.0'}
     hasBin: true
     peerDependencies:
       '@cloudflare/workers-types': ^4.20260511.1
+    peerDependenciesMeta:
+      '@cloudflare/workers-types':
+        optional: true
+
+  wrangler@4.93.0:
+    resolution: {integrity: sha512-qNsPr0oWRTc85SG7s1MjX+mWNTvkNV1zEQvRpTsV6eo8uqtvZoEAq8t8strQi9TtrDP3BOsxmy+N/G3ML6hH2w==}
+    engines: {node: '>=22.0.0'}
+    hasBin: true
+    peerDependencies:
+      '@cloudflare/workers-types': ^4.20260518.1
     peerDependenciesMeta:
       '@cloudflare/workers-types':
         optional: true
@@ -3919,6 +3983,12 @@ snapshots:
     optionalDependencies:
       workerd: 1.20260511.1
 
+  '@cloudflare/unenv-preset@2.16.1(unenv@2.0.0-rc.24)(workerd@1.20260518.1)':
+    dependencies:
+      unenv: 2.0.0-rc.24
+    optionalDependencies:
+      workerd: 1.20260518.1
+
   '@cloudflare/vite-plugin@1.37.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(workerd@1.20260511.1)(wrangler@4.91.0)':
     dependencies:
       '@cloudflare/unenv-preset': 2.16.1(unenv@2.0.0-rc.24)(workerd@1.20260511.1)
@@ -3932,9 +4002,22 @@ snapshots:
       - utf-8-validate
       - workerd
 
-  '@cloudflare/vite-plugin@1.37.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(workerd@1.20260511.1)(wrangler@4.91.0)':
+  '@cloudflare/vite-plugin@1.37.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(workerd@1.20260518.1)(wrangler@4.91.0)':
     dependencies:
-      '@cloudflare/unenv-preset': 2.16.1(unenv@2.0.0-rc.24)(workerd@1.20260511.1)
+      '@cloudflare/unenv-preset': 2.16.1(unenv@2.0.0-rc.24)(workerd@1.20260518.1)
+      miniflare: 4.20260511.0
+      unenv: 2.0.0-rc.24
+      vite: '@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)'
+      wrangler: 4.91.0
+      ws: 8.18.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+      - workerd
+
+  '@cloudflare/vite-plugin@1.37.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(workerd@1.20260518.1)(wrangler@4.91.0)':
+    dependencies:
+      '@cloudflare/unenv-preset': 2.16.1(unenv@2.0.0-rc.24)(workerd@1.20260518.1)
       miniflare: 4.20260511.0
       unenv: 2.0.0-rc.24
       vite: '@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)'
@@ -3945,19 +4028,47 @@ snapshots:
       - utf-8-validate
       - workerd
 
+  '@cloudflare/vite-plugin@1.37.2(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(workerd@1.20260518.1)(wrangler@4.93.0)':
+    dependencies:
+      '@cloudflare/unenv-preset': 2.16.1(unenv@2.0.0-rc.24)(workerd@1.20260518.1)
+      miniflare: 4.20260518.0
+      unenv: 2.0.0-rc.24
+      vite: '@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)'
+      wrangler: 4.93.0
+      ws: 8.18.0
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+      - workerd
+
   '@cloudflare/workerd-darwin-64@1.20260511.1':
+    optional: true
+
+  '@cloudflare/workerd-darwin-64@1.20260518.1':
     optional: true
 
   '@cloudflare/workerd-darwin-arm64@1.20260511.1':
     optional: true
 
+  '@cloudflare/workerd-darwin-arm64@1.20260518.1':
+    optional: true
+
   '@cloudflare/workerd-linux-64@1.20260511.1':
+    optional: true
+
+  '@cloudflare/workerd-linux-64@1.20260518.1':
     optional: true
 
   '@cloudflare/workerd-linux-arm64@1.20260511.1':
     optional: true
 
+  '@cloudflare/workerd-linux-arm64@1.20260518.1':
+    optional: true
+
   '@cloudflare/workerd-windows-64@1.20260511.1':
+    optional: true
+
+  '@cloudflare/workerd-windows-64@1.20260518.1':
     optional: true
 
   '@cspotcode/source-map-support@0.8.1':
@@ -4301,6 +4412,12 @@ snapshots:
   '@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(hono@4.12.18)':
     dependencies:
       hono: 4.12.18
+    optionalDependencies:
+      vite: '@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)'
+
+  '@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(hono@4.12.21)':
+    dependencies:
+      hono: 4.12.21
     optionalDependencies:
       vite: '@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)'
 
@@ -4810,7 +4927,17 @@ snapshots:
       tailwindcss: 4.3.0
       vite: '@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)'
 
-  '@ts-76/inertia-hono-jsx@file:.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(hono@4.12.18))(hono@4.12.18)':
+  '@ts-76/inertia-hono-jsx@0.2.1(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(hono@4.12.18))(hono@4.12.18)':
+    dependencies:
+      '@hono/inertia': 0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(hono@4.12.18)
+      '@inertiajs/core': 3.1.1
+      es-toolkit: 1.46.1
+      hono: 4.12.18
+      laravel-precognition: 2.0.0
+    transitivePeerDependencies:
+      - axios
+
+  '@ts-76/inertia-hono-jsx@0.2.3(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(hono@4.12.18))(hono@4.12.18)':
     dependencies:
       '@hono/inertia': 0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(hono@4.12.18)
       '@inertiajs/core': 3.1.1
@@ -4820,12 +4947,12 @@ snapshots:
     transitivePeerDependencies:
       - axios
 
-  '@ts-76/inertia-hono-jsx@file:.research/inertia-hono-jsx/ts-76-inertia-hono-jsx-0.2.2-fork-c.0.tgz(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(hono@4.12.18))(hono@4.12.18)':
+  '@ts-76/inertia-hono-jsx@0.2.3(@hono/inertia@0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(hono@4.12.21))(hono@4.12.21)':
     dependencies:
-      '@hono/inertia': 0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(hono@4.12.18)
+      '@hono/inertia': 0.2.0(@voidzero-dev/vite-plus-core@0.1.21(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(hono@4.12.21)
       '@inertiajs/core': 3.1.1
       es-toolkit: 1.46.1
-      hono: 4.12.18
+      hono: 4.12.21
       laravel-precognition: 2.0.0
     transitivePeerDependencies:
       - axios
@@ -5520,6 +5647,8 @@ snapshots:
 
   hono@4.12.18: {}
 
+  hono@4.12.21: {}
+
   ieee754@1.2.1: {}
 
   inherits@2.0.4: {}
@@ -5642,6 +5771,18 @@ snapshots:
       sharp: 0.34.5
       undici: 7.24.8
       workerd: 1.20260511.1
+      ws: 8.18.0
+      youch: 4.1.0-beta.10
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  miniflare@4.20260518.0:
+    dependencies:
+      '@cspotcode/source-map-support': 0.8.1
+      sharp: 0.34.5
+      undici: 7.24.8
+      workerd: 1.20260518.1
       ws: 8.18.0
       youch: 4.1.0-beta.10
     transitivePeerDependencies:
@@ -6290,6 +6431,14 @@ snapshots:
       '@cloudflare/workerd-linux-arm64': 1.20260511.1
       '@cloudflare/workerd-windows-64': 1.20260511.1
 
+  workerd@1.20260518.1:
+    optionalDependencies:
+      '@cloudflare/workerd-darwin-64': 1.20260518.1
+      '@cloudflare/workerd-darwin-arm64': 1.20260518.1
+      '@cloudflare/workerd-linux-64': 1.20260518.1
+      '@cloudflare/workerd-linux-arm64': 1.20260518.1
+      '@cloudflare/workerd-windows-64': 1.20260518.1
+
   wrangler@4.91.0:
     dependencies:
       '@cloudflare/kv-asset-handler': 0.5.0
@@ -6300,6 +6449,22 @@ snapshots:
       path-to-regexp: 6.3.0
       unenv: 2.0.0-rc.24
       workerd: 1.20260511.1
+    optionalDependencies:
+      fsevents: 2.3.3
+    transitivePeerDependencies:
+      - bufferutil
+      - utf-8-validate
+
+  wrangler@4.93.0:
+    dependencies:
+      '@cloudflare/kv-asset-handler': 0.5.0
+      '@cloudflare/unenv-preset': 2.16.1(unenv@2.0.0-rc.24)(workerd@1.20260518.1)
+      blake3-wasm: 2.1.5
+      esbuild: 0.27.3
+      miniflare: 4.20260518.0
+      path-to-regexp: 6.3.0
+      unenv: 2.0.0-rc.24
+      workerd: 1.20260518.1
     optionalDependencies:
       fsevents: 2.3.3
     transitivePeerDependencies:

@@ -1,23 +1,18 @@
 {
-  "name": "temp",
+  "name": "hono",
+  "version": "0.0.0",
+  "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "$npm_execpath run build && vite preview",
-    "deploy": "$npm_execpath run build && wrangler deploy",
-    "cf-typegen": "wrangler types --env-interface CloudflareBindings"
-  },
-  "dependencies": {
-    "@hono/inertia": "^0.2.0",
-    "@inertiajs/core": "^3.1.1",
-    "@ts-76/inertia-hono-jsx": "^0.2.0",
-    "hono": "^4.12.18"
+    "ready": "vp fmt && vp lint && vp run test -r && vp run build -r",
+    "dev": "vp run website#dev",
+    "prepare": "vp config"
   },
   "devDependencies": {
-    "@cloudflare/vite-plugin": "^1.2.3",
-    "vite": "^6.3.5",
-    "vite-ssr-components": "^0.6.1",
-    "wrangler": "^4.17.0"
-  }
+    "vite-plus": "catalog:"
+  },
+  "engines": {
+    "node": ">=22.12.0"
+  },
+  "packageManager": "pnpm@11.1.2"
 }

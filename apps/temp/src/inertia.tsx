@@ -17,15 +17,12 @@ const toInertiaPage = (page: PageObject): Page => ({
   rememberedState: {},
 });
 
-// ts-76 の createInertiaApp は SSR mode の overload 解決が外れて Auto overload (void | RenderFunction)
-// に落ちるため、SSR 戻り値型へ強引キャストする。ライブラリ側の型バグなので呼び出し側からは隠す。
 async function ssrRender(page: PageObject): Promise<InertiaAppSSRResponse> {
-  const result = await createInertiaApp({
+  return await createInertiaApp({
     page: toInertiaPage(page),
     render: renderToString,
     resolve,
   });
-  return result as unknown as InertiaAppSSRResponse;
 }
 
 const RootDocument = ({ body }: { body: string }) => (
