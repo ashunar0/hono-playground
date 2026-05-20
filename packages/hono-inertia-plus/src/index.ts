@@ -1,7 +1,19 @@
 import type { Context, MiddlewareHandler } from "hono";
 
-const DEFER_MARKER = Symbol.for("@ashunar0/hono-inertia-defer/marker");
-const SCROLL_MARKER = Symbol.for("@ashunar0/hono-inertia-scroll/marker");
+const DEFER_MARKER = Symbol.for("@ashunar0/hono-inertia-plus/defer");
+const SCROLL_MARKER = Symbol.for("@ashunar0/hono-inertia-plus/scroll");
+
+declare module "hono" {
+  interface Context {
+    /**
+     * Registers props merged into every subsequent `c.render(...)` within
+     * this request — Inertia's official "shared data" (`Inertia::share`)
+     * concept. Opinionated session helpers (e.g.
+     * `@ashunar0/hono-inertia-flash`'s `c.flash` / `c.back`) build on top of it.
+     */
+    share(props: Record<string, unknown>): void;
+  }
+}
 
 export interface DeferredProp<T = unknown> {
   [DEFER_MARKER]: true;
@@ -107,7 +119,7 @@ export interface PageObject {
 
 export type RootView = (page: PageObject, c: Context) => string | Promise<string>;
 
-export interface InertiaWithDeferAndScrollOptions {
+export interface InertiaPlusOptions {
   version?: string | null;
   rootView?: RootView;
 }
@@ -126,10 +138,9 @@ const defaultRootView: RootView = (page) =>
  *   and `X-Inertia-Partial-Data` / `X-Inertia-Partial-Except` headers,
  *   computing only the requested deferred resolvers and stripping non-
  *   requested eager props.
+ * - **Shared data** (`c.share`): props merged into every render this request.
  */
-export const inertiaWithDeferAndScroll = (
-  options: InertiaWithDeferAndScrollOptions = {},
-): MiddlewareHandler => {
+export const inertiaPlus = (options: InertiaPlusOptions = {}): MiddlewareHandler => {
   const version = options.version ?? null;
   const rootView = options.rootView ?? defaultRootView;
 
@@ -141,9 +152,15 @@ export const inertiaWithDeferAndScroll = (
       }
     }
 
+    const shared: Record<string, unknown> = {};
+    c.share = (props) => {
+      Object.assign(shared, props);
+    };
+
     // biome-ignore lint: c.setRenderer type comes from @hono/inertia's module augmentation
     c.setRenderer((async (component: string, props: Record<string, unknown> = {}) => {
       const url = new URL(c.req.url);
+      const incomingProps = { ...shared, ...props };
 
       const partialComponent = c.req.header("X-Inertia-Partial-Component");
       const partialData = c.req.header("X-Inertia-Partial-Data");
@@ -173,7 +190,7 @@ export const inertiaWithDeferAndScroll = (
       const matchPropsOn: string[] = [];
       const resolvedProps: Record<string, unknown> = {};
 
-      for (const [key, value] of Object.entries(props)) {
+      for (const [key, value] of Object.entries(incomingProps)) {
         const isExcluded =
           (onlyKeys !== null && !onlyKeys.includes(key)) ||
           (exceptKeys !== null && exceptKeys.includes(key));

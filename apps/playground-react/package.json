@@ -9,8 +9,7 @@
     "cf-typegen": "wrangler types --env-interface CloudflareBindings"
   },
   "dependencies": {
-    "@ashunar0/hono-inertia-defer": "workspace:*",
-    "@ashunar0/hono-inertia-scroll": "workspace:*",
+    "@ashunar0/hono-inertia-plus": "workspace:*",
     "@hono/inertia": "^0.2.0",
     "@inertiajs/react": "^3.1.1",
     "hono": "^4.12.18",

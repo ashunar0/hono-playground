@@ -7,7 +7,8 @@ export type Task = Awaited<ReturnType<typeof tasksService.list>>[number];
 export type AuthUser = NonNullable<AuthVariables["user"]>;
 
 export type HomePageProps = {
-  tasks: Task[];
+  /** deferred prop: 初期レンダー時は undefined、<Deferred> 解決後に Task[] */
+  tasks?: Task[];
   filter: ListFilter;
   user: AuthUser;
 };

@@ -4,7 +4,7 @@ import { TaskItem } from "@/features/tasks/components/TaskItem";
 import type { HomePageProps } from "@/features/tasks/types";
 import { cn } from "@/lib/cn";
 import { href } from "@/lib/href";
-import { Form, Link } from "@ts-76/inertia-hono-jsx";
+import { Deferred, Form, Link } from "@ts-76/inertia-hono-jsx";
 
 type FilterStatus = "open" | "done" | "all";
 type FilterOverrides = Partial<{
@@ -95,15 +95,23 @@ export default function Home({ tasks, filter, user }: HomePageProps) {
           </Link>
         </div>
 
-        {tasks.length === 0 ? (
-          <p class="text-center text-gray-500">タスクがないのだ</p>
-        ) : (
-          <ul class="divide-y divide-gray-200 rounded border border-gray-200">
-            {tasks.map((t) => (
-              <TaskItem task={t} activeTag={activeTag} now={now} linkTo={linkTo} />
-            ))}
-          </ul>
-        )}
+        <Deferred
+          data="tasks"
+          fallback={<p class="text-center text-gray-500">読み込み中なのだ…</p>}
+        >
+          {() => {
+            const list = tasks ?? [];
+            return list.length === 0 ? (
+              <p class="text-center text-gray-500">タスクがないのだ</p>
+            ) : (
+              <ul class="divide-y divide-gray-200 rounded border border-gray-200">
+                {list.map((t) => (
+                  <TaskItem task={t} activeTag={activeTag} now={now} linkTo={linkTo} />
+                ))}
+              </ul>
+            );
+          }}
+        </Deferred>
       </div>
     </>
   );

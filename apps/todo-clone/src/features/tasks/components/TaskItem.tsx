@@ -17,7 +17,7 @@ export function TaskItem({ task, activeTag, now, linkTo }: Props) {
     const checked = (e.currentTarget as HTMLInputElement).checked;
     router
       .optimistic<HomePageProps>((pageProps) => ({
-        tasks: pageProps.tasks.map((t) => (t.id === task.id ? { ...t, done: checked } : t)),
+        tasks: (pageProps.tasks ?? []).map((t) => (t.id === task.id ? { ...t, done: checked } : t)),
       }))
       .patch(`/tasks/${task.id}`, { done: checked }, { preserveScroll: true });
   };
@@ -25,7 +25,7 @@ export function TaskItem({ task, activeTag, now, linkTo }: Props) {
   const handleDelete = () => {
     router
       .optimistic<HomePageProps>((pageProps) => ({
-        tasks: pageProps.tasks.filter((t) => t.id !== task.id),
+        tasks: (pageProps.tasks ?? []).filter((t) => t.id !== task.id),
       }))
       .delete(`/tasks/${task.id}`, { preserveScroll: true });
   };

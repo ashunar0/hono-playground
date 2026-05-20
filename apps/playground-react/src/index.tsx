@@ -1,10 +1,10 @@
 import {
   defer,
-  inertiaWithDeferAndScroll,
+  inertiaPlus,
   type PageObject,
   type RootView,
   scroll,
-} from "@ashunar0/hono-inertia-scroll";
+} from "@ashunar0/hono-inertia-plus";
 import { createInertiaApp } from "@inertiajs/react";
 import type { InertiaAppSSRResponse, Page } from "@inertiajs/core";
 import { Hono } from "hono";
@@ -73,7 +73,7 @@ const rootView: RootView = async (page: PageObject) => {
 };
 
 const app = new Hono()
-  .use(inertiaWithDeferAndScroll({ version, rootView }))
+  .use(inertiaPlus({ version, rootView }))
   .get("/", (c) => c.render("Home", { greeting: "Hello from Hono Inertia (React)" }))
   .get("/adapter/head-keys", (c) => c.render("Adapter/HeadKeys", {}))
   .get("/adapter/form", (c) => c.render("Adapter/FormDemo", { submitted: lastFormSubmission }))

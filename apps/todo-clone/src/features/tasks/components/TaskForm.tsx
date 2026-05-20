@@ -15,7 +15,7 @@ export function TaskForm() {
         const tagNamesRaw = (data.tagNames ?? "") as string;
         return {
           tasks: [
-            ...tasks,
+            ...(tasks ?? []),
             {
               id: -Date.now(),
               userId: "",

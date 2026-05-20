@@ -1,7 +1,7 @@
 {
-  "name": "@ashunar0/hono-inertia-partial",
+  "name": "@ashunar0/hono-inertia-plus",
   "version": "0.0.1",
-  "description": "Server-side partial reload support for @hono/inertia (filter middleware that respects X-Inertia-Partial-Data / X-Inertia-Partial-Except headers)",
+  "description": "Protocol superset of @hono/inertia: shared data (c.share), partial reloads, deferred props, merge props, and Inertia v3 infinite scroll — in a single render-time middleware.",
   "license": "MIT",
   "files": [
     "src",

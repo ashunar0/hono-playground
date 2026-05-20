@@ -1,8 +1,4 @@
-import {
-  inertiaWithDeferAndScroll,
-  type PageObject,
-  type RootView,
-} from "@ashunar0/hono-inertia-scroll";
+import { inertiaPlus, type PageObject, type RootView } from "@ashunar0/hono-inertia-plus";
 import type { InertiaAppSSRResponse, Page } from "@inertiajs/core";
 import { createInertiaApp } from "@ts-76/inertia-hono-jsx";
 import { renderToString } from "hono/jsx/dom/server";
@@ -39,4 +35,4 @@ const rootView: RootView = async (page: PageObject) => {
   return "<!doctype html>" + html.replace("</head>", head.join("") + "</head>");
 };
 
-export const inertia = inertiaWithDeferAndScroll({ version, rootView });
+export const inertia = inertiaPlus({ version, rootView });

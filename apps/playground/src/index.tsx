@@ -1,4 +1,4 @@
-import { defer, scroll } from "@ashunar0/hono-inertia-scroll";
+import { defer, scroll } from "@ashunar0/hono-inertia-plus";
 import { Hono } from "hono";
 import { inertia } from "./inertia";
 import users from "./routes/users";

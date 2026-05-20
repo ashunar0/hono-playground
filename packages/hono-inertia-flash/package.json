@@ -1,7 +1,7 @@
 {
   "name": "@ashunar0/hono-inertia-flash",
   "version": "0.0.1",
-  "description": "Laravel/Rails-style shared data + flash session + redirect-back for @hono/inertia. Drop-in replacement of inertia() that adds c.share / c.flash / c.back.",
+  "description": "Laravel/Rails-style flash session + redirect-back layered on @ashunar0/hono-inertia-plus. Adds c.flash / c.back; relies on plus for c.share and rendering.",
   "license": "MIT",
   "files": [
     "src",
@@ -22,13 +22,11 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
-    "@hono/inertia": "^0.2.0",
     "hono": "^4.12.18",
     "typescript": "^5",
     "vite-plus": "catalog:"
   },
   "peerDependencies": {
-    "@hono/inertia": "^0.2.0",
     "hono": "^4.0.0"
   }
 }

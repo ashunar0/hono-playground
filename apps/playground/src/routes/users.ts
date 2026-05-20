@@ -1,4 +1,4 @@
-import { defer } from "@ashunar0/hono-inertia-defer";
+import { defer } from "@ashunar0/hono-inertia-plus";
 import { Hono } from "hono";
 
 const users = [
