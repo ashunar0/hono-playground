@@ -2,7 +2,7 @@ import { Layout } from "@/components/Layout";
 import { StoryRow } from "@/features/stories/components/StoryRow";
 import type { HomePageProps } from "@/features/stories/types";
 import { cn } from "@/lib/cn";
-import { Link } from "@ts-76/inertia-hono-jsx";
+import { InfiniteScroll, Link } from "@ts-76/inertia-hono-jsx";
 
 export default function Home({ stories, sort }: HomePageProps) {
   const tabClass = (active: boolean) =>
@@ -25,11 +25,18 @@ export default function Home({ stories, sort }: HomePageProps) {
       {stories.length === 0 ? (
         <p class="text-center text-gray-500">まだ投稿がないのだ</p>
       ) : (
-        <ol class="divide-y divide-gray-100">
+        // data="stories" が scrollProps を読み、末尾が見えたら次ページを append fetch。
+        <InfiniteScroll
+          data="stories"
+          as="ol"
+          class="divide-y divide-gray-100"
+          buffer={150}
+          loading={<p class="py-3 text-center text-xs text-gray-400">読み込み中なのだ…</p>}
+        >
           {stories.map((story) => (
             <StoryRow story={story} />
           ))}
-        </ol>
+        </InfiniteScroll>
       )}
     </Layout>
   );

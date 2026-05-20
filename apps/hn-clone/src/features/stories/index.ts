@@ -2,6 +2,7 @@ import { getDb } from "@/lib/db";
 import { toInertiaErrors, vJson, vParam, vQuery } from "@/lib/validator";
 import type { AuthVariables } from "@/middleware/auth";
 import { requireAuth } from "@/middleware/require-auth";
+import { scroll } from "@ashunar0/hono-inertia-plus";
 import { type Context, Hono } from "hono";
 import { commentsService } from "../comments/service";
 import { createStorySchema, listQuerySchema, storyIdParamSchema } from "./schema";
@@ -13,11 +14,21 @@ type AppContext = Context<AppEnv>;
 export const storiesApp = new Hono<AppEnv>()
   // 一覧・詳細は未ログインでも閲覧可。投稿だけ requireAuth を個別に付ける。
   .get("/", vQuery(listQuerySchema), async (c) => {
-    const { sort } = c.req.valid("query");
+    const { sort, page } = c.req.valid("query");
     // 未ログインは空文字 = 誰の投票にも一致せず voted は全部 false。
     const userId = c.get("user")?.id ?? "";
-    const stories = await storiesService.list(getDb(c.env), userId, sort);
-    return c.render("Home", { stories, sort });
+    const { items, currentPage, lastPage } = await storiesService.listPage(
+      getDb(c.env),
+      userId,
+      sort,
+      page,
+    );
+    // scroll() marker。plus が scrollProps を吐き、partial reload (append) で
+    // 次ページを stories 配列にマージ (id で dedupe) する。<InfiniteScroll data="stories"> が駆動。
+    return c.render("Home", {
+      stories: scroll({ data: items, currentPage, lastPage, pageName: "page", matchOn: "id" }),
+      sort,
+    });
   })
   .get("/submit", requireAuth, (c) => c.render("Submit"))
   .post(

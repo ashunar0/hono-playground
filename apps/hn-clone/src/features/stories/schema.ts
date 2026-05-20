@@ -32,6 +32,7 @@ export type CreateStoryRequest = z.infer<typeof createStorySchema>;
 
 export const listQuerySchema = z.object({
   sort: z.enum(["new", "top"]).catch("new").default("new"),
+  page: z.coerce.number().int().positive().catch(1).default(1),
 });
 
 export type ListQuery = z.infer<typeof listQuerySchema>;

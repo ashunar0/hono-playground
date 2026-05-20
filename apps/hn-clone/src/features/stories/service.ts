@@ -2,11 +2,18 @@ import type { Db } from "@/lib/db";
 import { storiesRepo } from "./repository";
 import type { CreateStoryRequest, ListQuery } from "./schema";
 
+// 1 ページの件数。デモで複数ページを見せたいので小さめ。
+export const PAGE_SIZE = 5;
+
 export const storiesService = {
-  list: async (db: Db, userId: string, sort: ListQuery["sort"] = "new") => {
-    const rows = await storiesRepo.list(db, userId, sort);
+  listPage: async (db: Db, userId: string, sort: ListQuery["sort"], page: number) => {
+    const currentPage = Math.max(1, page);
+    const total = await storiesRepo.countAll(db);
+    const lastPage = Math.max(1, Math.ceil(total / PAGE_SIZE));
+    const rows = await storiesRepo.list(db, userId, sort, PAGE_SIZE, (currentPage - 1) * PAGE_SIZE);
     // SQL の voted (0/1) を boolean に正規化。
-    return rows.map((row) => ({ ...row, voted: row.voted === 1 }));
+    const items = rows.map((row) => ({ ...row, voted: row.voted === 1 }));
+    return { items, currentPage, lastPage };
   },
 
   get: async (db: Db, userId: string, id: number) => {
