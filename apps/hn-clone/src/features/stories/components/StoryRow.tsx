@@ -1,7 +1,7 @@
 import { hostOf, timeAgo } from "@/lib/format";
+import { VoteButton } from "@/components/VoteButton";
 import { Link, router, usePage } from "@ts-76/inertia-hono-jsx";
 import type { HomePageProps, StoryListItem } from "../types";
-import { VoteButton } from "./VoteButton";
 
 export function StoryRow({ story }: { story: StoryListItem }) {
   // url 付き投稿はタイトルが外部リンク、text 投稿は詳細ページへ。

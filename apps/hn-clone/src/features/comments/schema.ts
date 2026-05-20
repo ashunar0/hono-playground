@@ -19,3 +19,9 @@ export const storyIdParamSchema = z.object({
 });
 
 export type StoryIdParam = z.infer<typeof storyIdParamSchema>;
+
+export const commentIdParamSchema = z.object({
+  commentId: z.coerce.number().int().positive(),
+});
+
+export type CommentIdParam = z.infer<typeof commentIdParamSchema>;

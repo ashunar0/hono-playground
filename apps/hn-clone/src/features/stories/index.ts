@@ -56,7 +56,7 @@ export const storiesApp = new Hono<AppEnv>()
       c.flash("toast", { type: "error", message: "投稿が見つからなかったのだ" });
       return c.redirect("/", 303);
     }
-    const comments = await commentsService.tree(db, id);
+    const comments = await commentsService.tree(db, userId, id);
     return c.render("Story", { story, comments });
   })
   .post("/stories/:id/vote", requireAuth, vParam(storyIdParamSchema), async (c) => {

@@ -1,7 +1,7 @@
 import { Layout } from "@/components/Layout";
 import { CommentForm } from "@/features/comments/components/CommentForm";
 import { CommentItem } from "@/features/comments/components/CommentItem";
-import { VoteButton } from "@/features/stories/components/VoteButton";
+import { VoteButton } from "@/components/VoteButton";
 import type { StoryPageProps } from "@/features/stories/types";
 import { hostOf, timeAgo } from "@/lib/format";
 import { Link, router, usePage } from "@ts-76/inertia-hono-jsx";
