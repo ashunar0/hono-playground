@@ -1,9 +1,22 @@
 import { formatYen } from "@/lib/format";
-import { Form, Link } from "@ts-76/inertia-hono-jsx";
+import { Link, router } from "@ts-76/inertia-hono-jsx";
 import { transactionTypeLabels } from "../schema";
 import type { TransactionListItem } from "../types";
 
 type Props = { transactions: TransactionListItem[] };
+
+// 楽観的更新で更新したい page props 形状。TransactionsTable 削除時に transactions を絞り込む。
+// memory [[project-inertia-optimistic-tprops-gap]]: Form prop の TProps は固定だが、
+// router.optimistic<T>() は T を渡せるので回避できる。
+type PageShape = { transactions?: TransactionListItem[] };
+
+const handleDelete = (id: string) => {
+  router
+    .optimistic<PageShape>((page) => ({
+      transactions: (page.transactions ?? []).filter((t) => t.id !== id),
+    }))
+    .post(`/transactions/${id}/delete`, undefined, { preserveScroll: true });
+};
 
 export function TransactionsTable({ transactions }: Props) {
   if (transactions.length === 0) {
@@ -78,16 +91,13 @@ function Row({ item: t }: { item: TransactionListItem }) {
           >
             編集
           </Link>
-          <Form action={`/transactions/${t.id}/delete`} method="post">
-            {() => (
-              <button
-                type="submit"
-                class="rounded border border-red-300 px-2 py-1 text-xs text-red-600 hover:bg-red-50"
-              >
-                削除
-              </button>
-            )}
-          </Form>
+          <button
+            type="button"
+            onClick={() => handleDelete(t.id)}
+            class="rounded border border-red-300 px-2 py-1 text-xs text-red-600 hover:bg-red-50"
+          >
+            削除
+          </button>
         </div>
       </td>
     </tr>
