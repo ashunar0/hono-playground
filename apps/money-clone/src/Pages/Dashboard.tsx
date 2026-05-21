@@ -108,6 +108,12 @@ export default function Dashboard({ dashboard }: Props) {
           >
             CSV ダウンロード (全期間)
           </a>
+          <Link
+            href="/import"
+            class="rounded border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
+          >
+            CSV 取り込み
+          </Link>
         </div>
       </div>
     </Layout>
