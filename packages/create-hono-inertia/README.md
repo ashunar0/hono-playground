@@ -17,6 +17,7 @@ bun create hono-inertia
 You will be prompted for:
 
 - **Project name** (or pass it as an argument: `pnpm create hono-inertia my-app`)
+- **Add Tailwind CSS?** (v4 with `@tailwindcss/vite`)
 - **Install dependencies?** (auto-detects npm / pnpm / yarn / bun)
 - **Initialize a git repository?**
 
@@ -27,6 +28,16 @@ cd my-app
 pnpm dev
 ```
 
+### Non-interactive
+
+Pass `--yes` (or `-y`) to accept all defaults. Combine with `--skip-*` flags to opt out:
+
+```sh
+pnpm create hono-inertia my-app --yes --skip-tailwind
+```
+
+Supported flags: `--yes`, `--skip-install`, `--skip-git`, `--skip-tailwind`.
+
 ## What you get
 
 A minimal Hono + Inertia template (no opinions about folder structure, layouts, or feature splits — extend it however you like):
@@ -36,6 +47,7 @@ A minimal Hono + Inertia template (no opinions about folder structure, layouts, 
 - **SSR + hydration**: server-side rendering with browser-side hydration
 - **Type-safe pages**: auto-generated `pages.gen.ts` for typed Inertia page props
 - **Build**: Vite with the official `@cloudflare/vite-plugin`
+- **Optional**: Tailwind CSS v4 (opt-in via prompt)
 
 ## Project layout
 

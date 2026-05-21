@@ -10,6 +10,7 @@ type PM = "npm" | "pnpm" | "yarn" | "bun";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const templateDir = resolve(__dirname, "../templates/cf-workers-hono-jsx");
+const patchesDir = resolve(__dirname, "../templates/_patches");
 
 function detectPM(): PM {
   const ua = process.env.npm_config_user_agent ?? "";
@@ -48,7 +49,50 @@ function parseArgs(argv: string[]) {
     yes: flags.has("--yes") || flags.has("-y"),
     skipInstall: flags.has("--skip-install"),
     skipGit: flags.has("--skip-git"),
+    skipTailwind: flags.has("--skip-tailwind"),
   };
+}
+
+type JsonObject = { [k: string]: unknown };
+
+function isPlainObject(v: unknown): v is JsonObject {
+  return !!v && typeof v === "object" && !Array.isArray(v);
+}
+
+function mergeJson(target: JsonObject, source: JsonObject): JsonObject {
+  const out: JsonObject = { ...target };
+  for (const [key, value] of Object.entries(source)) {
+    const existing = out[key];
+    out[key] = isPlainObject(value) && isPlainObject(existing) ? mergeJson(existing, value) : value;
+  }
+  return out;
+}
+
+function sortDeps(pkg: JsonObject): JsonObject {
+  const out = { ...pkg };
+  for (const key of ["dependencies", "devDependencies", "peerDependencies"]) {
+    const deps = out[key];
+    if (isPlainObject(deps)) {
+      out[key] = Object.fromEntries(Object.entries(deps).sort(([a], [b]) => a.localeCompare(b)));
+    }
+  }
+  return out;
+}
+
+function applyPatch(targetDir: string, patchName: string) {
+  const patchDir = resolve(patchesDir, patchName);
+  const overlayDir = resolve(patchDir, "overlay");
+  if (existsSync(overlayDir)) {
+    cpSync(overlayDir, targetDir, { recursive: true });
+  }
+  const mergeFile = resolve(patchDir, "package.json.merge.json");
+  if (existsSync(mergeFile)) {
+    const pkgPath = resolve(targetDir, "package.json");
+    const pkg = JSON.parse(readFileSync(pkgPath, "utf-8")) as JsonObject;
+    const patch = JSON.parse(readFileSync(mergeFile, "utf-8")) as JsonObject;
+    const merged = sortDeps(mergeJson(pkg, patch));
+    writeFileSync(pkgPath, `${JSON.stringify(merged, null, 2)}\n`);
+  }
 }
 
 async function main() {
@@ -73,6 +117,15 @@ async function main() {
             validate: (v) => validateProjectName(v ?? ""),
           }),
         );
+
+  const doTailwind = args.yes
+    ? !args.skipTailwind
+    : runOrCancel(
+        await confirm({
+          message: "Add Tailwind CSS?",
+          initialValue: true,
+        }),
+      );
 
   const pm = detectPM();
 
@@ -107,6 +160,9 @@ async function main() {
       filePath,
       contents.replace(/"name": "cf-workers-hono-jsx"/, `"name": "${projectName}"`),
     );
+  }
+  if (doTailwind) {
+    applyPatch(targetDir, "tailwind");
   }
   s1.stop(`Scaffolded ${pc.cyan(projectName)}`);
 

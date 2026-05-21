@@ -1,6 +1,6 @@
 {
   "name": "create-hono-inertia",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Scaffold a Hono + Inertia + hono/jsx project (Cloudflare Workers, SSR + hydration)",
   "keywords": [
     "cloudflare-workers",
