@@ -22,6 +22,8 @@ catalog:
   "@better-auth/drizzle-adapter": ^1.6.11
   d3-scale: ^4.0.2
   "@types/d3-scale": ^4.0.9
+  "@clack/prompts": ^1.4.0
+  picocolors: ^1.1.1
 overrides:
   vite: "catalog:"
   vitest: "catalog:"

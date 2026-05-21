@@ -5,18 +5,25 @@ Scaffold a [Hono](https://hono.dev) + [Inertia.js](https://inertiajs.com) projec
 ## Usage
 
 ```sh
-npm create hono-inertia@latest my-app
+npm create hono-inertia@latest
 # or
-pnpm create hono-inertia my-app
+pnpm create hono-inertia
 # or
-yarn create hono-inertia my-app
+yarn create hono-inertia
+# or
+bun create hono-inertia
 ```
+
+You will be prompted for:
+
+- **Project name** (or pass it as an argument: `pnpm create hono-inertia my-app`)
+- **Install dependencies?** (auto-detects npm / pnpm / yarn / bun)
+- **Initialize a git repository?**
 
 Then:
 
 ```sh
 cd my-app
-pnpm install
 pnpm dev
 ```
 

@@ -1,42 +1,155 @@
 #!/usr/bin/env node
+import { execFileSync } from "node:child_process";
 import { cpSync, existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { cancel, confirm, intro, isCancel, outro, spinner, text } from "@clack/prompts";
+import pc from "picocolors";
+
+type PM = "npm" | "pnpm" | "yarn" | "bun";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const templateDir = resolve(__dirname, "../templates/cf-workers-hono-jsx");
 
-const projectName = process.argv[2];
+function detectPM(): PM {
+  const ua = process.env.npm_config_user_agent ?? "";
+  if (ua.startsWith("pnpm")) return "pnpm";
+  if (ua.startsWith("yarn")) return "yarn";
+  if (ua.startsWith("bun")) return "bun";
+  return "npm";
+}
 
-if (!projectName) {
-  console.error("Usage: create-hono-inertia <project-name>");
+function validateProjectName(name: string): string | undefined {
+  if (!name) return "Project name is required.";
+  if (name.length > 214) return "Project name must be 214 characters or fewer.";
+  if (/[A-Z]/.test(name)) return "Project name must be lowercase.";
+  if (!/^[a-z0-9][a-z0-9._-]*$/.test(name)) {
+    return "Use letters, numbers, '.', '_' or '-' (must start with a letter or number).";
+  }
+  if (existsSync(resolve(process.cwd(), name))) {
+    return `Directory '${name}' already exists.`;
+  }
+  return undefined;
+}
+
+function runOrCancel<T>(value: T | symbol): T {
+  if (isCancel(value)) {
+    cancel("Cancelled.");
+    process.exit(0);
+  }
+  return value;
+}
+
+function parseArgs(argv: string[]) {
+  const flags = new Set(argv.filter((a) => a.startsWith("-")));
+  const positional = argv.filter((a) => !a.startsWith("-"));
+  return {
+    name: positional[0],
+    yes: flags.has("--yes") || flags.has("-y"),
+    skipInstall: flags.has("--skip-install"),
+    skipGit: flags.has("--skip-git"),
+  };
+}
+
+async function main() {
+  intro(pc.bgCyan(pc.black(" create-hono-inertia ")));
+
+  const args = parseArgs(process.argv.slice(2));
+  const argError = args.name ? validateProjectName(args.name) : undefined;
+
+  if (args.yes && (!args.name || argError)) {
+    cancel(argError ?? "Project name is required with --yes.");
+    process.exit(1);
+  }
+
+  const projectName =
+    args.name && !argError
+      ? args.name
+      : runOrCancel(
+          await text({
+            message: "Project name",
+            placeholder: "my-app",
+            initialValue: args.name && !argError ? args.name : "",
+            validate: (v) => validateProjectName(v ?? ""),
+          }),
+        );
+
+  const pm = detectPM();
+
+  const doInstall = args.yes
+    ? !args.skipInstall
+    : runOrCancel(
+        await confirm({
+          message: `Install dependencies with ${pc.cyan(pm)}?`,
+          initialValue: true,
+        }),
+      );
+
+  const doGit = args.yes
+    ? !args.skipGit
+    : runOrCancel(
+        await confirm({
+          message: "Initialize a git repository?",
+          initialValue: true,
+        }),
+      );
+
+  const targetDir = resolve(process.cwd(), projectName);
+
+  const s1 = spinner();
+  s1.start("Scaffolding project");
+  cpSync(templateDir, targetDir, { recursive: true });
+  renameSync(resolve(targetDir, "_gitignore"), resolve(targetDir, ".gitignore"));
+  for (const file of ["package.json", "wrangler.jsonc"]) {
+    const filePath = resolve(targetDir, file);
+    const contents = readFileSync(filePath, "utf-8");
+    writeFileSync(
+      filePath,
+      contents.replace(/"name": "cf-workers-hono-jsx"/, `"name": "${projectName}"`),
+    );
+  }
+  s1.stop(`Scaffolded ${pc.cyan(projectName)}`);
+
+  if (doGit) {
+    const s2 = spinner();
+    s2.start("Initializing git repository");
+    try {
+      execFileSync("git", ["init", "-q"], { cwd: targetDir, stdio: "ignore" });
+      execFileSync("git", ["add", "-A"], { cwd: targetDir, stdio: "ignore" });
+      execFileSync("git", ["commit", "-m", "Initial commit", "-q"], {
+        cwd: targetDir,
+        stdio: "ignore",
+      });
+      s2.stop("Git repository initialized");
+    } catch {
+      s2.stop(pc.yellow("Skipped git init (git not available or commit failed)"));
+    }
+  }
+
+  if (doInstall) {
+    const s3 = spinner();
+    s3.start(`Installing dependencies with ${pm}`);
+    try {
+      execFileSync(pm, ["install"], { cwd: targetDir, stdio: "ignore" });
+      s3.stop("Dependencies installed");
+    } catch {
+      s3.stop(pc.yellow(`Install failed. Run '${pm} install' manually.`));
+    }
+  }
+
+  const runDev = pm === "npm" ? "npm run dev" : `${pm} dev`;
+  const lines = [
+    `${pc.green("✓")} Project ready in ${pc.cyan(projectName)}`,
+    "",
+    "Next steps:",
+    `  ${pc.dim("cd")} ${projectName}`,
+  ];
+  if (!doInstall) lines.push(`  ${pc.dim(`${pm} install`)}`);
+  lines.push(`  ${pc.dim(runDev)}`);
+  outro(lines.join("\n"));
+}
+
+main().catch((err) => {
+  console.error(err);
   process.exit(1);
-}
-
-const targetDir = resolve(process.cwd(), projectName);
-
-if (existsSync(targetDir)) {
-  console.error(`Error: directory '${projectName}' already exists.`);
-  process.exit(1);
-}
-
-cpSync(templateDir, targetDir, { recursive: true });
-
-renameSync(resolve(targetDir, "_gitignore"), resolve(targetDir, ".gitignore"));
-
-const replacements = [
-  { file: "package.json", from: '"name": "cf-workers-hono-jsx"', to: `"name": "${projectName}"` },
-  { file: "wrangler.jsonc", from: '"name": "cf-workers-hono-jsx"', to: `"name": "${projectName}"` },
-];
-
-for (const { file, from, to } of replacements) {
-  const filePath = resolve(targetDir, file);
-  const contents = readFileSync(filePath, "utf-8");
-  writeFileSync(filePath, contents.replace(from, to));
-}
-
-console.log(`✓ Created ${projectName}\n`);
-console.log("Next steps:");
-console.log(`  cd ${projectName}`);
-console.log("  pnpm install");
-console.log("  pnpm dev");
+});
