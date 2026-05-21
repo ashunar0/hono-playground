@@ -1,6 +1,6 @@
 {
   "name": "@ashunar0/hono-inertia-flash",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Laravel/Rails-style flash session + redirect-back layered on @ashunar0/hono-inertia-plus. Adds c.flash / c.back; relies on plus for c.share and rendering.",
   "license": "MIT",
   "files": [

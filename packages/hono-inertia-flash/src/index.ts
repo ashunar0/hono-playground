@@ -36,6 +36,24 @@ export interface InertiaFlashOptions {
   keys?: readonly string[];
 }
 
+/**
+ * Extension point — declare your flash keys and their value types here, à la
+ * Hono's `ContextVariableMap`. Each `c.flash(key, value)` call narrows to the
+ * declared pair. Leave empty to keep the loose `(string, unknown)` fallback.
+ *
+ * @example
+ * ```ts
+ * declare module "@ashunar0/hono-inertia-flash" {
+ *   interface InertiaFlashStore {
+ *     toast: { type: "success" | "error"; message: string } | null;
+ *     errors: Record<string, string>;
+ *   }
+ * }
+ * ```
+ */
+// biome-ignore lint/suspicious/noEmptyInterface: extension point for module augmentation
+export interface InertiaFlashStore {}
+
 declare module "hono" {
   interface Context {
     /**
@@ -48,8 +66,14 @@ declare module "hono" {
      * Stores a value to be flashed to the next request via cookie. The
      * following request sees it injected as shared data (`c.share`) and emitted
      * on every page object — Laravel's `redirect()->with(...)` analogue.
+     *
+     * Augment `InertiaFlashStore` to narrow the (key, value) pair. Keys not in
+     * the store fall back to `unknown` so untyped flashes still compile.
      */
-    flash(key: string, value: unknown): void;
+    flash<K extends string>(
+      key: K,
+      value: K extends keyof InertiaFlashStore ? InertiaFlashStore[K] : unknown,
+    ): void;
     /**
      * 303 redirect to the `Referer` request header (falls back to `fallback`
      * if the header is absent or malformed). Pairs with `c.flash` for
@@ -133,9 +157,10 @@ export const inertiaFlash = (options: InertiaFlashOptions = {}): MiddlewareHandl
     c.share(sharedFlash);
 
     const flashOut: Record<string, unknown> = {};
-    c.flash = (key, value) => {
+    // overload された signature の実装側は loose 型 (key: string, value: unknown) で受ける。
+    c.flash = ((key: string, value: unknown) => {
       flashOut[key] = value;
-    };
+    }) as Context["flash"];
     c.back = (fallback = "/") => c.redirect(refererPath(c, fallback), 303);
 
     await next();
