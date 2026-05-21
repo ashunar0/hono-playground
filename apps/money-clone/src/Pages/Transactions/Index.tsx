@@ -8,6 +8,7 @@ import {
   transactionTypeLabels,
 } from "@/features/transactions/schema";
 import type { TransactionListItem } from "@/features/transactions/types";
+import { formatYen } from "@/lib/format";
 import { href } from "@/lib/href";
 import { inputClass } from "@/lib/inputClass";
 import { Form, Link } from "@ts-76/inertia-hono-jsx";
@@ -18,8 +19,6 @@ type Props = {
   categories: Category[];
   filter: TransactionFilter;
 };
-
-const formatYen = (n: number) => `¥${n.toLocaleString("ja-JP")}`;
 
 // MonthPager は accounts / categories を再フェッチしない (静的)。
 // partial reload で transactions と filter だけ差し替えれば十分。

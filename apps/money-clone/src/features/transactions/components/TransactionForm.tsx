@@ -35,14 +35,22 @@ const todayISO = () => {
   return `${y}-${m}-${day}`;
 };
 
-export function TransactionForm({ action, submitLabel, accounts, categories, defaults }: Props) {
+export function TransactionForm({
+  action,
+  submitLabel,
+  accounts,
+  categories,
+  defaults,
+}: Props) {
   const initialType: TransactionType = defaults?.type ?? "expense";
   // type を切り替えると category 候補が連動する。SSR 時は initialType ベース、hydration 後に useState で再選択可。
   const [type, setType] = useState<TransactionType>(initialType);
   const visibleCategories = categories.filter((c) => c.kind === type);
   const initialAccountId = defaults?.accountId ?? accounts[0]?.id ?? "";
   const initialCategoryId =
-    defaults?.categoryId ?? categories.find((c) => c.kind === initialType)?.id ?? "";
+    defaults?.categoryId ??
+    categories.find((c) => c.kind === initialType)?.id ??
+    "";
 
   return (
     <Form action={action} method="post">
@@ -54,7 +62,7 @@ export function TransactionForm({ action, submitLabel, accounts, categories, def
             <span class="text-sm text-gray-700">種別</span>
             <div class="flex gap-2">
               {TRANSACTION_TYPES.map((t) => (
-                <label class="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded border border-gray-300 px-3 py-2 has-[:checked]:border-emerald-600 has-[:checked]:bg-emerald-50">
+                <label class="flex flex-1 cursor-pointer items-center justify-center gap-2 rounded border border-gray-300 px-3 py-2 has-checked:border-emerald-600 has-checked:bg-emerald-50">
                   <input
                     type="radio"
                     name="type"
@@ -63,7 +71,9 @@ export function TransactionForm({ action, submitLabel, accounts, categories, def
                     onChange={() => setType(t)}
                     class="sr-only"
                   />
-                  <span class="text-sm font-medium">{transactionTypeLabels[t]}</span>
+                  <span class="text-sm font-medium">
+                    {transactionTypeLabels[t]}
+                  </span>
                 </label>
               ))}
             </div>
@@ -90,7 +100,9 @@ export function TransactionForm({ action, submitLabel, accounts, categories, def
               class={inputClass(!!errors.amount)}
               aria-invalid={errors.amount ? "true" : undefined}
             />
-            {errors.amount && <p class="text-sm text-red-500">{errors.amount}</p>}
+            {errors.amount && (
+              <p class="text-sm text-red-500">{errors.amount}</p>
+            )}
           </label>
 
           <label class="flex flex-col gap-1">
@@ -106,7 +118,9 @@ export function TransactionForm({ action, submitLabel, accounts, categories, def
                 </option>
               ))}
             </select>
-            {errors.accountId && <p class="text-sm text-red-500">{errors.accountId}</p>}
+            {errors.accountId && (
+              <p class="text-sm text-red-500">{errors.accountId}</p>
+            )}
           </label>
 
           <label class="flex flex-col gap-1">
@@ -122,7 +136,9 @@ export function TransactionForm({ action, submitLabel, accounts, categories, def
                 </option>
               ))}
             </select>
-            {errors.categoryId && <p class="text-sm text-red-500">{errors.categoryId}</p>}
+            {errors.categoryId && (
+              <p class="text-sm text-red-500">{errors.categoryId}</p>
+            )}
           </label>
 
           <label class="flex flex-col gap-1">

@@ -6,10 +6,9 @@ import {
 } from "@/features/accounts/schema";
 import type { AccountsPageProps } from "@/features/accounts/types";
 import { FormField } from "@/features/auth/components/FormField";
+import { formatYen } from "@/lib/format";
 import { inputClass } from "@/lib/inputClass";
 import { Form, Link } from "@ts-76/inertia-hono-jsx";
-
-const formatYen = (n: number) => `¥${n.toLocaleString("ja-JP")}`;
 
 export default function AccountsIndex({ accounts }: AccountsPageProps) {
   return (
