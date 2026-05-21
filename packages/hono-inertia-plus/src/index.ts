@@ -2,6 +2,7 @@ import type { Context, MiddlewareHandler } from "hono";
 
 const DEFER_MARKER = Symbol.for("@ashunar0/hono-inertia-plus/defer");
 const SCROLL_MARKER = Symbol.for("@ashunar0/hono-inertia-plus/scroll");
+const ALWAYS_MARKER = Symbol.for("@ashunar0/hono-inertia-plus/always");
 
 declare module "hono" {
   interface Context {
@@ -38,12 +39,21 @@ export interface ScrollDescriptor {
   pageName: string;
 }
 
+export interface AlwaysProp<T = unknown> {
+  [ALWAYS_MARKER]: true;
+  resolve: () => T | Promise<T>;
+}
+
 const isDeferred = (value: unknown): value is DeferredProp => {
   return typeof value === "object" && value !== null && DEFER_MARKER in value;
 };
 
 const isScroll = (value: unknown): value is ScrollProp => {
   return typeof value === "object" && value !== null && SCROLL_MARKER in value;
+};
+
+const isAlways = (value: unknown): value is AlwaysProp => {
+  return typeof value === "object" && value !== null && ALWAYS_MARKER in value;
 };
 
 /**
@@ -103,6 +113,34 @@ export const defer = <T>(resolver: () => T | Promise<T>, group = "default"): T |
     resolve: resolver,
   };
   return marker as unknown as T | undefined;
+};
+
+/**
+ * Marks a prop as **always returned**, even on partial reloads where the prop
+ * is excluded by `only` / `except`. The resolver runs on every render and the
+ * returned value is sent to the client, which overwrites its cached value.
+ *
+ * Use for props that must reflect their current source on every navigation —
+ * notably one-shot session data like flashed messages, errors, CSRF tokens, or
+ * authenticated user info. Without this marker, partial reloads omit the prop
+ * and the client keeps its previous value, so a flashed toast would re-fire
+ * on every subsequent partial reload.
+ *
+ * Mirrors Laravel Inertia's `Inertia::always()`.
+ *
+ * @example
+ * ```ts
+ * c.share({
+ *   flash: always(() => readFlashFromCookie(c)),
+ * })
+ * ```
+ */
+export const always = <T>(resolver: () => T | Promise<T>): T => {
+  const marker: AlwaysProp<T> = {
+    [ALWAYS_MARKER]: true,
+    resolve: resolver,
+  };
+  return marker as unknown as T;
 };
 
 export interface PageObject {
@@ -191,6 +229,13 @@ export const inertiaPlus = (options: InertiaPlusOptions = {}): MiddlewareHandler
       const resolvedProps: Record<string, unknown> = {};
 
       for (const [key, value] of Object.entries(incomingProps)) {
+        // `always(fn)` は partial reload の only/except を無視して毎回評価・返却される。
+        // flash / CSRF token / auth user など「partial reload でも常に上書きしたい」 props 向け。
+        if (isAlways(value)) {
+          resolvedProps[key] = await value.resolve();
+          continue;
+        }
+
         const isExcluded =
           (onlyKeys !== null && !onlyKeys.includes(key)) ||
           (exceptKeys !== null && exceptKeys.includes(key));
