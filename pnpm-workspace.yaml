@@ -20,6 +20,8 @@ catalog:
   better-auth: ^1.6.11
   "@better-auth/cli": ^1.4.21
   "@better-auth/drizzle-adapter": ^1.6.11
+  d3-scale: ^4.0.2
+  "@types/d3-scale": ^4.0.9
 overrides:
   vite: "catalog:"
   vitest: "catalog:"
