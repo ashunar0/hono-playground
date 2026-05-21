@@ -16,63 +16,68 @@ export default function CategoriesIndex({ categories }: CategoriesPageProps) {
 
   return (
     <Layout>
-    <div class="mx-auto max-w-3xl p-8">
-      <h1 class="mb-6 text-2xl font-bold">カテゴリ</h1>
+      <div class="mx-auto max-w-3xl p-8">
+        <h1 class="mb-6 text-2xl font-bold">カテゴリ</h1>
 
-      <section class="mb-8 rounded border border-gray-200 bg-white p-6">
-        <h2 class="mb-4 text-lg font-semibold">新規作成</h2>
-        <Form action="/categories" method="post">
-          {({ errors }) => (
-            <div class="flex flex-col gap-3">
-              <FormField name="name" type="text" label="名前 (例: サブスク)" error={errors.name} />
-              <label class="flex flex-col gap-1">
-                <span class="text-sm text-gray-700">種別</span>
-                <select
-                  name="kind"
-                  class={inputClass(!!errors.kind)}
-                  aria-invalid={errors.kind ? "true" : undefined}
+        <section class="mb-8 rounded border border-gray-200 bg-white p-6">
+          <h2 class="mb-4 text-lg font-semibold">新規作成</h2>
+          <Form action="/categories" method="post">
+            {({ errors }) => (
+              <div class="flex flex-col gap-3">
+                <FormField
+                  name="name"
+                  type="text"
+                  label="名前 (例: サブスク)"
+                  error={errors.name}
+                />
+                <label class="flex flex-col gap-1">
+                  <span class="text-sm text-gray-700">種別</span>
+                  <select
+                    name="kind"
+                    class={inputClass(!!errors.kind)}
+                    aria-invalid={errors.kind ? "true" : undefined}
+                  >
+                    {CATEGORY_KINDS.map((k: CategoryKind) => (
+                      <option value={k}>{categoryKindLabels[k]}</option>
+                    ))}
+                  </select>
+                  {errors.kind && <p class="text-sm text-red-500">{errors.kind}</p>}
+                </label>
+                <label class="flex flex-col gap-1">
+                  <span class="text-sm text-gray-700">色</span>
+                  <div class="flex flex-wrap gap-2">
+                    {CATEGORY_COLORS.map((c, i) => (
+                      <label class="cursor-pointer">
+                        <input
+                          type="radio"
+                          name="color"
+                          value={c}
+                          checked={i === 0}
+                          class="peer sr-only"
+                        />
+                        <span
+                          class="block h-8 w-8 rounded-full border-2 border-transparent peer-checked:border-gray-900"
+                          style={`background-color: ${c}`}
+                        />
+                      </label>
+                    ))}
+                  </div>
+                  {errors.color && <p class="text-sm text-red-500">{errors.color}</p>}
+                </label>
+                <button
+                  type="submit"
+                  class="rounded bg-blue-500 px-4 py-2 font-medium text-white hover:bg-blue-600"
                 >
-                  {CATEGORY_KINDS.map((k: CategoryKind) => (
-                    <option value={k}>{categoryKindLabels[k]}</option>
-                  ))}
-                </select>
-                {errors.kind && <p class="text-sm text-red-500">{errors.kind}</p>}
-              </label>
-              <label class="flex flex-col gap-1">
-                <span class="text-sm text-gray-700">色</span>
-                <div class="flex flex-wrap gap-2">
-                  {CATEGORY_COLORS.map((c, i) => (
-                    <label class="cursor-pointer">
-                      <input
-                        type="radio"
-                        name="color"
-                        value={c}
-                        checked={i === 0}
-                        class="peer sr-only"
-                      />
-                      <span
-                        class="block h-8 w-8 rounded-full border-2 border-transparent peer-checked:border-gray-900"
-                        style={`background-color: ${c}`}
-                      />
-                    </label>
-                  ))}
-                </div>
-                {errors.color && <p class="text-sm text-red-500">{errors.color}</p>}
-              </label>
-              <button
-                type="submit"
-                class="rounded bg-blue-500 px-4 py-2 font-medium text-white hover:bg-blue-600"
-              >
-                作成
-              </button>
-            </div>
-          )}
-        </Form>
-      </section>
+                  作成
+                </button>
+              </div>
+            )}
+          </Form>
+        </section>
 
-      <CategorySection title="支出" items={expense} />
-      <CategorySection title="収入" items={income} />
-    </div>
+        <CategorySection title="支出" items={expense} />
+        <CategorySection title="収入" items={income} />
+      </div>
     </Layout>
   );
 }

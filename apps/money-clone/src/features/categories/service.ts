@@ -2,9 +2,7 @@ import type { Db } from "@/lib/db";
 import { categoriesRepo } from "./repository";
 import type { CreateCategoryRequest, UpdateCategoryRequest } from "./schema";
 
-export type RemoveResult =
-  | { ok: true }
-  | { ok: false; reason: "not-found" | "has-transactions" };
+export type RemoveResult = { ok: true } | { ok: false; reason: "not-found" | "has-transactions" };
 
 export const categoriesService = {
   list: (db: Db, userId: string) => categoriesRepo.list(db, userId),

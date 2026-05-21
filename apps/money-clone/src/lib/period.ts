@@ -18,7 +18,7 @@ export const shiftPeriod = (period: string, delta: number): string => {
   const year = Number(match[1]);
   const month = Number(match[2]); // 1-12
   // 1-based の月を 0-based に直して計算 → 戻す。
-  const total = (year * 12 + (month - 1)) + delta;
+  const total = year * 12 + (month - 1) + delta;
   const ny = Math.floor(total / 12);
   const nm = total - ny * 12 + 1;
   return `${ny}-${String(nm).padStart(2, "0")}`;

@@ -4,11 +4,7 @@ import type { Category } from "@/features/categories/types";
 import { inputClass } from "@/lib/inputClass";
 import { Form } from "@ts-76/inertia-hono-jsx";
 import { useState } from "hono/jsx";
-import {
-  type TransactionType,
-  TRANSACTION_TYPES,
-  transactionTypeLabels,
-} from "../schema";
+import { type TransactionType, TRANSACTION_TYPES, transactionTypeLabels } from "../schema";
 
 type DefaultValues = {
   date: string;
@@ -35,22 +31,14 @@ const todayISO = () => {
   return `${y}-${m}-${day}`;
 };
 
-export function TransactionForm({
-  action,
-  submitLabel,
-  accounts,
-  categories,
-  defaults,
-}: Props) {
+export function TransactionForm({ action, submitLabel, accounts, categories, defaults }: Props) {
   const initialType: TransactionType = defaults?.type ?? "expense";
   // type を切り替えると category 候補が連動する。SSR 時は initialType ベース、hydration 後に useState で再選択可。
   const [type, setType] = useState<TransactionType>(initialType);
   const visibleCategories = categories.filter((c) => c.kind === type);
   const initialAccountId = defaults?.accountId ?? accounts[0]?.id ?? "";
   const initialCategoryId =
-    defaults?.categoryId ??
-    categories.find((c) => c.kind === initialType)?.id ??
-    "";
+    defaults?.categoryId ?? categories.find((c) => c.kind === initialType)?.id ?? "";
 
   return (
     <Form action={action} method="post">
@@ -71,9 +59,7 @@ export function TransactionForm({
                     onChange={() => setType(t)}
                     class="sr-only"
                   />
-                  <span class="text-sm font-medium">
-                    {transactionTypeLabels[t]}
-                  </span>
+                  <span class="text-sm font-medium">{transactionTypeLabels[t]}</span>
                 </label>
               ))}
             </div>
@@ -100,9 +86,7 @@ export function TransactionForm({
               class={inputClass(!!errors.amount)}
               aria-invalid={errors.amount ? "true" : undefined}
             />
-            {errors.amount && (
-              <p class="text-sm text-red-500">{errors.amount}</p>
-            )}
+            {errors.amount && <p class="text-sm text-red-500">{errors.amount}</p>}
           </label>
 
           <label class="flex flex-col gap-1">
@@ -118,9 +102,7 @@ export function TransactionForm({
                 </option>
               ))}
             </select>
-            {errors.accountId && (
-              <p class="text-sm text-red-500">{errors.accountId}</p>
-            )}
+            {errors.accountId && <p class="text-sm text-red-500">{errors.accountId}</p>}
           </label>
 
           <label class="flex flex-col gap-1">
@@ -136,9 +118,7 @@ export function TransactionForm({
                 </option>
               ))}
             </select>
-            {errors.categoryId && (
-              <p class="text-sm text-red-500">{errors.categoryId}</p>
-            )}
+            {errors.categoryId && <p class="text-sm text-red-500">{errors.categoryId}</p>}
           </label>
 
           <label class="flex flex-col gap-1">

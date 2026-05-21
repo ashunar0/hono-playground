@@ -12,11 +12,7 @@ type AccountInput = {
 
 export const accountsRepo = {
   list: (db: Db, userId: string) =>
-    db
-      .select()
-      .from(accounts)
-      .where(eq(accounts.userId, userId))
-      .orderBy(asc(accounts.createdAt)),
+    db.select().from(accounts).where(eq(accounts.userId, userId)).orderBy(asc(accounts.createdAt)),
 
   findById: async (db: Db, userId: string, id: string) => {
     const [row] = await db

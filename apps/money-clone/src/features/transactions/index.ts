@@ -85,11 +85,7 @@ export const transactionsApp = new Hono<AppEnv>()
     }),
     async (c) => {
       const user = c.get("user")!;
-      const result = await transactionsService.create(
-        getDb(c.env),
-        user.id,
-        c.req.valid("json"),
-      );
+      const result = await transactionsService.create(getDb(c.env), user.id, c.req.valid("json"));
       if (!result.ok) {
         c.flash("errors", { _form: validationMessage(result) });
         return c.back();

@@ -2,11 +2,7 @@ import { accountsService } from "@/features/accounts/service";
 import { categoriesService } from "@/features/categories/service";
 import type { Db } from "@/lib/db";
 import { transactionsRepo } from "./repository";
-import type {
-  CreateTransactionRequest,
-  TransactionType,
-  UpdateTransactionRequest,
-} from "./schema";
+import type { CreateTransactionRequest, TransactionType, UpdateTransactionRequest } from "./schema";
 
 type Filter = {
   accountId?: string;
@@ -39,8 +35,7 @@ const validate = async (
 };
 
 export const transactionsService = {
-  list: (db: Db, userId: string, filter: Filter = {}) =>
-    transactionsRepo.list(db, userId, filter),
+  list: (db: Db, userId: string, filter: Filter = {}) => transactionsRepo.list(db, userId, filter),
 
   get: (db: Db, userId: string, id: string) => transactionsRepo.findById(db, userId, id),
 

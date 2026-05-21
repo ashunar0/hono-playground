@@ -45,14 +45,14 @@ export default function TransactionsIndex({ transactions, accounts, categories, 
         </div>
 
         <div class="mb-4">
-          <MonthPager
-            period={filter.period}
-            baseParams={baseParams}
-            only={PARTIAL_RELOAD_KEYS}
-          />
+          <MonthPager period={filter.period} baseParams={baseParams} only={PARTIAL_RELOAD_KEYS} />
         </div>
 
-        <form method="get" action="/transactions" class="mb-6 rounded border border-gray-200 bg-white p-4">
+        <form
+          method="get"
+          action="/transactions"
+          class="mb-6 rounded border border-gray-200 bg-white p-4"
+        >
           {/* MonthPager で選択中の period をフィルタ submit でも維持する */}
           <input type="hidden" name="period" value={filter.period ?? ""} />
           <div class="flex flex-wrap items-end gap-3">

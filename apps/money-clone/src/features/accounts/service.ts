@@ -2,9 +2,7 @@ import type { Db } from "@/lib/db";
 import { accountsRepo } from "./repository";
 import type { CreateAccountRequest, UpdateAccountRequest } from "./schema";
 
-export type RemoveResult =
-  | { ok: true }
-  | { ok: false; reason: "not-found" | "has-transactions" };
+export type RemoveResult = { ok: true } | { ok: false; reason: "not-found" | "has-transactions" };
 
 export const accountsService = {
   list: (db: Db, userId: string) => accountsRepo.list(db, userId),

@@ -35,9 +35,7 @@ export function MonthPager({ period, baseParams = {}, only, path = "/transaction
         ◀ 前月
       </Link>
       <div class="flex items-center gap-3">
-        <span class="text-base font-semibold">
-          {period ? formatPeriod(period) : "全期間"}
-        </span>
+        <span class="text-base font-semibold">{period ? formatPeriod(period) : "全期間"}</span>
         {period && period !== todayPeriod && (
           <Link
             href={buildHref(todayPeriod)}
