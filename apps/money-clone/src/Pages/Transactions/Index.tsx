@@ -1,4 +1,5 @@
 import { Layout } from "@/components/Layout";
+import { MonthPager } from "@/components/MonthPager";
 import type { Account } from "@/features/accounts/types";
 import type { Category } from "@/features/categories/types";
 import {
@@ -20,7 +21,17 @@ type Props = {
 
 const formatYen = (n: number) => `¥${n.toLocaleString("ja-JP")}`;
 
+// MonthPager は accounts / categories を再フェッチしない (静的)。
+// partial reload で transactions と filter だけ差し替えれば十分。
+const PARTIAL_RELOAD_KEYS = ["transactions", "filter"] as const;
+
 export default function TransactionsIndex({ transactions, accounts, categories, filter }: Props) {
+  const baseParams = {
+    accountId: filter.accountId,
+    categoryId: filter.categoryId,
+    type: filter.type,
+  };
+
   return (
     <Layout>
       <div class="mx-auto max-w-4xl p-8">
@@ -34,7 +45,17 @@ export default function TransactionsIndex({ transactions, accounts, categories, 
           </Link>
         </div>
 
+        <div class="mb-4">
+          <MonthPager
+            period={filter.period}
+            baseParams={baseParams}
+            only={PARTIAL_RELOAD_KEYS}
+          />
+        </div>
+
         <form method="get" action="/transactions" class="mb-6 rounded border border-gray-200 bg-white p-4">
+          {/* MonthPager で選択中の period をフィルタ submit でも維持する */}
+          <input type="hidden" name="period" value={filter.period ?? ""} />
           <div class="flex flex-wrap items-end gap-3">
             <label class="flex flex-col gap-1">
               <span class="text-xs text-gray-600">口座</span>

@@ -12,6 +12,7 @@ type Filter = {
   accountId?: string;
   categoryId?: string;
   type?: TransactionType;
+  period?: string;
 };
 
 export type ValidationError = {

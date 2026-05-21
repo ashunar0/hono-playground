@@ -54,6 +54,13 @@ export const transactionFilterSchema = z.object({
   type: z
     .union([z.enum(TRANSACTION_TYPES), z.literal("").transform(() => undefined)])
     .optional(),
+  // 'YYYY-MM'。指定なしは「全期間」。URL state として MonthPager から渡される。
+  period: z
+    .union([
+      z.string().regex(/^\d{4}-\d{2}$/),
+      z.literal("").transform(() => undefined),
+    ])
+    .optional(),
 });
 
 export type TransactionFilter = z.infer<typeof transactionFilterSchema>;

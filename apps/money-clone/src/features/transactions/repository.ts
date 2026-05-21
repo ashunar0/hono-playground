@@ -1,7 +1,7 @@
 import { accounts, categories, transactions } from "@/db/schema";
 import type { Db } from "@/lib/db";
 import { newId } from "@/lib/id";
-import { type SQL, and, desc, eq } from "drizzle-orm";
+import { type SQL, and, desc, eq, like } from "drizzle-orm";
 import type { TransactionType } from "./schema";
 
 type TransactionInput = {
@@ -17,6 +17,8 @@ type ListFilter = {
   accountId?: string;
   categoryId?: string;
   type?: TransactionType;
+  // 'YYYY-MM'。date が 'YYYY-MM-DD' なので LIKE 'YYYY-MM-%' で月絞り込み。
+  period?: string;
 };
 
 export const transactionsRepo = {
@@ -26,6 +28,7 @@ export const transactionsRepo = {
     if (filter.accountId) where.push(eq(transactions.accountId, filter.accountId));
     if (filter.categoryId) where.push(eq(transactions.categoryId, filter.categoryId));
     if (filter.type) where.push(eq(transactions.type, filter.type));
+    if (filter.period) where.push(like(transactions.date, `${filter.period}-%`));
     return db
       .select({
         id: transactions.id,
