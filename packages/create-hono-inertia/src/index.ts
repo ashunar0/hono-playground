@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 import { execFileSync } from "node:child_process";
-import { cpSync, existsSync, readFileSync, renameSync, writeFileSync } from "node:fs";
+import { cpSync, existsSync, readdirSync, readFileSync, renameSync, writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
 import { cancel, confirm, intro, isCancel, outro, spinner, text } from "@clack/prompts";
@@ -50,7 +50,51 @@ function parseArgs(argv: string[]) {
     skipInstall: flags.has("--skip-install"),
     skipGit: flags.has("--skip-git"),
     skipTailwind: flags.has("--skip-tailwind"),
+    skipAlias: flags.has("--skip-alias"),
   };
+}
+
+function buildViteConfig(opts: { tailwind: boolean; alias: boolean }): string {
+  const imports = [
+    opts.alias ? `import path from "node:path";` : null,
+    `import { cloudflare } from "@cloudflare/vite-plugin";`,
+    `import { inertiaPages } from "@hono/inertia/vite";`,
+    opts.tailwind ? `import tailwindcss from "@tailwindcss/vite";` : null,
+    `import { defineConfig } from "vite";`,
+    `import ssrPlugin from "vite-ssr-components/plugin";`,
+  ].filter(Boolean);
+
+  const aliasBlock = opts.alias
+    ? `  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
+    },
+  },
+`
+    : "";
+
+  const plugins = [
+    `    cloudflare(),`,
+    opts.tailwind ? `    tailwindcss(),` : null,
+    `    inertiaPages({
+      pagesDir: "src/Pages",
+      outFile: "src/pages.gen.ts",
+      serverModule: "./index",
+    }),`,
+    `    ssrPlugin(),`,
+  ].filter(Boolean);
+
+  return `${imports.join("\n")}
+
+export default defineConfig({
+${aliasBlock}  esbuild: {
+    jsxImportSource: "hono/jsx",
+  },
+  plugins: [
+${plugins.join("\n")}
+  ],
+});
+`;
 }
 
 type JsonObject = { [k: string]: unknown };
@@ -79,19 +123,27 @@ function sortDeps(pkg: JsonObject): JsonObject {
   return out;
 }
 
+const MERGE_SUFFIX = ".merge.json";
+
 function applyPatch(targetDir: string, patchName: string) {
   const patchDir = resolve(patchesDir, patchName);
+  if (!existsSync(patchDir)) return;
+
   const overlayDir = resolve(patchDir, "overlay");
   if (existsSync(overlayDir)) {
     cpSync(overlayDir, targetDir, { recursive: true });
   }
-  const mergeFile = resolve(patchDir, "package.json.merge.json");
-  if (existsSync(mergeFile)) {
-    const pkgPath = resolve(targetDir, "package.json");
-    const pkg = JSON.parse(readFileSync(pkgPath, "utf-8")) as JsonObject;
-    const patch = JSON.parse(readFileSync(mergeFile, "utf-8")) as JsonObject;
-    const merged = sortDeps(mergeJson(pkg, patch));
-    writeFileSync(pkgPath, `${JSON.stringify(merged, null, 2)}\n`);
+
+  for (const entry of readdirSync(patchDir)) {
+    if (!entry.endsWith(MERGE_SUFFIX)) continue;
+    const targetName = entry.slice(0, -MERGE_SUFFIX.length);
+    const targetPath = resolve(targetDir, targetName);
+    if (!existsSync(targetPath)) continue;
+    const target = JSON.parse(readFileSync(targetPath, "utf-8")) as JsonObject;
+    const patch = JSON.parse(readFileSync(resolve(patchDir, entry), "utf-8")) as JsonObject;
+    let merged = mergeJson(target, patch);
+    if (targetName === "package.json") merged = sortDeps(merged);
+    writeFileSync(targetPath, `${JSON.stringify(merged, null, 2)}\n`);
   }
 }
 
@@ -123,6 +175,15 @@ async function main() {
     : runOrCancel(
         await confirm({
           message: "Add Tailwind CSS?",
+          initialValue: true,
+        }),
+      );
+
+  const doAlias = args.yes
+    ? !args.skipAlias
+    : runOrCancel(
+        await confirm({
+          message: `Add import alias (${pc.cyan("@/*")} → ${pc.cyan("./src/*")})?`,
           initialValue: true,
         }),
       );
@@ -161,9 +222,12 @@ async function main() {
       contents.replace(/"name": "cf-workers-hono-jsx"/, `"name": "${projectName}"`),
     );
   }
-  if (doTailwind) {
-    applyPatch(targetDir, "tailwind");
-  }
+  if (doTailwind) applyPatch(targetDir, "tailwind");
+  if (doAlias) applyPatch(targetDir, "alias");
+  writeFileSync(
+    resolve(targetDir, "vite.config.ts"),
+    buildViteConfig({ tailwind: doTailwind, alias: doAlias }),
+  );
   s1.stop(`Scaffolded ${pc.cyan(projectName)}`);
 
   if (doGit) {
