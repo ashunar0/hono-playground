@@ -12,9 +12,6 @@ catalogs:
     '@better-auth/drizzle-adapter':
       specifier: ^1.6.11
       version: 1.6.11
-    '@clack/prompts':
-      specifier: ^1.4.0
-      version: 1.4.0
     '@hono/zod-validator':
       specifier: ^0.8.0
       version: 0.8.0
@@ -39,9 +36,6 @@ catalogs:
     drizzle-orm:
       specifier: ^0.45.2
       version: 0.45.2
-    picocolors:
-      specifier: ^1.1.1
-      version: 1.1.1
     tailwindcss:
       specifier: ^4.3.0
       version: 4.3.0
@@ -65,7 +59,7 @@ importers:
     devDependencies:
       vite-plus:
         specifier: 'catalog:'
-        version: 0.1.22(@types/node@25.7.0)(@voidzero-dev/vite-plus-core@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)
+        version: 0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1))
 
   apps/hn-clone:
     dependencies:
@@ -135,7 +129,7 @@ importers:
         version: 0.6.1
       vitest:
         specifier: npm:@voidzero-dev/vite-plus-test@latest
-        version: '@voidzero-dev/vite-plus-test@0.1.22(@types/node@25.7.0)(@voidzero-dev/vite-plus-core@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)'
+        version: '@voidzero-dev/vite-plus-test@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1))'
       wrangler:
         specifier: ^4.17.0
         version: 4.91.0
@@ -288,7 +282,7 @@ importers:
     devDependencies:
       vite-plus:
         specifier: 'catalog:'
-        version: 0.1.22(@types/node@25.7.0)(@voidzero-dev/vite-plus-core@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)
+        version: 0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1))
 
   apps/todo-clone:
     dependencies:
@@ -358,7 +352,7 @@ importers:
         version: 0.6.1
       vitest:
         specifier: npm:@voidzero-dev/vite-plus-test@latest
-        version: '@voidzero-dev/vite-plus-test@0.1.22(@types/node@25.7.0)(@voidzero-dev/vite-plus-core@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)'
+        version: '@voidzero-dev/vite-plus-test@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1))'
       wrangler:
         specifier: ^4.17.0
         version: 4.91.0
@@ -373,15 +367,15 @@ importers:
         version: '@voidzero-dev/vite-plus-core@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)'
       vite-plus:
         specifier: 'catalog:'
-        version: 0.1.22(@types/node@25.7.0)(@voidzero-dev/vite-plus-core@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)
+        version: 0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1))
 
   packages/create-hono-inertia:
     dependencies:
       '@clack/prompts':
-        specifier: 'catalog:'
+        specifier: ^1.4.0
         version: 1.4.0
       picocolors:
-        specifier: 'catalog:'
+        specifier: ^1.1.1
         version: 1.1.1
     devDependencies:
       '@types/node':
@@ -5124,46 +5118,6 @@ snapshots:
       - utf-8-validate
       - yaml
 
-  '@voidzero-dev/vite-plus-test@0.1.22(@types/node@25.7.0)(@voidzero-dev/vite-plus-core@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)':
-    dependencies:
-      '@standard-schema/spec': 1.1.0
-      '@types/chai': 5.2.3
-      '@voidzero-dev/vite-plus-core': 0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)
-      es-module-lexer: 1.7.0
-      obug: 2.1.1
-      pixelmatch: 7.2.0
-      pngjs: 7.0.0
-      sirv: 3.0.2
-      std-env: 4.1.0
-      tinybench: 2.9.0
-      tinyexec: 1.1.2
-      tinyglobby: 0.2.16
-      vite: '@voidzero-dev/vite-plus-core@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)'
-      ws: 8.20.1
-    optionalDependencies:
-      '@types/node': 25.7.0
-    transitivePeerDependencies:
-      - '@arethetypeswrong/core'
-      - '@tsdown/css'
-      - '@tsdown/exe'
-      - '@vitejs/devtools'
-      - bufferutil
-      - esbuild
-      - jiti
-      - less
-      - publint
-      - sass
-      - sass-embedded
-      - stylus
-      - sugarss
-      - terser
-      - tsx
-      - typescript
-      - unplugin-unused
-      - unrun
-      - utf-8-validate
-      - yaml
-
   '@voidzero-dev/vite-plus-test@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1))':
     dependencies:
       '@standard-schema/spec': 1.1.0
@@ -5278,7 +5232,7 @@ snapshots:
       pg: 8.20.0
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
-      vitest: '@voidzero-dev/vite-plus-test@0.1.22(@types/node@25.7.0)(@voidzero-dev/vite-plus-core@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)'
+      vitest: '@voidzero-dev/vite-plus-test@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1))'
 
   better-auth@1.6.11(@prisma/client@5.22.0)(@voidzero-dev/vite-plus-test@0.1.22(@types/node@25.7.0)(@voidzero-dev/vite-plus-core@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(better-sqlite3@12.10.0)(drizzle-kit@0.31.10)(drizzle-orm@0.45.2(@libsql/client@0.15.15)(@prisma/client@5.22.0)(@types/pg@8.20.0)(better-sqlite3@12.10.0)(kysely@0.28.17)(pg@8.20.0))(pg@8.20.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6):
     dependencies:
@@ -5307,7 +5261,7 @@ snapshots:
       pg: 8.20.0
       react: 19.2.6
       react-dom: 19.2.6(react@19.2.6)
-      vitest: '@voidzero-dev/vite-plus-test@0.1.22(@types/node@25.7.0)(@voidzero-dev/vite-plus-core@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3))(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)'
+      vitest: '@voidzero-dev/vite-plus-test@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1))'
     transitivePeerDependencies:
       - '@cloudflare/workers-types'
       - '@opentelemetry/api'
@@ -6256,12 +6210,12 @@ snapshots:
       - vite
       - yaml
 
-  vite-plus@0.1.22(@types/node@25.7.0)(@voidzero-dev/vite-plus-core@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3))(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3):
+  vite-plus@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)):
     dependencies:
       '@oxc-project/types': 0.129.0
       '@oxlint/plugins': 1.61.0
-      '@voidzero-dev/vite-plus-core': 0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)
-      '@voidzero-dev/vite-plus-test': 0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1))
+      '@voidzero-dev/vite-plus-core': 0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)
+      '@voidzero-dev/vite-plus-test': 0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1))
       oxfmt: 0.48.0
       oxlint: 1.63.0(oxlint-tsgolint@0.22.1)
       oxlint-tsgolint: 0.22.1
@@ -6305,12 +6259,12 @@ snapshots:
       - vite
       - yaml
 
-  vite-plus@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)):
+  vite-plus@0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)):
     dependencies:
       '@oxc-project/types': 0.129.0
       '@oxlint/plugins': 1.61.0
-      '@voidzero-dev/vite-plus-core': 0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)
-      '@voidzero-dev/vite-plus-test': 0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@5.9.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1))
+      '@voidzero-dev/vite-plus-core': 0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)
+      '@voidzero-dev/vite-plus-test': 0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1))
       oxfmt: 0.48.0
       oxlint: 1.63.0(oxlint-tsgolint@0.22.1)
       oxlint-tsgolint: 0.22.1

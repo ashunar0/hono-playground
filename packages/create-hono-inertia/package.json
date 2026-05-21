@@ -1,6 +1,6 @@
 {
   "name": "create-hono-inertia",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "Scaffold a Hono + Inertia + hono/jsx project (Cloudflare Workers, SSR + hydration)",
   "keywords": [
     "cloudflare-workers",
@@ -37,8 +37,8 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@clack/prompts": "catalog:",
-    "picocolors": "catalog:"
+    "@clack/prompts": "^1.4.0",
+    "picocolors": "^1.1.1"
   },
   "devDependencies": {
     "@types/node": "catalog:",
