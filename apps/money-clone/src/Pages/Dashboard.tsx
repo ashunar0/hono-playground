@@ -5,12 +5,13 @@ import { Layout } from "@/components/Layout";
 import { MonthPager } from "@/components/MonthPager";
 import { BalancesGrid } from "@/features/dashboard/components/BalancesGrid";
 import { CategoryBreakdown } from "@/features/dashboard/components/CategoryBreakdown";
+import { DashboardActions } from "@/features/dashboard/components/DashboardActions";
 import { MonthlyTable } from "@/features/dashboard/components/MonthlyTable";
 import { SummaryCards } from "@/features/dashboard/components/SummaryCards";
 import type { DashboardData } from "@/features/dashboard/service";
 import { formatYen } from "@/lib/format";
 import { formatPeriod } from "@/lib/period";
-import { Link, usePage } from "@ts-76/inertia-hono-jsx";
+import { usePage } from "@ts-76/inertia-hono-jsx";
 
 type Props = { dashboard: DashboardData };
 
@@ -80,41 +81,7 @@ export default function Dashboard({ dashboard }: Props) {
           </div>
         </section>
 
-        <div class="mt-8 flex flex-wrap gap-3">
-          <Link
-            href="/transactions/new"
-            class="rounded bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700"
-          >
-            + 取引を追加
-          </Link>
-          <Link
-            href="/transactions"
-            class="rounded border border-emerald-600 px-4 py-2 text-emerald-600 hover:bg-emerald-50"
-          >
-            取引一覧へ
-          </Link>
-          {/* Inertia 経由ではなく直接 GET したいので素の <a>。download 属性は Content-Disposition の filename を尊重する。 */}
-          <a
-            href={`/export?period=${period}`}
-            class="rounded border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
-            download
-          >
-            CSV ダウンロード ({formatPeriod(period)})
-          </a>
-          <a
-            href="/export"
-            class="rounded border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
-            download
-          >
-            CSV ダウンロード (全期間)
-          </a>
-          <Link
-            href="/import"
-            class="rounded border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
-          >
-            CSV 取り込み
-          </Link>
-        </div>
+        <DashboardActions period={period} />
       </div>
     </Layout>
   );
