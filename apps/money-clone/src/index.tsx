@@ -3,6 +3,7 @@ import { accountsApp } from "./features/accounts";
 import { authApp } from "./features/auth";
 import { categoriesApp } from "./features/categories";
 import { dashboardService } from "./features/dashboard/service";
+import { exportApp } from "./features/export";
 import { transactionsApp } from "./features/transactions";
 import { flash, inertia } from "./inertia";
 import { getDb } from "./lib/db";
@@ -23,6 +24,7 @@ const app = new Hono<{
   .route("/", accountsApp)
   .route("/", categoriesApp)
   .route("/", transactionsApp)
+  .route("/", exportApp)
   .get("/", async (c) => {
     const user = c.get("user");
     if (!user) {

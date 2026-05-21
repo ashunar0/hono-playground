@@ -80,7 +80,7 @@ export default function Dashboard({ dashboard }: Props) {
           </div>
         </section>
 
-        <div class="mt-8 flex gap-3">
+        <div class="mt-8 flex flex-wrap gap-3">
           <Link
             href="/transactions/new"
             class="rounded bg-emerald-600 px-4 py-2 text-white hover:bg-emerald-700"
@@ -93,6 +93,21 @@ export default function Dashboard({ dashboard }: Props) {
           >
             取引一覧へ
           </Link>
+          {/* Inertia 経由ではなく直接 GET したいので素の <a>。download 属性は Content-Disposition の filename を尊重する。 */}
+          <a
+            href={`/export?period=${period}`}
+            class="rounded border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
+            download
+          >
+            CSV ダウンロード ({formatPeriod(period)})
+          </a>
+          <a
+            href="/export"
+            class="rounded border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50"
+            download
+          >
+            CSV ダウンロード (全期間)
+          </a>
         </div>
       </div>
     </Layout>
