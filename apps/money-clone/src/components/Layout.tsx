@@ -15,6 +15,9 @@ export function Layout({ children }: { children?: Child }) {
           </Link>
           {user && (
             <>
+              <Link href="/transactions" class="text-white/90 hover:text-white">
+                取引
+              </Link>
               <Link href="/accounts" class="text-white/90 hover:text-white">
                 口座
               </Link>
