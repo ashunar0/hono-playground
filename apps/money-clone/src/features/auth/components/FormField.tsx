@@ -6,9 +6,10 @@ type Props = {
   label: string;
   error?: string;
   autocomplete?: string;
+  defaultValue?: string;
 };
 
-export function FormField({ name, type, label, error, autocomplete }: Props) {
+export function FormField({ name, type, label, error, autocomplete, defaultValue }: Props) {
   return (
     <label class="flex flex-col gap-1">
       <span class="text-sm text-gray-700">{label}</span>
@@ -16,6 +17,7 @@ export function FormField({ name, type, label, error, autocomplete }: Props) {
         type={type}
         name={name}
         autocomplete={autocomplete}
+        value={defaultValue}
         aria-invalid={error ? "true" : undefined}
         class={inputClass(!!error)}
       />
