@@ -22,11 +22,13 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "@ashunar0/hono-inertia-plus": "workspace:*",
     "hono": "^4.12.18",
     "typescript": "^5",
     "vite-plus": "catalog:"
   },
   "peerDependencies": {
+    "@ashunar0/hono-inertia-plus": "workspace:*",
     "hono": "^4.0.0"
   }
 }

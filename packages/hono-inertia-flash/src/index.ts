@@ -1,7 +1,9 @@
+import { always } from "@ashunar0/hono-inertia-plus";
 import type { Context, MiddlewareHandler } from "hono";
 import { getCookie, setCookie } from "hono/cookie";
 
 const COOKIE_NAME = "__inertia_flash";
+const DEFAULT_KEYS = ["toast", "errors"] as const;
 
 export interface InertiaFlashOptions {
   /**
@@ -20,6 +22,18 @@ export interface InertiaFlashOptions {
    * scheme by default (`true` for `https`, `false` for `http`).
    */
   secureCookie?: boolean;
+  /**
+   * Flash keys to always advertise as shared props. Each listed key is wrapped
+   * with plus's `always(fn)` so that on partial reloads the server overwrites
+   * the client's previously cached value (with `null` after the cookie is
+   * consumed), preventing a flashed toast from re-firing on every subsequent
+   * partial reload.
+   *
+   * If you flash custom keys beyond the defaults, list them here.
+   *
+   * @default ["toast", "errors"]
+   */
+  keys?: readonly string[];
 }
 
 declare module "hono" {
@@ -85,6 +99,7 @@ const refererPath = (c: Context, fallback: string): string => {
 export const inertiaFlash = (options: InertiaFlashOptions = {}): MiddlewareHandler => {
   const cookieName = options.cookieName ?? COOKIE_NAME;
   const flashMaxAge = options.flashMaxAge ?? 60;
+  const knownKeys = options.keys ?? DEFAULT_KEYS;
 
   return async (c, next) => {
     if (typeof c.share !== "function") {
@@ -106,9 +121,16 @@ export const inertiaFlash = (options: InertiaFlashOptions = {}): MiddlewareHandl
     if (raw) {
       setCookie(c, cookieName, "", { maxAge: 0, path: "/" });
     }
-    if (Object.keys(flashIn).length > 0) {
-      c.share(flashIn);
+
+    // 既知 key を `always(fn)` で share する。partial reload で `only`/`except` に
+    // 含まれなくても client に返却されるため、cookie 消費後は `null` で前回値を
+    // 上書きでき、トーストが再発火しない。Laravel Inertia の
+    // `Inertia::always(fn () => session()->get('flash'))` 流儀。
+    const sharedFlash: Record<string, unknown> = {};
+    for (const key of knownKeys) {
+      sharedFlash[key] = always(() => flashIn[key] ?? null);
     }
+    c.share(sharedFlash);
 
     const flashOut: Record<string, unknown> = {};
     c.flash = (key, value) => {
