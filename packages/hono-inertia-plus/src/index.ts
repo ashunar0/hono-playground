@@ -98,6 +98,62 @@ const isMerge = (value: unknown): value is MergeProp => {
   return typeof value === "object" && value !== null && MERGE_MARKER in value;
 };
 
+// Inertia v3 dot-notation partial reload の bidirectional matching helper。
+// 例: only:['stats.revenue'] のとき、key='stats' は ancestor (leadsToOnly) で通過、
+// key='stats.revenue' は exact match (matchesOnly) で通過、key='user' は両方 false で除外。
+const matchesOnly = (path: string, only: string[]): boolean =>
+  only.some((p) => p === path || path.startsWith(`${p}.`));
+
+const leadsToOnly = (path: string, only: string[]): boolean =>
+  only.some((p) => p.startsWith(`${path}.`));
+
+const matchesExcept = (path: string, except: string[]): boolean =>
+  except.some((p) => p === path || path.startsWith(`${p}.`));
+
+const shouldIncludePath = (
+  path: string,
+  only: string[] | null,
+  except: string[] | null,
+): boolean => {
+  if (except !== null && matchesExcept(path, except)) return false;
+  if (only === null) return true;
+  return matchesOnly(path, only) || leadsToOnly(path, only);
+};
+
+/**
+ * `resolvedProps` をルートに dot-path で再帰 walk し、`only`/`except` 指定を
+ * パスベースで評価して新しいオブジェクトを返す。
+ *
+ * - **exact / descendant 一致** (`only:['stats.revenue']` で path=`stats.revenue` または `stats.revenue.x`):
+ *   subtree を丸ごと通す
+ * - **ancestor 一致** (`only:['stats.revenue']` で path=`stats`): 子へ再帰
+ * - **不一致**: 除外
+ *
+ * Step 1 では配列要素の index 指定 (`items.0.name`) は未対応 — 配列は丸ごと通過させる。
+ * ネスト位置の marker 評価 (Step 2) も別タスクで、現状は eager な object literal だけが対象。
+ */
+const filterByPath = (
+  value: unknown,
+  path: string,
+  only: string[] | null,
+  except: string[] | null,
+): unknown => {
+  if (typeof value !== "object" || value === null) return value;
+  if (Array.isArray(value)) return value;
+
+  const out: Record<string, unknown> = {};
+  for (const [key, sub] of Object.entries(value)) {
+    const subPath = path === "" ? key : `${path}.${key}`;
+    if (!shouldIncludePath(subPath, only, except)) continue;
+    if (only !== null && matchesOnly(subPath, only)) {
+      out[key] = sub;
+    } else {
+      out[key] = filterByPath(sub, subPath, only, except);
+    }
+  }
+  return out;
+};
+
 const buildMerge =
   (strategy: MergeStrategy) =>
   <T>(data: T, options: MergeOptions = {}): T => {
@@ -346,18 +402,24 @@ export const inertiaPlus = (options: InertiaPlusOptions = {}): MiddlewareHandler
       const deepMergeProps: string[] = [];
       const matchPropsOn: string[] = [];
       const resolvedProps: Record<string, unknown> = {};
+      // `always(...)` で wrap されたトップレベル key は partial filter を bypass する
+      // (Laravel 流: AlwaysProp は only/except を無視して常に送出)。filterByPath を
+      // 通したあとに resolvedProps の値で上書きすることで実現。ネスト位置の always (Step 2) は別。
+      const alwaysKeys = new Set<string>();
 
       for (const [key, value] of Object.entries(incomingProps)) {
         // `always(fn)` は partial reload の only/except を無視して毎回評価・返却される。
         // flash / CSRF token / auth user など「partial reload でも常に上書きしたい」 props 向け。
         if (isAlways(value)) {
           resolvedProps[key] = await value.resolve();
+          alwaysKeys.add(key);
           continue;
         }
 
-        const isExcluded =
-          (onlyKeys !== null && !onlyKeys.includes(key)) ||
-          (exceptKeys !== null && exceptKeys.includes(key));
+        // dot-path 対応 (v3): `only:['stats.revenue']` のとき key='stats' は ancestor
+        // (leadsToOnly) として通過させ、page.props 組立直前の filterByPath でネスト walk して
+        // 余計な子を落とす。トップレベル marker 評価は今まで通り、ネスト位置の marker (Step 2) は未対応。
+        const isExcluded = !shouldIncludePath(key, onlyKeys, exceptKeys);
 
         if (isDeferred(value)) {
           if (!isPartial) {
@@ -408,9 +470,26 @@ export const inertiaPlus = (options: InertiaPlusOptions = {}): MiddlewareHandler
         resolvedProps[key] = value;
       }
 
+      // partial reload で dot-path only/except が指定されているとき、resolvedProps を
+      // 再帰 walk して該当 path だけを残す。フル visit や只のトップレベル only のときも
+      // 副作用ないが、isPartial=true のときに限定して余計な処理を避ける。
+      let filteredProps: Record<string, unknown>;
+      if (isPartial && (onlyKeys || exceptKeys)) {
+        filteredProps = filterByPath(resolvedProps, "", onlyKeys, exceptKeys) as Record<
+          string,
+          unknown
+        >;
+        // always() で wrap された key は partial filter を bypass する。
+        for (const key of alwaysKeys) {
+          filteredProps[key] = resolvedProps[key];
+        }
+      } else {
+        filteredProps = resolvedProps;
+      }
+
       const page: PageObject = {
         component,
-        props: resolvedProps,
+        props: filteredProps,
         url: url.pathname + url.search,
         version,
       };
