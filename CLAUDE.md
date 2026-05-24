@@ -15,4 +15,4 @@ Docs are local at `node_modules/vite-plus/docs` or online at https://viteplus.de
 
 <!--VITE PLUS END-->
 
-- スクリーンショットは不要
+- ユーザーに見せるためのスクリーンショットは撮影不要。あなたが確認するために必要なら取ってもいいけど、後で消しておくこと。
