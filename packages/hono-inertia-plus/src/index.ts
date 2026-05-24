@@ -3,6 +3,9 @@ import type { Context, MiddlewareHandler } from "hono";
 const DEFER_MARKER = Symbol.for("@ashunar0/hono-inertia-plus/defer");
 const SCROLL_MARKER = Symbol.for("@ashunar0/hono-inertia-plus/scroll");
 const ALWAYS_MARKER = Symbol.for("@ashunar0/hono-inertia-plus/always");
+const MERGE_MARKER = Symbol.for("@ashunar0/hono-inertia-plus/merge");
+
+type MergeStrategy = "append" | "prepend" | "deep";
 
 declare module "hono" {
   interface Context {
@@ -64,6 +67,21 @@ export interface AlwaysProp<T = unknown> {
   resolve: () => T | Promise<T>;
 }
 
+export interface MergeProp<T = unknown> {
+  [MERGE_MARKER]: true;
+  strategy: MergeStrategy;
+  data: T;
+  matchOn: string[];
+}
+
+export interface MergeOptions {
+  /**
+   * Dot-path(s) used by the client to dedupe array items during merge
+   * (e.g. `"id"` for `posts: merge([...], { matchOn: 'id' })` ⇒ `matchPropsOn: ['posts.id']`).
+   */
+  matchOn?: string | string[];
+}
+
 const isDeferred = (value: unknown): value is DeferredProp => {
   return typeof value === "object" && value !== null && DEFER_MARKER in value;
 };
@@ -75,6 +93,74 @@ const isScroll = (value: unknown): value is ScrollProp => {
 const isAlways = (value: unknown): value is AlwaysProp => {
   return typeof value === "object" && value !== null && ALWAYS_MARKER in value;
 };
+
+const isMerge = (value: unknown): value is MergeProp => {
+  return typeof value === "object" && value !== null && MERGE_MARKER in value;
+};
+
+const buildMerge =
+  (strategy: MergeStrategy) =>
+  <T>(data: T, options: MergeOptions = {}): T => {
+    const matchOn = options.matchOn
+      ? Array.isArray(options.matchOn)
+        ? options.matchOn
+        : [options.matchOn]
+      : [];
+    const marker: MergeProp<T> = {
+      [MERGE_MARKER]: true,
+      strategy,
+      data,
+      matchOn,
+    };
+    return marker as unknown as T;
+  };
+
+/**
+ * Marks a prop for **shallow append merge** on partial reloads. The client
+ * concatenates incoming array items to the cached array (or shallow-spreads
+ * incoming object keys onto the cached object). Provide `matchOn` to dedupe
+ * array items by a unique key.
+ *
+ * Mirrors Laravel Inertia's `Inertia::merge($value)`.
+ *
+ * @example
+ * ```ts
+ * c.render('Posts/Index', {
+ *   posts: merge(await db.posts(page), { matchOn: 'id' }),
+ * })
+ * ```
+ */
+export const merge: <T>(data: T, options?: MergeOptions) => T = buildMerge("append");
+
+/**
+ * Marks a prop for **shallow prepend merge** on partial reloads. Same as
+ * `merge()` but new array items are prepended instead of appended.
+ *
+ * Mirrors Laravel Inertia's `Inertia::merge($value)->prepend()`.
+ */
+export const prepend: <T>(data: T, options?: MergeOptions) => T = buildMerge("prepend");
+
+/**
+ * Marks a prop for **recursive deep merge** on partial reloads. The client
+ * walks the incoming value object-by-object: arrays follow `matchOn` dedupe
+ * rules (or concat), nested objects merge recursively, scalars replace.
+ *
+ * Use for wrapper-shaped paginated props like `{ data: [...], meta: {...} }`
+ * where shallow merge would lose the inner `data` array.
+ *
+ * Mirrors Laravel Inertia's `Inertia::deepMerge($value)`.
+ *
+ * @example
+ * ```ts
+ * c.render('Posts/Index', {
+ *   feed: deepMerge(
+ *     { data: await db.posts(page), meta: { total, nextCursor } },
+ *     { matchOn: 'data.id' },
+ *   ),
+ * })
+ * ```
+ */
+export const deepMerge: <T>(data: T, options?: MergeOptions) => T = buildMerge("deep");
 
 /**
  * Marks a prop as a paginated scroll source. The page object emitted to the
@@ -172,6 +258,7 @@ export interface PageObject {
   scrollProps?: Record<string, ScrollDescriptor>;
   mergeProps?: string[];
   prependProps?: string[];
+  deepMergeProps?: string[];
   matchPropsOn?: string[];
   encryptHistory?: boolean;
   clearHistory?: boolean;
@@ -256,6 +343,7 @@ export const inertiaPlus = (options: InertiaPlusOptions = {}): MiddlewareHandler
       const scrollProps: Record<string, ScrollDescriptor> = {};
       const mergeProps: string[] = [];
       const prependProps: string[] = [];
+      const deepMergeProps: string[] = [];
       const matchPropsOn: string[] = [];
       const resolvedProps: Record<string, unknown> = {};
 
@@ -302,6 +390,20 @@ export const inertiaPlus = (options: InertiaPlusOptions = {}): MiddlewareHandler
           continue;
         }
 
+        if (isMerge(value)) {
+          if (isPartial && isExcluded) continue;
+          resolvedProps[key] = value.data;
+          // strategy ごとに別フィールドへ。`matchPropsOn` は key 配下の dot-path に正規化
+          // (`merge(_, {matchOn:'id'})` ⇒ `matchPropsOn: ['posts.id']`)。
+          if (value.strategy === "append") mergeProps.push(key);
+          else if (value.strategy === "prepend") prependProps.push(key);
+          else deepMergeProps.push(key);
+          for (const path of value.matchOn) {
+            matchPropsOn.push(`${key}.${path}`);
+          }
+          continue;
+        }
+
         if (isPartial && isExcluded) continue;
         resolvedProps[key] = value;
       }
@@ -323,6 +425,9 @@ export const inertiaPlus = (options: InertiaPlusOptions = {}): MiddlewareHandler
       }
       if (prependProps.length > 0) {
         page.prependProps = prependProps;
+      }
+      if (deepMergeProps.length > 0) {
+        page.deepMergeProps = deepMergeProps;
       }
       if (matchPropsOn.length > 0) {
         page.matchPropsOn = matchPropsOn;
