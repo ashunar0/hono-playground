@@ -10,8 +10,16 @@ const forwardSetCookie = (c: AppContext, res: Response) => {
 
 export const authApp = new Hono<AppEnv>()
   .all("/api/auth/*", (c) => c.get("auth").handler(c.req.raw))
-  .get("/login", (c) => c.render("Login"))
-  .get("/signup", (c) => c.render("Signup"))
+  .get("/login", (c) => {
+    // 未認証ページ到達 = 認証外れたとみなし、sessionStorage の Inertia encryption key/iv
+    // を破棄。ログアウト経由でも新規 visit でも副作用なし (key 無い時 clear は no-op)。
+    c.clearHistory();
+    return c.render("Login");
+  })
+  .get("/signup", (c) => {
+    c.clearHistory();
+    return c.render("Signup");
+  })
   .post(
     "/login",
     vJson(loginSchema, (result, c: AppContext) => {
