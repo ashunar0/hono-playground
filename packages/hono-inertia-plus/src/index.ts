@@ -13,6 +13,26 @@ declare module "hono" {
      * `@ashunar0/hono-inertia-flash`'s `c.flash` / `c.back`) build on top of it.
      */
     share(props: Record<string, unknown>): void;
+    /**
+     * Toggles Inertia v3 history encryption for this response. When `true`
+     * (default), the client encrypts the page object with AES-256-GCM before
+     * storing it in `window.history.state`, so back/forward navigation after
+     * logout cannot reveal cached data. Pass `false` to explicitly opt out.
+     *
+     * The flag is omitted from the page object unless this is called, in which
+     * case the client inherits the previous page's setting.
+     *
+     * Mirrors Laravel Inertia's `Inertia::encryptHistory()`.
+     */
+    encryptHistory(value?: boolean): void;
+    /**
+     * Sets `clearHistory: true` on this response so the client rotates its
+     * sessionStorage encryption key/IV, making previously-encrypted history
+     * entries unreadable. Use on logout or other sensitive state transitions.
+     *
+     * Mirrors Laravel Inertia's `Inertia::clearHistory()`.
+     */
+    clearHistory(): void;
   }
 }
 
@@ -153,6 +173,8 @@ export interface PageObject {
   mergeProps?: string[];
   prependProps?: string[];
   matchPropsOn?: string[];
+  encryptHistory?: boolean;
+  clearHistory?: boolean;
 }
 
 export type RootView = (page: PageObject, c: Context) => string | Promise<string>;
@@ -193,6 +215,15 @@ export const inertiaPlus = (options: InertiaPlusOptions = {}): MiddlewareHandler
     const shared: Record<string, unknown> = {};
     c.share = (props) => {
       Object.assign(shared, props);
+    };
+
+    let encryptHistoryFlag: boolean | undefined;
+    let clearHistoryFlag = false;
+    c.encryptHistory = (value = true) => {
+      encryptHistoryFlag = value;
+    };
+    c.clearHistory = () => {
+      clearHistoryFlag = true;
     };
 
     // biome-ignore lint: c.setRenderer type comes from @hono/inertia's module augmentation
@@ -295,6 +326,14 @@ export const inertiaPlus = (options: InertiaPlusOptions = {}): MiddlewareHandler
       }
       if (matchPropsOn.length > 0) {
         page.matchPropsOn = matchPropsOn;
+      }
+      // `encryptHistory` は client が前ページから継承する。undefined のときは
+      // page object に出さず継承させ、`true`/`false` 明示時のみ送る (v3 流儀)。
+      if (encryptHistoryFlag !== undefined) {
+        page.encryptHistory = encryptHistoryFlag;
+      }
+      if (clearHistoryFlag) {
+        page.clearHistory = true;
       }
 
       c.header("Vary", "Accept, X-Inertia");
