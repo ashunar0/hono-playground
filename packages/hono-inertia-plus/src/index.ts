@@ -98,6 +98,15 @@ const isMerge = (value: unknown): value is MergeProp => {
   return typeof value === "object" && value !== null && MERGE_MARKER in value;
 };
 
+const isPlainObject = (value: unknown): value is Record<string, unknown> =>
+  typeof value === "object" &&
+  value !== null &&
+  !Array.isArray(value) &&
+  !isDeferred(value) &&
+  !isScroll(value) &&
+  !isAlways(value) &&
+  !isMerge(value);
+
 // Inertia v3 dot-notation partial reload の bidirectional matching helper。
 // 例: only:['stats.revenue'] のとき、key='stats' は ancestor (leadsToOnly) で通過、
 // key='stats.revenue' は exact match (matchesOnly) で通過、key='user' は両方 false で除外。
@@ -118,40 +127,6 @@ const shouldIncludePath = (
   if (except !== null && matchesExcept(path, except)) return false;
   if (only === null) return true;
   return matchesOnly(path, only) || leadsToOnly(path, only);
-};
-
-/**
- * `resolvedProps` をルートに dot-path で再帰 walk し、`only`/`except` 指定を
- * パスベースで評価して新しいオブジェクトを返す。
- *
- * - **exact / descendant 一致** (`only:['stats.revenue']` で path=`stats.revenue` または `stats.revenue.x`):
- *   subtree を丸ごと通す
- * - **ancestor 一致** (`only:['stats.revenue']` で path=`stats`): 子へ再帰
- * - **不一致**: 除外
- *
- * Step 1 では配列要素の index 指定 (`items.0.name`) は未対応 — 配列は丸ごと通過させる。
- * ネスト位置の marker 評価 (Step 2) も別タスクで、現状は eager な object literal だけが対象。
- */
-const filterByPath = (
-  value: unknown,
-  path: string,
-  only: string[] | null,
-  except: string[] | null,
-): unknown => {
-  if (typeof value !== "object" || value === null) return value;
-  if (Array.isArray(value)) return value;
-
-  const out: Record<string, unknown> = {};
-  for (const [key, sub] of Object.entries(value)) {
-    const subPath = path === "" ? key : `${path}.${key}`;
-    if (!shouldIncludePath(subPath, only, except)) continue;
-    if (only !== null && matchesOnly(subPath, only)) {
-      out[key] = sub;
-    } else {
-      out[key] = filterByPath(sub, subPath, only, except);
-    }
-  }
-  return out;
 };
 
 const buildMerge =
@@ -331,6 +306,118 @@ const defaultRootView: RootView = (page) =>
   `<!DOCTYPE html><html><head><meta charset="utf-8" /></head><body><div id="app" data-page='${JSON.stringify(page).replace(/'/g, "&#39;")}'></div></body></html>`;
 
 /**
+ * Resolution context shared across the recursive `resolveProps` walk.
+ *
+ * Holds the partial-reload state (`isPartial` / `onlyKeys` / `exceptKeys` /
+ * `mergeIntent`) and the metadata accumulators that build up the page object's
+ * `deferredProps` / `scrollProps` / `mergeProps` / `prependProps` /
+ * `deepMergeProps` / `matchPropsOn` fields as nested marker positions are
+ * visited.
+ */
+interface ResolveCtx {
+  isPartial: boolean;
+  onlyKeys: string[] | null;
+  exceptKeys: string[] | null;
+  mergeIntent: string | undefined;
+  deferredGroups: Record<string, string[]>;
+  scrollProps: Record<string, ScrollDescriptor>;
+  mergeProps: string[];
+  prependProps: string[];
+  deepMergeProps: string[];
+  matchPropsOn: string[];
+}
+
+/**
+ * Recursively walks `input` building dot-paths (`stats.revenue.users`),
+ * evaluating Inertia markers (defer/always/merge/scroll) at any nesting
+ * depth and emitting their metadata into `ctx` against the resolved path.
+ *
+ * Mirrors Laravel adapter's `PropsResolver::resolveProps`:
+ * - `AlwaysProp` and `parentWasResolved=true` subtrees bypass partial filtering.
+ * - `DeferredProp` on initial visits is skipped (closure not invoked) and
+ *   advertised via `ctx.deferredGroups[group]` at its dot-path.
+ * - Markers whose resolved value is a plain object recurse with
+ *   `parentWasResolved=true` so the user-constructed children bypass the
+ *   request's `only`/`except` filter — they were already opted-in by the
+ *   marker call itself.
+ *
+ * Step 3 will add array index paths (`items.0.name`) — for now arrays are
+ * carried through as opaque values.
+ */
+const resolveProps = async (
+  input: Record<string, unknown>,
+  prefix: string,
+  parentWasResolved: boolean,
+  ctx: ResolveCtx,
+): Promise<Record<string, unknown>> => {
+  const out: Record<string, unknown> = {};
+
+  for (const [key, raw] of Object.entries(input)) {
+    const path = prefix === "" ? key : `${prefix}.${key}`;
+
+    // Partial filter. AlwaysProp and parentWasResolved subtrees bypass.
+    if (ctx.isPartial && !isAlways(raw) && !parentWasResolved) {
+      if (!shouldIncludePath(path, ctx.onlyKeys, ctx.exceptKeys)) continue;
+    }
+
+    // Defer on initial visit: emit metadata and skip resolution.
+    if (isDeferred(raw)) {
+      if (!ctx.isPartial) {
+        const group = raw.group;
+        ctx.deferredGroups[group] ??= [];
+        ctx.deferredGroups[group].push(path);
+        continue;
+      }
+      const value = await raw.resolve();
+      out[key] = isPlainObject(value) ? await resolveProps(value, path, true, ctx) : value;
+      continue;
+    }
+
+    if (isAlways(raw)) {
+      const value = await raw.resolve();
+      out[key] = isPlainObject(value) ? await resolveProps(value, path, true, ctx) : value;
+      continue;
+    }
+
+    if (isScroll(raw)) {
+      out[key] = raw.data;
+      ctx.scrollProps[path] = {
+        previousPage: raw.previousPage,
+        nextPage: raw.nextPage,
+        currentPage: raw.currentPage,
+        pageName: raw.pageName,
+      };
+      if (ctx.isPartial && ctx.mergeIntent === "append") {
+        ctx.mergeProps.push(path);
+        if (raw.matchOn) ctx.matchPropsOn.push(`${path}.${raw.matchOn}`);
+      } else if (ctx.isPartial && ctx.mergeIntent === "prepend") {
+        ctx.prependProps.push(path);
+        if (raw.matchOn) ctx.matchPropsOn.push(`${path}.${raw.matchOn}`);
+      }
+      continue;
+    }
+
+    if (isMerge(raw)) {
+      out[key] = raw.data;
+      if (raw.strategy === "append") ctx.mergeProps.push(path);
+      else if (raw.strategy === "prepend") ctx.prependProps.push(path);
+      else ctx.deepMergeProps.push(path);
+      for (const p of raw.matchOn) ctx.matchPropsOn.push(`${path}.${p}`);
+      continue;
+    }
+
+    if (isPlainObject(raw)) {
+      // Plain object: recurse keeping the inherited parentWasResolved.
+      out[key] = await resolveProps(raw, path, parentWasResolved, ctx);
+    } else {
+      out[key] = raw;
+    }
+  }
+
+  return out;
+};
+
+/**
  * Middleware that augments `@hono/inertia` with:
  * - **Deferred props**: `defer(() => ...)` resolvers are skipped on the
  *   initial response and advertised via `page.deferredProps`.
@@ -394,122 +481,44 @@ export const inertiaPlus = (options: InertiaPlusOptions = {}): MiddlewareHandler
               .filter(Boolean)
           : null;
 
-      const mergeIntent = c.req.header("X-Inertia-Infinite-Scroll-Merge-Intent");
-      const deferredGroups: Record<string, string[]> = {};
-      const scrollProps: Record<string, ScrollDescriptor> = {};
-      const mergeProps: string[] = [];
-      const prependProps: string[] = [];
-      const deepMergeProps: string[] = [];
-      const matchPropsOn: string[] = [];
-      const resolvedProps: Record<string, unknown> = {};
-      // `always(...)` で wrap されたトップレベル key は partial filter を bypass する
-      // (Laravel 流: AlwaysProp は only/except を無視して常に送出)。filterByPath を
-      // 通したあとに resolvedProps の値で上書きすることで実現。ネスト位置の always (Step 2) は別。
-      const alwaysKeys = new Set<string>();
+      const ctx: ResolveCtx = {
+        isPartial,
+        onlyKeys,
+        exceptKeys,
+        mergeIntent: c.req.header("X-Inertia-Infinite-Scroll-Merge-Intent"),
+        deferredGroups: {},
+        scrollProps: {},
+        mergeProps: [],
+        prependProps: [],
+        deepMergeProps: [],
+        matchPropsOn: [],
+      };
 
-      for (const [key, value] of Object.entries(incomingProps)) {
-        // `always(fn)` は partial reload の only/except を無視して毎回評価・返却される。
-        // flash / CSRF token / auth user など「partial reload でも常に上書きしたい」 props 向け。
-        if (isAlways(value)) {
-          resolvedProps[key] = await value.resolve();
-          alwaysKeys.add(key);
-          continue;
-        }
-
-        // dot-path 対応 (v3): `only:['stats.revenue']` のとき key='stats' は ancestor
-        // (leadsToOnly) として通過させ、page.props 組立直前の filterByPath でネスト walk して
-        // 余計な子を落とす。トップレベル marker 評価は今まで通り、ネスト位置の marker (Step 2) は未対応。
-        const isExcluded = !shouldIncludePath(key, onlyKeys, exceptKeys);
-
-        if (isDeferred(value)) {
-          if (!isPartial) {
-            const group = value.group;
-            deferredGroups[group] ??= [];
-            deferredGroups[group].push(key);
-            continue;
-          }
-          if (isExcluded) continue;
-          resolvedProps[key] = await value.resolve();
-          continue;
-        }
-
-        if (isScroll(value)) {
-          if (isPartial && isExcluded) continue;
-          resolvedProps[key] = value.data;
-          scrollProps[key] = {
-            previousPage: value.previousPage,
-            nextPage: value.nextPage,
-            currentPage: value.currentPage,
-            pageName: value.pageName,
-          };
-          if (isPartial && mergeIntent === "append") {
-            mergeProps.push(key);
-            if (value.matchOn) matchPropsOn.push(`${key}.${value.matchOn}`);
-          } else if (isPartial && mergeIntent === "prepend") {
-            prependProps.push(key);
-            if (value.matchOn) matchPropsOn.push(`${key}.${value.matchOn}`);
-          }
-          continue;
-        }
-
-        if (isMerge(value)) {
-          if (isPartial && isExcluded) continue;
-          resolvedProps[key] = value.data;
-          // strategy ごとに別フィールドへ。`matchPropsOn` は key 配下の dot-path に正規化
-          // (`merge(_, {matchOn:'id'})` ⇒ `matchPropsOn: ['posts.id']`)。
-          if (value.strategy === "append") mergeProps.push(key);
-          else if (value.strategy === "prepend") prependProps.push(key);
-          else deepMergeProps.push(key);
-          for (const path of value.matchOn) {
-            matchPropsOn.push(`${key}.${path}`);
-          }
-          continue;
-        }
-
-        if (isPartial && isExcluded) continue;
-        resolvedProps[key] = value;
-      }
-
-      // partial reload で dot-path only/except が指定されているとき、resolvedProps を
-      // 再帰 walk して該当 path だけを残す。フル visit や只のトップレベル only のときも
-      // 副作用ないが、isPartial=true のときに限定して余計な処理を避ける。
-      let filteredProps: Record<string, unknown>;
-      if (isPartial && (onlyKeys || exceptKeys)) {
-        filteredProps = filterByPath(resolvedProps, "", onlyKeys, exceptKeys) as Record<
-          string,
-          unknown
-        >;
-        // always() で wrap された key は partial filter を bypass する。
-        for (const key of alwaysKeys) {
-          filteredProps[key] = resolvedProps[key];
-        }
-      } else {
-        filteredProps = resolvedProps;
-      }
+      const resolvedProps = await resolveProps(incomingProps, "", false, ctx);
 
       const page: PageObject = {
         component,
-        props: filteredProps,
+        props: resolvedProps,
         url: url.pathname + url.search,
         version,
       };
-      if (!isPartial && Object.keys(deferredGroups).length > 0) {
-        page.deferredProps = deferredGroups;
+      if (!isPartial && Object.keys(ctx.deferredGroups).length > 0) {
+        page.deferredProps = ctx.deferredGroups;
       }
-      if (Object.keys(scrollProps).length > 0) {
-        page.scrollProps = scrollProps;
+      if (Object.keys(ctx.scrollProps).length > 0) {
+        page.scrollProps = ctx.scrollProps;
       }
-      if (mergeProps.length > 0) {
-        page.mergeProps = mergeProps;
+      if (ctx.mergeProps.length > 0) {
+        page.mergeProps = ctx.mergeProps;
       }
-      if (prependProps.length > 0) {
-        page.prependProps = prependProps;
+      if (ctx.prependProps.length > 0) {
+        page.prependProps = ctx.prependProps;
       }
-      if (deepMergeProps.length > 0) {
-        page.deepMergeProps = deepMergeProps;
+      if (ctx.deepMergeProps.length > 0) {
+        page.deepMergeProps = ctx.deepMergeProps;
       }
-      if (matchPropsOn.length > 0) {
-        page.matchPropsOn = matchPropsOn;
+      if (ctx.matchPropsOn.length > 0) {
+        page.matchPropsOn = ctx.matchPropsOn;
       }
       // `encryptHistory` は client が前ページから継承する。undefined のときは
       // page object に出さず継承させ、`true`/`false` 明示時のみ送る (v3 流儀)。
