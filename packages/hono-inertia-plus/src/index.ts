@@ -107,6 +107,11 @@ const isPlainObject = (value: unknown): value is Record<string, unknown> =>
   !isAlways(value) &&
   !isMerge(value);
 
+// プレーンな object か array — どちらも子要素を path 構築しながら walk できる。
+// `Object.entries(array)` は ['0', value] 形で回るので、object/array を 1 ループで扱える。
+const isWalkable = (value: unknown): value is Record<string, unknown> | unknown[] =>
+  Array.isArray(value) || isPlainObject(value);
+
 // Inertia v3 dot-notation partial reload の bidirectional matching helper。
 // 例: only:['stats.revenue'] のとき、key='stats' は ancestor (leadsToOnly) で通過、
 // key='stats.revenue' は exact match (matchesOnly) で通過、key='user' は両方 false で除外。
@@ -328,29 +333,35 @@ interface ResolveCtx {
 }
 
 /**
- * Recursively walks `input` building dot-paths (`stats.revenue.users`),
- * evaluating Inertia markers (defer/always/merge/scroll) at any nesting
- * depth and emitting their metadata into `ctx` against the resolved path.
+ * Recursively walks `input` (object or array) building dot-paths
+ * (`stats.revenue`, `items.0.bar`), evaluating Inertia markers
+ * (defer/always/merge/scroll) at any nesting depth and emitting their
+ * metadata into `ctx` against the resolved path.
  *
  * Mirrors Laravel adapter's `PropsResolver::resolveProps`:
  * - `AlwaysProp` and `parentWasResolved=true` subtrees bypass partial filtering.
  * - `DeferredProp` on initial visits is skipped (closure not invoked) and
  *   advertised via `ctx.deferredGroups[group]` at its dot-path.
- * - Markers whose resolved value is a plain object recurse with
+ * - Markers whose resolved value is walkable recurse with
  *   `parentWasResolved=true` so the user-constructed children bypass the
  *   request's `only`/`except` filter — they were already opted-in by the
  *   marker call itself.
- *
- * Step 3 will add array index paths (`items.0.name`) — for now arrays are
- * carried through as opaque values.
+ * - Arrays preserve their shape: `Object.entries` yields ['0', value] tuples
+ *   so index becomes part of the path, and we push to `out` instead of
+ *   assigning by key.
  */
-const resolveProps = async (
-  input: Record<string, unknown>,
+const resolveProps = async <T extends Record<string, unknown> | unknown[]>(
+  input: T,
   prefix: string,
   parentWasResolved: boolean,
   ctx: ResolveCtx,
-): Promise<Record<string, unknown>> => {
-  const out: Record<string, unknown> = {};
+): Promise<T> => {
+  const isArr = Array.isArray(input);
+  const out: Record<string, unknown> | unknown[] = isArr ? [] : {};
+  const assign = (key: string, value: unknown) => {
+    if (isArr) (out as unknown[]).push(value);
+    else (out as Record<string, unknown>)[key] = value;
+  };
 
   for (const [key, raw] of Object.entries(input)) {
     const path = prefix === "" ? key : `${prefix}.${key}`;
@@ -369,18 +380,18 @@ const resolveProps = async (
         continue;
       }
       const value = await raw.resolve();
-      out[key] = isPlainObject(value) ? await resolveProps(value, path, true, ctx) : value;
+      assign(key, isWalkable(value) ? await resolveProps(value, path, true, ctx) : value);
       continue;
     }
 
     if (isAlways(raw)) {
       const value = await raw.resolve();
-      out[key] = isPlainObject(value) ? await resolveProps(value, path, true, ctx) : value;
+      assign(key, isWalkable(value) ? await resolveProps(value, path, true, ctx) : value);
       continue;
     }
 
     if (isScroll(raw)) {
-      out[key] = raw.data;
+      assign(key, raw.data);
       ctx.scrollProps[path] = {
         previousPage: raw.previousPage,
         nextPage: raw.nextPage,
@@ -398,7 +409,7 @@ const resolveProps = async (
     }
 
     if (isMerge(raw)) {
-      out[key] = raw.data;
+      assign(key, raw.data);
       if (raw.strategy === "append") ctx.mergeProps.push(path);
       else if (raw.strategy === "prepend") ctx.prependProps.push(path);
       else ctx.deepMergeProps.push(path);
@@ -406,15 +417,14 @@ const resolveProps = async (
       continue;
     }
 
-    if (isPlainObject(raw)) {
-      // Plain object: recurse keeping the inherited parentWasResolved.
-      out[key] = await resolveProps(raw, path, parentWasResolved, ctx);
+    if (isWalkable(raw)) {
+      assign(key, await resolveProps(raw, path, parentWasResolved, ctx));
     } else {
-      out[key] = raw;
+      assign(key, raw);
     }
   }
 
-  return out;
+  return out as T;
 };
 
 /**
