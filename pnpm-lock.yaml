@@ -278,12 +278,6 @@ importers:
         specifier: ^4.17.0
         version: 4.91.0
 
-  apps/temp:
-    devDependencies:
-      vite-plus:
-        specifier: 'catalog:'
-        version: 0.1.22(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1)(typescript@6.0.3)(vite@8.0.12(@types/node@25.7.0)(esbuild@0.28.0)(jiti@2.7.0)(tsx@4.22.1))
-
   apps/todo-clone:
     dependencies:
       '@ashunar0/hono-inertia-flash':
